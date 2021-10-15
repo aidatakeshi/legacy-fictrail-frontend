@@ -1,0 +1,25 @@
+{
+  "name": "hr-doodle",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bootstrap": "^4.5.2",
+    "bootstrap-vue": "^2.17.3",
+    "chart.js": "^2.9.4",
+    "core-js": "^3.6.5",
+    "konva": "^7.2.4",
+    "nuxt": "^2.14.6",
+    "paper-vueify": "^1.1.13",
+    "vue-chartjs": "^3.5.1",
+    "vue-colour-picker": "0.0.5",
+    "vue-json-pretty": "^1.8.0",
+    "vue-konva": "^2.1.7"
+  }
+}

@@ -1,0 +1,439 @@
+/* Headers */
+h1 small{
+    color: grey;
+    font-size: 60%;
+}
+
+h2 small{
+    color: grey;
+    font-size: 60%;
+}
+
+h3 small{
+    color: grey;
+    font-size: 60%;
+}
+
+/* My Table */
+
+.my-table th{
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle !important;
+}
+.my-table td{
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle !important;
+}
+.my-table a{
+    font-weight: bold;
+}
+.my-table button{
+    padding: 0 0.2em !important;
+}
+.my-table .subheader{
+    color: white !important;
+    background-color: #333 !important;
+}
+.my-table .left-header{
+    background-color: #f8f8f8 !important;
+}
+.my-table .warning{
+    color: red;
+}
+.my-table .remarks{
+    min-width: 10rem;
+    text-align: left;
+    font-size: 0.8rem;
+    white-space: pre-line;
+}
+.my-table .remarks-small{
+    min-width: 10rem;
+    text-align: left;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    white-space: pre-line;
+}
+@media only screen and (max-width: 1200px) {
+    .my-table .remarks-small{
+        min-width: 15rem;
+    }
+}
+
+.my-table .small{
+    text-align: left;
+    font-size: 0.8rem;
+}
+
+@media only screen and (max-width: 800px) {
+    .my-table{
+        font-size: 0.8rem;
+    }
+    .my-table button{
+        font-size: 0.8rem;
+    }
+    .my-table th{
+        padding: 0.2rem !important;
+    }
+    .my-table td{
+        padding: 0.2rem !important;
+    }
+}
+
+@media only screen and (min-width: 801px) {
+    .my-table th{
+        padding: 0.3rem !important;
+    }
+    .my-table td{
+        padding: 0.3rem !important;
+    }
+}
+
+.my-table td.no-padding{
+    padding: 0 !important;
+}
+
+.my-table thead.sticky tr th{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+@media only screen and (max-width: 800px) {
+    .container {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    .card-body {
+        padding-left: 0.25rem !important;
+        padding-right: 0.25rem !important;
+    }
+}
+
+/* Map Button */
+.map-nav-button{
+    border: solid 2px rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 2px;
+}
+
+/* Map Overlay */
+.map-overlay{
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: rgba(255, 255, 255, 1);
+    border: solid 1px #ccc;
+    padding: 5px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    font-size: 0.8rem;
+    z-index: 1;
+}
+.map-overlay-toggle{
+    position: fixed;
+    background-color: rgba(127, 127, 127, 1);
+    color: white;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+.map-overlay h1{
+    font-size: 1.5rem;
+    margin: 0;
+}
+.map-overlay h2{
+    font-size: 1.2rem;
+    margin: 0;
+}
+.map-overlay button{
+    font-size: 0.8rem;
+    padding: 0.2rem;
+}
+.map-overlay input{
+    font-size: 0.8rem;
+    padding: 0.1rem;
+}
+.map-overlay select{
+    font-size: 0.8rem;
+    padding: 0.1rem;
+}
+.map-overlay textarea{
+    font-size: 0.8rem;
+    padding: 0.1rem;
+}
+
+@media only screen and (max-width: 800px) {
+    .map-overlay{
+        width: 100%;
+        height: 50%;
+    }
+    .map-overlay-toggle{
+        height: 15px;
+        width: 100px;
+        left: calc(50% - 50px);
+    }
+    .map-overlay-toggle .wide{
+        display: none !important;
+    }
+    .map-overlay-toggle.off{
+        top: 50%;
+    }
+    .map-overlay-toggle.on{
+        top: 0;
+    }
+}
+@media only screen and (min-width: 801px) {
+    .map-overlay{
+        height: 100%;
+        width: 300px;
+    }
+    .map-overlay-toggle{
+        height: 100px;
+        width: 15px;
+        top: calc(50% - 50px);
+    }
+    .map-overlay-toggle .narrow{
+        display: none !important;
+    }
+    .map-overlay-toggle.off{
+        left: 300px;
+    }
+    .map-overlay-toggle.on{
+        left: 0px;
+    }
+}
+
+/* Map Overlay Line List */
+.map-line-list{
+    margin-top: 0.5rem;
+}
+.map-line-list button{
+    padding: 0rem 0.1rem;
+    margin: 0.05rem;
+    font-size: 0.8rem;
+}
+.map-line-list .content{
+    flex-grow: 1;
+    padding: 0.2rem;
+}
+.map-line-list .buttons{
+    text-align: right;
+    word-wrap: nowrap;
+    padding: 0.2rem;
+}
+.map-line-list .type{
+    border: solid 1px rgba(0, 0, 0, 0.3) !important;
+}
+.map-line-list .type .header{
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 123, 255, 0.2);
+    border-bottom: solid 1px rgba(0, 0, 0, 0.1) !important;
+}
+.map-line-list .type .no-lines{
+    padding: 0.5rem;
+    text-align: center;
+    border-bottom: solid 1px rgba(0, 0, 0, 0.1) !important;
+}
+.map-line-list .initial{
+    padding: 0rem 0.2rem;
+    background-color: rgba(255, 238, 204, 0.5);
+    font-weight: bold;
+    text-align: center;
+    border-bottom: solid 1px rgba(0, 0, 0, 0.1) !important;
+}
+.map-line-list .type .line{
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: solid 1px rgba(0, 0, 0, 0.1) !important;
+}
+.map-line-list .type .line:hover{
+    background-color: rgba(255, 238, 204, 0.3);
+}
+
+/* Map Station Details */
+.map-stationde-edit{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.map-stationde-edit .label{
+    min-width: 100px;
+}
+.map-stationde-edit .input{
+    flex-grow: 1;
+}
+
+/* Map Line Details */
+.map-linede-info{
+    font-weight: bold;
+    margin-top: 0.3rem;
+}
+.map-linede-section .station{
+    background-color: rgba(0, 123, 255, 0.2);
+    border: solid 1px rgba(0, 0, 0, 0.3) !important;
+    border-left: solid 5px #666 !important;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+}
+.map-linede-section .station.selected{
+    background-color: rgba(123, 0, 255, 0.2);
+}
+.map-linede-section .station.unsaved{
+    border-left: solid 5px #c00 !important;
+}
+.map-linede-section .station.new{
+    border-left: solid 5px #090 !important;
+}
+.map-linede-section .station.to-remove{
+    border-left: solid 5px #00c !important;
+    color: #666;
+    text-decoration: line-through;
+}
+.map-linede-section .station .main{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+.map-linede-section .station .text{
+    padding: 0.2rem;
+    font-weight: bold;
+}
+
+.map-linede-section .new-station{
+    border: solid 1px rgba(0, 0, 0, 0.1) !important;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.map-linede-section .segments{
+    border: solid 1px rgba(0, 0, 0, 0.3) !important;
+    margin-left: 5px;
+}
+.map-linede-section .segments .segment{
+    background-color: rgba(255, 255, 255, 0.2);
+}
+.map-linede-section .segments .segment:not(:last-child){
+    border-bottom: solid 1px rgba(0, 0, 0, 0.1) !important;
+}
+.map-linede-section .segments .segment .main{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+}
+.map-linede-section .segments .segment .text{
+    padding: 0.2rem;
+}
+.map-linede-section .segments .segment.selected{
+    background-color: rgba(255, 255, 0, 0.2);
+}
+
+.map-linede-section .buttons{
+    padding: 0rem 0.2rem;
+    white-space: nowrap !important;
+}
+.map-linede-section .buttons button{
+    padding: 0rem 0.1rem;
+    margin: 0.05rem;
+    font-size: 0.8rem;
+}
+.map-linede-section .menu{
+    padding: 0.2rem;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    flex-wrap: wrap;
+    border-top: solid 1px rgba(0, 0, 0, 0.1) !important;
+}
+.map-linede-section .menu button{
+    min-width: 40%;
+    margin: 0.1rem;
+    padding: 0rem;
+}
+.map-linede-section .menu label{
+    width: 40%;
+    margin: 0.1rem;
+    padding: 0rem;
+    font-weight: bold;
+}
+.map-linede-section .menu input{
+    width: 40%;
+    margin: 0.1rem;
+    padding: 0rem;
+}
+
+/* Schedule Draft */
+.schdraft-time-input{
+    border-color: rgba(0,0,0,0.1);
+    border-width: 1px;
+    font-size: 0.8rem;
+    width: 5rem;
+    text-align: center;
+    line-height: 1.2rem;
+}
+.schdraft-time-input.depart{
+    font-weight: bold;
+}
+.schdraft-time-input.pass{
+    font-style: italic;
+}
+
+/* Schedule Draft */
+.schdraft-input{
+    display: flex;
+    align-items: stretch;
+}
+.schdraft-input button{
+    border: none;
+    padding: 0;
+    height: 100%;
+}
+.schdraft-input .track button{
+    width: 2rem;
+    overflow-x: hidden;
+    background-color: #fec;
+    font-size: 0.8rem;
+}
+.schdraft-input .track button:hover{
+    background-color: #fda;
+}
+.schdraft-input .pass-toggle-btn{
+    font-size: 0.6rem;
+}
+.schdraft-input .time{
+    width: 5rem;
+}
+.schdraft-input .time-mod button{
+    font-size: 0.7rem;
+    width: 1rem;
+    overflow-x: hidden;
+    background-color: #fff;
+    text-align: center;
+}
+.schdraft-input .time-mod button:hover{
+    background-color: #ddd;
+}
+.schdraft-input .time-delta button{
+    width: 2rem;
+    overflow-x: hidden;
+    background-color: #eff;
+    color: #555;
+    font-size: 0.7rem;
+    font-style: italic;
+}
+.schdraft-input .time-delta button:hover{
+    background-color: #ccc;
+}
