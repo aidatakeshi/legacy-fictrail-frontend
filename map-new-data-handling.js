@@ -19,7 +19,7 @@ exports.loadAll = loadAll;
 /**
  * Lines
  */
-async function loadLines($this, axios){
+async function loadLines($this, axios){ //To be modified, don't use getItems()
     //Line Types
     $this.data_line_types = await $.getItems(axios, "line_types", {
         fields: 'id,name_chi,name_eng,major,color',

@@ -1,5 +1,5 @@
 import axios from 'axios'
 
 export default axios.create({
-    baseURL: "http://directus.crowdedtra.in/",
+    baseURL: "http://hr-api.crowdedtra.in/",
 })

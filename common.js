@@ -2,14 +2,10 @@
 exports.saveToken = function(token){
     localStorage.setItem('access_token', token);
 };
-exports.saveRefreshToken = function(token){
-    localStorage.setItem('refresh_token', token);
-};
 
 //Method to Clear Token from LocalStorage
 exports.clearToken = function(){
     localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
 };
 
 //Method to Obtain Token from LocalStorage
@@ -17,10 +13,6 @@ exports.getToken = function(omitBearer = false){
     var bearer = (omitBearer) ? '' : 'Bearer ';
     var accessToken = localStorage.getItem('access_token');
     return (accessToken == null) ? '' : (bearer + accessToken);
-};
-exports.getRefreshToken = function(){
-    var refreshToken = localStorage.getItem('refresh_token');
-    return (refreshToken == null) ? '' : refreshToken;
 };
 
 //Method to Call API and Return Data
@@ -56,10 +48,6 @@ async function callAPI(axios, APIMethod, APIRoute, data = {}, tokenRequired = tr
     catch (error){
         if (error.response){
             var status = error.response.status;
-            //If status = 401, force logout
-            if (status == 401){
-                window.location = "/logout";
-            }
             //Return Error Data
             var error_data = error.response.data || {};
             error_data.http_status = status;
@@ -85,16 +73,7 @@ function getFields(input){
     return 'id,' + input.join(',');
 }
 
-async function getOneItem(axios, type, id, fields){
-    //Otherwise Call API
-    var response = await callAPI(axios, 'GET', `items/${type}/${encodeURI(id)}`, {
-        fields: getFields(fields),
-    });
-    if (response.http_status != 200) return {};
-    //Return Data
-    return response.data;
-}
-exports.getOneItem = getOneItem;
+//getItems() To be removed after fixing map-new-data-handling
 
 //Get All Items of the Same Collection
 //- options: fields, filter, search, sort, array, limit, page

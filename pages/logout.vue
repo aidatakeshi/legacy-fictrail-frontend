@@ -11,10 +11,7 @@
         },
 
         async mounted(){
-            var rToken = $.getRefreshToken();
-            var response = await $.callAPI(axios, "POST", "auth/logout", {
-                refresh_token: rToken,
-            }, false);
+            var response = await $.callAPI(axios, "POST", "logout", false);
             $.clearToken();
             this.$router.push('/');
         },

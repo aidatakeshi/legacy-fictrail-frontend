@@ -2,7 +2,7 @@
 
     import axios from '~/plugins/axios'
     const $ = require('~/common.js');
-    const menu = require('~/menu.js');
+    const menu = require('~/config.menu.js');
 
     import { BIcon, BIconCaretLeftFill, BIconCaretRightFill } from 'bootstrap-vue'
 
@@ -30,15 +30,12 @@
 
         async mounted(){
             //Verify Myself
-            var response = await $.callAPI(axios, "GET", "users/me", {});
+            var response = await $.callAPI(axios, "GET", "myself", {});
             if (response.http_status >= 400){
                 //4xx error -> force out
                 $.clearToken();
                 return this.$router.push('/');
             }
-            //Refresh token in intervals
-            //this.refreshing = setInterval(this.refreshToken, 600000); //Every 10 minutes
-            //this.refreshToken();
         },
 
         beforeDestroy(){
@@ -46,16 +43,6 @@
         },
 
         methods: {
-            async refreshToken(){
-                var refresh_token = $.getRefreshToken();
-                var response = await $.callAPI(axios, "POST", "auth/refresh", {
-                    refresh_token: refresh_token,
-                });
-                if (response.data){
-                    $.saveToken(response.data.access_token);
-                    $.saveRefreshToken(response.data.refresh_token);
-                }
-            },
         },
 
         computed: {

@@ -14,6 +14,13 @@ h3 small{
     font-size: 60%;
 }
 
+/* Code Display */
+pre {
+    border: solid 1px #ccc;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+}
+
 /* My Table */
 
 .my-table th{

@@ -2,7 +2,7 @@
 
     import axios from '~/plugins/axios'
     const $ = require('~/common.js');
-    const menu = require('~/menu.js');
+    const menu = require('~/config.menu.js');
 
     export default {
 
