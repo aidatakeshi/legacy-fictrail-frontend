@@ -1,0 +1,67 @@
+<script>
+import axios from '~/plugins/axios'
+const $ = require('~/common.js');
+
+export default {
+    props: {
+        value: null,
+        stationId: null,
+        nullable: Boolean,
+        size: null,
+    },
+    data() {
+        return {
+            options: [],
+            selected: null,
+        };
+    },
+    watch: {
+        value(){
+            this.selected = this.value ? this.value : null;
+        },
+        lineId(){
+            this.updateOptions();
+            this.selected = null;
+            this.$emit('input', this.selected);
+        },
+    },
+    mounted(){
+        this.updateOptions();
+    },
+    methods:{
+        async updateOptions(){
+            //Null Option
+            if (this.nullable){
+                var options = [{ value: null, text: '-- 不設定 --' }];
+            }else{
+                var options = [{ value: null, text: '-- 請選擇 --', disabled: true }];
+            }
+
+            //Call API
+            var response = await $.callAPI(axios, 'GET', 'station/'+this.stationId+'/lines?from_selecter=1');
+            if (response.http_response >= 400) return false;
+            var result = response.data;
+            for (var i in result){
+                options.push({
+                    value: result[i].line_id,
+                    text: `${result[i].name_chi} [${result[i].name_eng}]`,
+                });
+            }
+            //Output Options
+            this.options = options;
+            //Selected
+            this.selected = this.value ? this.value : null;
+        },
+    },
+}
+</script>
+
+<template>
+    <div>
+        <b-form-select v-model="selected" :options="options" :size="size"
+            @input="$emit('input', selected); $emit('focus');"
+            @change="$emit('change', selected)"
+            @focus="$emit('focus')"
+        ></b-form-select>
+    </div>
+</template>

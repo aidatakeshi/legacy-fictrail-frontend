@@ -4,9 +4,6 @@
     const $ = require('~/common.js');
 
     export default {
-    components: {
-    },
-
         layout: "dashboard",
 
         data() {
@@ -34,7 +31,9 @@
                 selectItem2: {
                     operatorType: null,
                     operator: null,
-                }
+                },
+                selectStationOfLine: null,
+                selectLineOfStation: null,
             }
         },
 
@@ -51,7 +50,8 @@
 
 <template>
     <div class="my-4">
-        <h1>Test Components</h1>
+
+        <h1>Test Components 1</h1>
 
         <h2>select-item</h2>
 
@@ -172,5 +172,30 @@
             </div>
 
         </b-card>
+
+        <h2>select-station-of-line</h2>
+
+        <b-card>
+            <div class="row">
+                <div class="col-sm-6">
+                    <select-station-of-line v-model="selectStationOfLine"
+                    line-id="008e934b-110d-46a0-ad65-196cbc0acf0b" />
+                    Selected: {{selectStationOfLine}}
+                </div>
+            </div>
+        </b-card>
+
+        <h2>select-line-of-station</h2>
+
+        <b-card>
+            <div class="row">
+                <div class="col-sm-6">
+                    <select-line-of-station v-model="selectLineOfStation"
+                    station-id="369864db-f29a-40c8-84dd-c8eca786c66b" />
+                    Selected: {{selectLineOfStation}}
+                </div>
+            </div>
+        </b-card>
+
     </div>
 </template>

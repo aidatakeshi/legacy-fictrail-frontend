@@ -1,5 +1,6 @@
 import axios from 'axios'
+const env = require('~/config.js');
 
 export default axios.create({
-    baseURL: "http://hr-api.crowdedtra.in/",
+    baseURL: env.API_BASE_URL,
 })

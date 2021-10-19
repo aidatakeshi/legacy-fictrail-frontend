@@ -46,8 +46,19 @@ pre {
 .my-table .left-header{
     background-color: #f8f8f8 !important;
 }
+.my-table .col-button{
+    width: 1rem;
+}
+.my-table .color{
+    width: 1rem;
+}
 .my-table .warning{
     color: red;
+}
+.my-table .name{
+    font-weight: bold;
+    line-height: 1rem;
+    background-color: rgba(0, 0, 0, 0.02);
 }
 .my-table .remarks{
     min-width: 10rem;
@@ -55,19 +66,6 @@ pre {
     font-size: 0.8rem;
     white-space: pre-line;
 }
-.my-table .remarks-small{
-    min-width: 10rem;
-    text-align: left;
-    font-size: 0.75rem;
-    line-height: 1rem;
-    white-space: pre-line;
-}
-@media only screen and (max-width: 1200px) {
-    .my-table .remarks-small{
-        min-width: 15rem;
-    }
-}
-
 .my-table .small{
     text-align: left;
     font-size: 0.8rem;

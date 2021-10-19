@@ -1,4 +1,9 @@
 <script>
+
+/**
+ * Select Item (Generic Use)
+ */
+
 import axios from '~/plugins/axios'
 const $ = require('~/common.js');
 const config = require('~/config.select-item.js');
@@ -9,6 +14,7 @@ export default {
         type: null,
         nullable: Boolean,
         filter: null,
+        size: null,
     },
     data() {
         return {
@@ -23,6 +29,7 @@ export default {
         filter(){
             this.updateOptions();
             this.selected = null;
+            this.$emit('input', this.selected);
         },
     },
     mounted(){
@@ -38,7 +45,7 @@ export default {
             }
 
             //Content Option
-            var configOfItem = config.itemTypes[this.type];
+            var configOfItem = config.data[this.type];
             if (!configOfItem) return false;
 
             //If filter is required but no filter query, halt
@@ -63,7 +70,7 @@ export default {
                 for (var i in result){
                     var value = result[i].id;
                     var label = result[i][configOfItem.display];
-                    if (configOfItem.display2) label += ` (${result[i][configOfItem.display2]})`
+                    if (configOfItem.display2) label += ` [${result[i][configOfItem.display2]}]`
                     options.push({ value: value, text: label });
                 }
             }
@@ -74,19 +81,20 @@ export default {
                     if (!sub_result.length) continue;
                     var value = result[i].id;
                     var label = result[i][configOfItem.display];
-                    if (configOfItem.display2) label += ` (${result[i][configOfItem.display2]})`
+                    if (configOfItem.display2) label += ` [${result[i][configOfItem.display2]}]`
                     options.push({ text: `【${label}】`, disabled: true});
                     for (var i in sub_result){
                         var value = sub_result[i].id;
                         var label = sub_result[i][configOfItem.display_sub];
-                        if (configOfItem.display_sub2) label += ` (${sub_result[i][configOfItem.display_sub2]})`
+                        if (configOfItem.display_sub2) label += ` [${sub_result[i][configOfItem.display_sub2]}]`
                         options.push({ value: value, text: label });
                     }
                 }
             }
-
             //Output Options
             this.options = options;
+            //Selected
+            this.selected = this.value ? this.value : null;
         },
     },
 }
@@ -94,8 +102,10 @@ export default {
 
 <template>
     <div>
-        <b-form-select v-model="selected" :options="options"
+        <b-form-select v-model="selected" :options="options" :size="size"
             @input="$emit('input', selected); $emit('focus');"
+            @change="$emit('change', selected)"
+            @focus="$emit('focus')"
         ></b-form-select>
     </div>
 </template>

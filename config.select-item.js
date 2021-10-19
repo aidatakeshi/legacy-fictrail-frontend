@@ -1,4 +1,4 @@
-exports.itemTypes = {
+exports.data = {
     /**
      * Operator
      */
@@ -91,7 +91,6 @@ exports.itemTypes = {
     "train_name": {
         api_call: "train_type",
         display: "name_chi",
-        display2: "id",
         api_query: "more",
         api_sub: "trainNames",
         display_sub: "name_chi",

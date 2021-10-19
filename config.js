@@ -1,0 +1,1 @@
+exports.API_BASE_URL = "http://hr-api.crowdedtra.in";
