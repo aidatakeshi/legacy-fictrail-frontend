@@ -71,6 +71,9 @@ exports.data = {
             {label: 'Sort', field: 'sort', format: 'number'},
             {label: '備註', field: 'remarks', format: 'remarks'},
         ],
+        default: {
+            'major': false,
+        },
     },
     "line_group": {
         editor: [
@@ -102,6 +105,7 @@ exports.data = {
      */
     "station": {
         editor: [
+            {label: 'ID', field: 'id', format: 'id'},
             {label: '營運者', field: 'operator_id', format: 'select', select_type: 'operator'},
             {label: '地區', field: 'prefecture_id', format: 'select', select_type: 'prefecture'},
             {label: '名稱 (中文)', field: 'name_chi'},
@@ -128,12 +132,30 @@ exports.data = {
      */
     "train_type": {
         editor: [
-            
+            {label: 'ID', field: 'id', format: 'id'},
+            {label: '營運者', field: 'operator_id', format: 'select', select_type: 'operator', nullable: true},
+            {label: '名稱 (中文)', field: 'name_chi'},
+            {label: '名稱 (Eng)', field: 'name_eng'},
+            {label: '簡稱 (中文)', field: 'name_chi_short'},
+            {label: '簡稱 (Eng)', field: 'name_eng_short'},
+            {label: '代表色彩', field: 'color', format: 'color'},
+            {label: '文字色彩', field: 'color_text', format: 'color'},
+            {label: '有料', field: 'is_premium', format: 'boolean'},
+            {label: 'Sort', field: 'sort', format: 'number'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
         ],
     },
     "train_name": {
         editor: [
-
+            {label: 'ID', field: 'id', format: 'id'},
+            {label: '列車種別', field: 'train_type_id', format: 'select', select_type: 'train_type'},
+            {label: '主要營運者', field: 'major_operator_id', format: 'select', select_type: 'operator', nullable: true},  
+            {label: '名稱 (中文)', field: 'name_chi'},
+            {label: '名稱 (Eng)', field: 'name_eng'},
+            {label: '代表色彩', field: 'color', format: 'color'},
+            {label: '文字色彩', field: 'color_text', format: 'color'},
+            {label: '最高速度', field: 'max_speed_kph', format: 'number'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
         ],
     },
 
@@ -142,13 +164,14 @@ exports.data = {
      */
     "vehicle_performance_group": {
         editor: [
-
+            {label: 'ID', field: 'id', format: 'id'},
+            {label: '標題', field: 'name_chi'},
+            {label: 'Sort', field: 'sort', format: 'number'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
         ],
     },
     "vehicle_performance_item": {
-        editor: [
-
-        ],
+        //Use Dedicated Editor
     },
 
 };

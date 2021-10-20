@@ -83,19 +83,19 @@ pre {
         font-size: 0.8rem;
     }
     .my-table th{
-        padding: 0.2rem !important;
+        padding: 0.1rem !important;
     }
     .my-table td{
-        padding: 0.2rem !important;
+        padding: 0.1rem !important;
     }
 }
 
 @media only screen and (min-width: 801px) {
     .my-table th{
-        padding: 0.3rem !important;
+        padding: 0.2rem !important;
     }
     .my-table td{
-        padding: 0.3rem !important;
+        padding: 0.2rem !important;
     }
 }
 

@@ -11,20 +11,17 @@ exports.menu = [
         {'href': "/lines", 'text': "路線"},
         {'href': "/lines/groups", 'text': "路線組合"},
         {'href': "/lines/types", 'text': "路線類別"},
-        {'href': "/lines/stats", 'text': "HR的路線統計"},
+        {'href': "/lines/stats-hr", 'text': "HR的路線統計"},
     ]},
     {'href': "/stations", 'text': "車站"},
-    {'href': "/trains/types", 'text': "列車", 'sub': [
+    {'href': "/trains/types", 'text': "列車/車輛", 'sub': [
         {'href': "/trains/types", 'text': "列車種別"},
         {'href': "/trains/names", 'text': "列車名稱"},
-    ]},
-    {'href': "/vehicle-performances", 'text': "車輛", 'sub': [
         {'href': "/vehicle-performances", 'text': "車輛性能"},
-        {'href': "/vehicle-performances/groups", 'text': "車輛性能類別"},
     ]},
-    {'href': "/fares/hr", 'text': "票價", 'sub': [
+    /*{'href': "/fares/hr", 'text': "票價", 'sub': [
         {'href': "/fares/hr", 'text': "HR票價"},
-    ]},
+    ]},*/
     {'href': "/map", 'text': "地圖編輯"},
     {'text': "時刻表", 'sub': [
         {'href': "/schdraft", 'text': "時刻表編輯"},

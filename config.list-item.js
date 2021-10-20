@@ -122,12 +122,23 @@ exports.data = {
      */
     "vehicle_performance_group": {
         list: [
-
+            {label: '標題', field: 'name_chi', format: 'link', url: '/vehicle-performances/'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
+            {label: 'ID', field: 'id', format: 'id'},
+            {label: 'Sort', field: 'sort', format: 'sort'},
         ],
     },
     "vehicle_performance_item": {
         list: [
-
+            {label: '', format: 's_vehicle_performance_graph'},
+            {label: '標題', field: 'name_chi', format: 'name'},
+            {label: '最高速度', field: 'max_speed_kph', format: 'number', unit: 'km/h', decimals: 0},
+            {label: '起動加速', field: 'max_accel_kph_s', format: 'number', unit: 'km/h/s', decimals: 1},
+            {label: '動力比例', field: 'motor_ratio', format: 'number', unit: '%', decimals: 1},
+            {label: '定格出力', field: 'motor_rated_kw', format: 'number', unit: 'kW', decimals: 0},
+            {label: '備註', field: 'remarks', format: 'remarks'},
+            {label: 'ID', field: 'id', format: 'id'},
+            {label: '', format: 's_vehicle_performance_duplicate'},
         ],
     },
 

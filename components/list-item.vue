@@ -9,11 +9,11 @@ const $ = require('~/common.js');
 const config = require('~/config.list-item.js');
 const env = require('~/config.js');
 
-import { BIcon, BIconPen, BIconX, BIconCheck } from 'bootstrap-vue'
+import { BIcon, BIconPen, BIconX, BIconCheck, BIconLayers, BIconGraphDown, BIconTrash } from 'bootstrap-vue'
 
 export default {
     components:{
-        BIcon, BIconPen, BIconX, BIconCheck,
+        BIcon, BIconPen, BIconX, BIconCheck, BIconLayers, BIconGraphDown, BIconTrash,
     },
     props: {
         type: null,
@@ -152,8 +152,12 @@ export default {
                         </td>
                         <!----------------------->
                         <template v-for="(listConfig, i) in configOfList">
+                            <!-- "remarks" -->
+                            <td :key="i" v-if="listConfig.format == 'remarks'" class="remarks"><!---
+                            --->{{item[listConfig.field]}}<!---
+                        ---></td>
                             <!-- "name" -->
-                            <td :key="i" v-if="listConfig.format == 'name'" class="name">
+                            <td :key="i" v-else-if="listConfig.format == 'name'" class="name">
                                 {{item[listConfig.field]}}
                                 <small v-if="listConfig.field_bracket">
                                     ({{item[listConfig.field_bracket]}})
@@ -168,10 +172,12 @@ export default {
                                     </small>
                                 </template>
                             </td>
-                            <!-- "remarks" -->
-                            <td :key="i" v-else-if="listConfig.format == 'remarks'" class="remarks"><!---
-                            --->{{item[listConfig.field]}}<!---
-                        ---></td>
+                            <!-- "link" -->
+                            <td :key="i" v-else-if="listConfig.format == 'link'" class="name">
+                                <nuxt-link :to="listConfig.url + item.id">
+                                    {{item[listConfig.field]}}
+                                </nuxt-link>
+                            </td>
                             <!-- "id" -->
                             <td :key="i" v-else-if="listConfig.format == 'id'">
                                 <b-badge>{{item[listConfig.field]}}</b-badge>
@@ -211,6 +217,20 @@ export default {
                                 </b-button>
                                 <span v-else>-</span>
                             </td>
+                            <!-- "s_vehicle_performance_graph" -->
+                            <td :key="i" v-else-if="listConfig.format == 's_vehicle_performance_graph'">
+                                <b-button variant="outline-secondary" class="px-2 py-1" v-if="item.has_calc_results"
+                                @click="$emit('view-graph', item.id)">
+                                    <b-icon-graph-down />
+                                </b-button>
+                            </td>
+                            <!-- "s_vehicle_performance_duplicate" -->
+                            <td :key="i" v-else-if="listConfig.format == 's_vehicle_performance_duplicate'">
+                                <b-button variant="outline-info" class="px-2 py-1"
+                                @click="$emit('duplicate', item.id)">
+                                    <b-icon-layers />
+                                </b-button>
+                            </td>
                             <!-- Default -->
                             <td :key="i" v-else>
                                 {{item[listConfig.field]}}
@@ -220,7 +240,7 @@ export default {
                         <!-- Delete Button -->
                         <td class="buttons">
                             <b-button variant="outline-danger">
-                                <b-icon-x scale="1.5" @click="removeItem(item.id)" />
+                                <b-icon-trash @click="removeItem(item.id)" />
                             </b-button>
                         </td>
                         <!----------------------->
