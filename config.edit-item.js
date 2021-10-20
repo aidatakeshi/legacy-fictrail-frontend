@@ -102,8 +102,25 @@ exports.data = {
      */
     "station": {
         editor: [
-            
+            {label: '營運者', field: 'operator_id', format: 'select', select_type: 'operator'},
+            {label: '地區', field: 'prefecture_id', format: 'select', select_type: 'prefecture'},
+            {label: '名稱 (中文)', field: 'name_chi'},
+            {label: '名稱 (Eng)', field: 'name_eng'},
+            {label: '主要車站', field: 'major', format: 'boolean'},
+            {label: '海拔 (m)', field: 'height_m', format: 'number'},
+            {label: '信號所', field: 'is_signal_only', format: 'boolean'},
+            {label: '已廢止', field: 'is_abandoned', format: 'boolean'},
+            {label: '月台/軌道編號', field: 'tracks', format: 's_station_track_number'},
+            {label: '軌道相交點 (時刻表用)', field: 'track_cross_points', format: 's_station_track_cross_points'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
         ],
+        default: {
+            'major': false,
+            'is_signal_only': false,
+            'is_abandoned': false,
+            'tracks': ['1', '2'],
+            'track_cross_points': [],
+        },
     },
 
     /**
@@ -111,7 +128,7 @@ exports.data = {
      */
     "train_type": {
         editor: [
-
+            
         ],
     },
     "train_name": {

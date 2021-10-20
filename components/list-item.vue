@@ -123,7 +123,7 @@ export default {
         <div class="table-responsive">
 
             <!-- Pagination -->
-            <div v-if="page" class="d-flex justify-content-between align-items-center flex-wrap">
+            <div v-if="limit_b" class="d-flex justify-content-between align-items-center flex-wrap">
                 <div class="my-2" @click="jumpToPage()"><strong>共有{{count}}項結果：</strong></div>
                 <b-pagination v-model="page" :total-rows="count" :per-page="limit_b" v-if="count > limit_b"
                     first-number last-number
@@ -152,7 +152,7 @@ export default {
                         </td>
                         <!----------------------->
                         <template v-for="(listConfig, i) in configOfList">
-                            <!-- Name -->
+                            <!-- "name" -->
                             <td :key="i" v-if="listConfig.format == 'name'" class="name">
                                 {{item[listConfig.field]}}
                                 <small v-if="listConfig.field_bracket">
@@ -168,25 +168,25 @@ export default {
                                     </small>
                                 </template>
                             </td>
-                            <!-- Remarks -->
+                            <!-- "remarks" -->
                             <td :key="i" v-else-if="listConfig.format == 'remarks'" class="remarks"><!---
                             --->{{item[listConfig.field]}}<!---
                         ---></td>
-                            <!-- ID -->
+                            <!-- "id" -->
                             <td :key="i" v-else-if="listConfig.format == 'id'">
                                 <b-badge>{{item[listConfig.field]}}</b-badge>
                             </td>
-                            <!-- Color -->
+                            <!-- "color" -->
                             <td :key="i" v-else-if="listConfig.format == 'color'" class="color">
                                 <color-box :color="item[listConfig.field]"></color-box>
                             </td>
-                            <!-- Image -->
+                            <!-- "image" -->
                             <td :key="i" v-else-if="listConfig.format == 'image'">
                                 <img v-if="item[listConfig.field]"
                                 :src="image_url(item[listConfig.field])"
                                 :style="image_style(listConfig)" />
                             </td>
-                            <!--Boolean -->
+                            <!-- "boolean" -->
                             <td :key="i" v-else-if="listConfig.format == 'boolean'">
                                 <span class="text-success" v-if="item[listConfig.field]">
                                     <b-icon-check scale="1.5" />
@@ -195,10 +195,21 @@ export default {
                                     <b-icon-x scale="1.5" />
                                 </span>
                             </td>
-                            <!--Number -->
+                            <!-- "number" -->
                             <td :key="i" v-else-if="listConfig.format == 'number'">
-                                {{decimals(item[listConfig.field], listConfig.decimals)}}
-                                <small v-if="listConfig.unit">{{listConfig.unit}}</small>
+                                <template v-if="item[listConfig.field]">
+                                    {{decimals(item[listConfig.field], listConfig.decimals)}}
+                                    <small v-if="listConfig.unit">{{listConfig.unit}}</small>
+                                </template>
+                                <template v-else>-</template>
+                            </td>
+                            <!-- "s_line_station_count" -->
+                            <td :key="i" v-else-if="listConfig.format == 's_line_station_count'">
+                                <b-button variant="outline-secondary" class="px-2 py-1" style="min-width: 2em;"
+                                @click="$emit('view-line', item.id)" v-if="item[listConfig.field]">
+                                    {{item[listConfig.field]}}
+                                </b-button>
+                                <span v-else>-</span>
                             </td>
                             <!-- Default -->
                             <td :key="i" v-else>
@@ -219,7 +230,7 @@ export default {
             </table>
 
             <!-- Another Pagination -->
-            <div v-if="page" class="d-flex justify-content-between align-items-center flex-wrap">
+            <div v-if="limit_b" class="d-flex justify-content-between align-items-center flex-wrap">
                 <div class="my-2"></div>
                 <b-pagination v-model="page" :total-rows="count" :per-page="limit_b" v-if="count > limit_b"
                     first-number last-number

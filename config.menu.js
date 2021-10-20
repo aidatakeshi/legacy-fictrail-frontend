@@ -14,9 +14,9 @@ exports.menu = [
         {'href': "/lines/stats", 'text': "HR的路線統計"},
     ]},
     {'href': "/stations", 'text': "車站"},
-    {'href': "/train-types", 'text': "列車", 'sub': [
-        {'href': "/train-types", 'text': "列車種別"},
-        {'href': "/train-names", 'text': "列車名稱"},
+    {'href': "/trains/types", 'text': "列車", 'sub': [
+        {'href': "/trains/types", 'text': "列車種別"},
+        {'href': "/trains/names", 'text': "列車名稱"},
     ]},
     {'href': "/vehicle-performances", 'text': "車輛", 'sub': [
         {'href': "/vehicle-performances", 'text': "車輛性能"},

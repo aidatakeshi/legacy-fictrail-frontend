@@ -25,7 +25,7 @@
 
         methods: {
             async loadData(){
-                var response = await $.callAPI(axios, 'GET', 'items/line_types?list=1', this.query);
+                var response = await $.callAPI(axios, 'GET', 'items/line_types?more=1&list=1', this.query);
                 if (response.http_response >= 400) return false;
                 this.data = response.data;
                 this.trigger++;
@@ -36,6 +36,9 @@
             showNew(data){
                 this.$refs.edit_modal.showNew(data);
             },
+            viewLine(id){
+                this.$refs.line_station_modal.show(id);
+            }
         },
 
     }
@@ -91,7 +94,7 @@
                 <h2>{{line_type.name_chi}}</h2>
 
                 <list-item type="line" :data="line_type.lines" :trigger="trigger"
-                    @change="loadData" @edit="showEdit"
+                    @change="loadData" @edit="showEdit" @view-line="viewLine"
                 />
 
                 <button-new @click="showNew({line_type_id: line_type.id})" />
@@ -101,6 +104,9 @@
 
         <!-- Edit Modal -->
         <edit-item ref="edit_modal" type="line" @change="loadData" />
+
+        <!-- Line-Station Modal -->
+        <edit-line-stations ref="line_station_modal" />
 
     </div>
 </template>

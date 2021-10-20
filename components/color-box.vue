@@ -10,7 +10,7 @@ export default {
 </script>
 
 <template>
-    <div class="color-box" :style="{backgroundColor: color}">
+    <div class="color-box" :style="{backgroundColor: color}" v-if="color !== null">
     </div>
 </template>
 

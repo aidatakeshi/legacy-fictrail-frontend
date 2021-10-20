@@ -26,7 +26,6 @@ export default {
             editorConfig: [],
             dataDefault: {},
             editing_failed: false,
-            trigger: 0,
         };
     },
     watch: {
@@ -99,59 +98,93 @@ export default {
 
 <template>
     <div>
-        <b-modal ref="_modal" centered scrollable hide-footer
+        <b-modal ref="_modal" centered scrollable hide-footer size="md"
         :title="isNew ? '新增項目' : '編輯項目'">
 
             <div class="row" v-for="(editorField, i) in editorConfig" :key="i">
-                <!-- Label -->
-                <div class="col-sm-4">
-                    <strong>{{editorField.label}}</strong>
-                </div>
                 <!-- format: id -->
                 <template v-if="editorField.format == 'id'">
+                    <div class="col-sm-4"><strong>{{editorField.label}}</strong></div>
                     <div class="col-sm-8">
                         <b-form-input type="text" v-model="data$[editorField.field]" size="sm"
                         @focus="editing_failed = false" :disabled="!isNew" />
                     </div>
                 </template>
-                <!-- format: remarks -->
-                <div class="col-sm-12" v-else-if="editorField.format == 'remarks'">
-                    <b-form-textarea v-model="data$[editorField.field]" size="sm" rows="5"
-                    @focus="editing_failed = false" />
-                </div>
                 <!-- format: number -->
-                <div class="col-sm-8" v-else-if="editorField.format == 'number'">
-                    <b-form-input type="number" v-model="data$[editorField.field]" size="sm"
-                    @focus="editing_failed = false" />
-                </div>
+                <template v-else-if="editorField.format == 'number'">
+                    <div class="col-sm-4"><strong>{{editorField.label}}</strong></div>
+                    <div class="col-sm-8">
+                        <b-form-input type="number" v-model="data$[editorField.field]" size="sm"
+                        @focus="editing_failed = false" />
+                    </div>
+                </template>
                 <!-- format: boolean -->
-                <div class="col-sm-8" v-else-if="editorField.format == 'boolean'">
-                    <b-checkbox switch v-model="data$[editorField.field]" class="my-1"
-                    @focus="editing_failed = false" />
-                </div>
+                <template v-else-if="editorField.format == 'boolean'">
+                    <div class="col-sm-4"><strong>{{editorField.label}}</strong></div>
+                    <div class="col-sm-8">
+                        <b-checkbox switch v-model="data$[editorField.field]" class="my-1"
+                        @focus="editing_failed = false" />
+                    </div>
+                </template>
                 <!-- format: select -->
-                <div class="col-sm-8" v-else-if="editorField.format == 'select'">
-                    <select-item v-model="data$[editorField.field]" :type="editorField.select_type" size="sm"
-                    :nullable="editorField.nullable" @focus="editing_failed = false" />
-                </div>
+                <template v-else-if="editorField.format == 'select'">
+                    <div class="col-sm-4"><strong>{{editorField.label}}</strong></div>
+                    <div class="col-sm-8">
+                        <select-item v-model="data$[editorField.field]" :type="editorField.select_type" size="sm"
+                        :nullable="editorField.nullable" @focus="editing_failed = false" />
+                    </div>
+                </template>
                 <!-- format: image -->
-                <div class="col-sm-8" v-else-if="editorField.format == 'image'">
-                    <select-image v-model="data$[editorField.field]"
-                    :width="editorField.width" :height="editorField.height"
-                    @focus="editing_failed = false" />
-                </div>
+                <template v-else-if="editorField.format == 'image'">
+                    <div class="col-sm-4"><strong>{{editorField.label}}</strong></div>
+                    <div class="col-sm-8">
+                        <select-image v-model="data$[editorField.field]"
+                        :width="editorField.width" :height="editorField.height"
+                        @focus="editing_failed = false" />
+                    </div>
+                </template>
                 <!-- format: color -->
-                <div class="col-sm-8 d-flex" v-else-if="editorField.format == 'color'">
-                    <b-form-input type="color" v-model="data$[editorField.field]" size="sm"
-                    @focus="editing_failed = false" @input="$forceUpdate()" />
-                    <b-form-input type="text" v-model="data$[editorField.field]" size="sm"
-                    @focus="editing_failed = false" @input="$forceUpdate()" />
-                </div>
+                <template v-else-if="editorField.format == 'color'">
+                    <div class="col-sm-4"><strong>{{editorField.label}}</strong></div>
+                    <div class="col-sm-8 d-flex">
+                        <b-form-input type="color" v-model="data$[editorField.field]" size="sm"
+                        @focus="editing_failed = false" @input="$forceUpdate()" />
+                        <b-form-input type="text" v-model="data$[editorField.field]" size="sm"
+                        @focus="editing_failed = false" @input="$forceUpdate()" />
+                    </div>
+                </template>
+                <!-- format: remarks -->
+                <template v-else-if="editorField.format == 'remarks'">
+                    <div class="col-sm-12">
+                        <strong>{{editorField.label}}</strong>
+                        <b-form-textarea v-model="data$[editorField.field]" size="sm" rows="5"
+                        @focus="editing_failed = false" />
+                    </div>
+                </template>
+                <!-- For Station: s_station_track_number -->
+                <template v-else-if="editorField.format == 's_station_track_number'">
+                    <div class="col-sm-12">
+                        <strong>{{editorField.label}}</strong>
+                        <input-track-number v-model="data$[editorField.field]"
+                        @focus="editing_failed = false" />
+                    </div>
+                </template>
+                <!-- For Station: s_station_track_cross_points -->
+                <template v-else-if="editorField.format == 's_station_track_cross_points'">
+                    <div class="col-sm-12">
+                        <strong>{{editorField.label}}</strong>
+                        <input-track-cross-points v-model="data$[editorField.field]"
+                        @focus="editing_failed = false" />
+                    </div>
+                </template>
                 <!-- default format -->
-                <div class="col-sm-8" v-else>
-                    <b-form-input type="text" v-model="data$[editorField.field]" size="sm"
-                    @focus="editing_failed = false" />
-                </div>
+                <template v-else>
+                    <div class="col-sm-4"><strong>{{editorField.label}}</strong></div>
+                    <div class="col-sm-8 d-flex">
+                        <b-form-input type="text" v-model="data$[editorField.field]" size="sm"
+                        @focus="editing_failed = false" />
+                    </div>
+                </template>
                 <!---------------------------------------->
             </div>
 

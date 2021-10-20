@@ -39,6 +39,10 @@ pre {
 .my-table button{
     padding: 0 0.2em !important;
 }
+.my-table .break-word{
+    white-space: normal !important;
+    word-break: break-all !important;
+}
 .my-table .subheader{
     color: white !important;
     background-color: #333 !important;

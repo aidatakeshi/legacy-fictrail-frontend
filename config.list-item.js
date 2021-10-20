@@ -67,6 +67,7 @@ exports.data = {
             {label: '營運者', field: 'operator_name_chi', field_sub: 'operator_name_eng', format: 'name'},
             {label: '', field: 'color', format: 'color'},
             {label: '名稱', field: 'name_chi', field_sub: 'name_eng', field_sub_bracket: 'name_eng_short', format: 'name'},
+            {label: '車站', field: 'station_count', format: 's_line_station_count'},
             {label: '長度', field: 'length_km', format: 'number', decimals: 1, unit: 'km'},
             {label: '最高速度', field: 'max_speed_kph', format: 'number', unit: 'km/h'},
             {label: '備註', field: 'remarks', format: 'remarks'},
@@ -95,12 +96,24 @@ exports.data = {
      */
     "train_type": {
         list: [
-
+            {label: '', field: 'operator_color', format: 'color'},
+            {label: '營運者', field: 'operator_name_chi', field_sub: 'operator_name_eng', format: 'name'},
+            {label: '', field: 'color', format: 'color'},
+            {label: '名稱', field: 'name_chi', field_sub: 'name_eng', field_bracket: 'name_chi_short', field_sub_bracket: 'name_eng_short', format: 'name'},
+            {label: '有料', field: 'is_premium', format: 'boolean'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
+            {label: 'ID', field: 'id', format: 'id'},
+            {label: 'Sort', field: 'sort', format: 'sort'},
         ],
     },
     "train_name": {
         list: [
-
+            {label: '主要', field: 'major_operator_color', format: 'color'},
+            {label: '營運者', field: 'major_operator_name_chi', field_sub: 'major_operator_name_eng', format: 'name'},
+            {label: '', field: 'color', format: 'color'},
+            {label: '名稱', field: 'name_chi', field_sub: 'name_eng', format: 'name'},
+            {label: '最高速度', field: 'max_speed_kph', format: 'number', unit: 'km/h'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
         ],
     },
 

@@ -11,6 +11,9 @@
             return {
                 data: [],
                 trigger: 0,
+                query: {
+                    major_operator_id: null,
+                },
             }
         },
 
@@ -20,7 +23,7 @@
 
         methods: {
             async loadData(){
-                var response = await $.callAPI(axios, 'GET', 'items/prefecture_area?more=1', {});
+                var response = await $.callAPI(axios, 'GET', 'items/train_types?more=1&list=1', this.query);
                 if (response.http_response >= 400) return false;
                 this.data = response.data;
                 this.trigger++;
@@ -39,36 +42,45 @@
 
 <template>
     <div class="my-4">
-        <h1>都府縣省</h1>
+        <h1>列車名稱</h1>
 
         <!-- Breadcrumb -->
         <div class="mt-2">
             <b-breadcrumb>
-                <b-breadcrumb-item to="/prefectures" active>都府縣省</b-breadcrumb-item>
-                <b-breadcrumb-item to="/prefectures/areas">廣域地區</b-breadcrumb-item>
+                <b-breadcrumb-item to="/trains/types">列車種別</b-breadcrumb-item>
+                <b-breadcrumb-item to="/trains/names" active>列車名稱</b-breadcrumb-item>
             </b-breadcrumb>
         </div>
+
+        <!-- Filter -->
+        <b-card body-class="row">
+            <div class="col-sm-6 col-md-4">
+                <strong>主要營運者</strong>
+                <select-item type="operator" v-model="query.major_operator_id" nullable
+                size="sm" @change="loadData" />
+            </div>
+        </b-card>
 
         <!-- Create New -->
         <button-new @click="showNew()" />
 
         <!-- Content -->
-        <template v-for="area in data">
-            <div :key="area.id" v-if="area.prefectures.length">
+        <template v-for="train_type in data">
+            <div :key="train_type.id" v-if="train_type.trainNames.length">
 
-                <h2>{{area.name_chi}}</h2>
+                <h2>{{train_type.name_chi}}</h2>
 
-                <list-item type="prefecture" :data="area.prefectures" :trigger="trigger"
+                <list-item type="train_name" :data="train_type.trainNames" :trigger="trigger"
                     @change="loadData" @edit="showEdit"
                 />
 
-                <button-new @click="showNew({area_id: area.id})" />
+                <button-new @click="showNew({train_type_id: train_type.id})" />
 
             </div>
         </template>
 
         <!-- Edit Modal -->
-        <edit-item ref="edit_modal" type="prefecture" @change="loadData" />
+        <edit-item ref="edit_modal" type="train_name" @change="loadData" />
 
     </div>
 </template>

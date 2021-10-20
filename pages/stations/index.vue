@@ -9,8 +9,7 @@
 
         data() {
             return {
-                triggerList: 0,
-                triggerEdit: 0,
+                trigger: 0,
                 query: {
                     sort: 'name_eng',
                     operator_id: null,
@@ -44,7 +43,7 @@
         <b-card body-class="row">
             <div class="col-sm-6 col-lg-3">
                 <strong>排序方式</strong>
-                <b-form-select v-model="query.sort" size="sm" @change="triggerList++">
+                <b-form-select v-model="query.sort" size="sm" @change="trigger++">
                     <b-form-select-option value="name_eng">英文名稱 (順序)</b-form-select-option>
                     <b-form-select-option value="-name_eng">英文名稱 (倒序)</b-form-select-option>
                     <b-form-select-option value="operator_id">營運者 (順序)</b-form-select-option>
@@ -56,16 +55,16 @@
             <div class="col-sm-6 col-lg-3">
                 <strong>營運者</strong>
                 <select-item type="operator" v-model="query.operator_id" nullable
-                size="sm" @change="triggerList++" />
+                size="sm" @change="trigger++" />
             </div>
             <div class="col-sm-6 col-lg-3">
                 <strong>地區</strong>
                 <select-item type="prefecture" v-model="query.prefecture_id" nullable
-                size="sm" @change="triggerList++" />
+                size="sm" @change="trigger++" />
             </div>
             <div class="col-sm-6 col-lg-3">
                 <strong>名稱</strong>
-                <b-form-input type="text" v-model="query.name" size="sm" @change="triggerList++" />
+                <b-form-input type="text" v-model="query.name" size="sm" @change="trigger++" />
             </div>
         </b-card>
 
@@ -74,7 +73,7 @@
 
         <!-- Content -->
         <div class="my-2">
-            <list-item type="station" :trigger="triggerList"
+            <list-item type="station" :trigger="trigger"
             :query="{'list': '1'}" :query2="query" @edit="showEdit" />
         </div>
 
@@ -82,7 +81,7 @@
         <button-new @click="showNew()" />
 
         <!-- Edit Modal -->
-        <edit-item ref="edit_modal" type="station" @change="triggerList++" :trigger="triggerEdit" />
+        <edit-item ref="edit_modal" type="station" @change="trigger++" />
 
     </div>
 </template>

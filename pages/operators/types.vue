@@ -9,7 +9,7 @@
 
         data() {
             return {
-                data: null,
+                data: [],
                 trigger: 0,
             }
         },
