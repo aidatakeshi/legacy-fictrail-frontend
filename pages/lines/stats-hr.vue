@@ -33,6 +33,17 @@
 
         <h1 class="mb-2">HR的路線統計</h1>
 
+        <!-- Breadcrumb -->
+        <div class="mt-2">
+            <b-breadcrumb>
+                <b-breadcrumb-item to="/lines">路線</b-breadcrumb-item>
+                <b-breadcrumb-item to="/lines/groups">路線組合</b-breadcrumb-item>
+                <b-breadcrumb-item to="/lines/types">路線類別</b-breadcrumb-item>
+                <b-breadcrumb-item to="/lines/stats-hr" active>HR的路線統計</b-breadcrumb-item>
+            </b-breadcrumb>
+        </div>
+
+        <!-- Table -->
         <div class="table-responsive" v-if="dataLoaded">
             <table class="table table-hover my-table">
                 <thead class="thead-light">

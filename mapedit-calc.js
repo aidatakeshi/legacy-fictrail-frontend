@@ -1,4 +1,4 @@
-const config = require('~/map-new-config.js');
+const config = require('~/mapedit-config.js');
 
 //General Functions
 

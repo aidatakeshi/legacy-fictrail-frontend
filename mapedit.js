@@ -1,6 +1,6 @@
 const $ = require('~/common.js');
-const config = require('~/map-new-config.js');
-const calc = require('~/map-new-calc.js');
+const config = require('~/mapedit-config.js');
+const calc = require('~/mapedit-calc.js');
 
 //General Functions
 

@@ -1,5 +1,5 @@
 const $ = require('~/common.js');
-const config = require('~/map-new-config.js');
+const config = require('~/mapedit-config.js');
 
 //Load All Data
 async function loadAll($this, axios){
@@ -19,23 +19,20 @@ exports.loadAll = loadAll;
 /**
  * Lines
  */
-async function loadLines($this, axios){ //To be modified, don't use getItems()
+async function loadLines($this, axios){
     //Line Types
-    $this.data_line_types = await $.getItems(axios, "line_types", {
-        fields: 'id,name_chi,name_eng,major,color',
-        sort: 'sort',
-    });
+    var response = await $.callAPI(axios, "GET", "items/line_types?obj=1");
+    if (response.http_status != 200) return false;
+    $this.data_line_types = response.data;
     for (var id in $this.data_line_types){
         $this.data_line_types[id].line_ids = [];
         $this.line_type_ids.push(id);
         $this.line_type_ids_reversed.unshift(id);
     }
     //Lines & Line-Stations
-    $this.data_lines = await $.getItems(axios, "lines", {
-        sort: 'name_eng',
-    }, 'lines_stations', {
-        sort: 'sort',
-    }, 'line_id', 'stations');
+    var response = await $.callAPI(axios, "GET", "items/lines?obj=1&stations=1");
+    if (response.http_status != 200) return false;
+    $this.data_lines = response.data;
     for (var i in $this.data_lines){
         var line = $this.data_lines[i];
         $this.data_line_types[line.line_type_id].line_ids.push(line.id);
@@ -71,9 +68,7 @@ exports.loadStations = loadStations;
  * Prefectures
  */
 async function loadPrefectures($this, axios){
-    var response = await $.callAPI(axios, 'GET', `items/prefectures?limit=-1`, {
-        fields: 'id,name_chi,name_chi_suffix',
-    });
+    var response = await $.callAPI(axios, 'GET', `items/prefectures`);
     if (response.http_status != 200) return false;
     for (var i in response.data){
         $this.data_prefectures[response.data[i].id] = response.data[i];
@@ -86,9 +81,7 @@ exports.loadPrefectures = loadPrefectures;
  */
 async function loadOperators($this, axios){
     $this.data_operators = {};
-    var response = await $.callAPI(axios, 'GET', `items/operators?limit=-1`, {
-        fields: 'id,name_chi,color',
-    });
+    var response = await $.callAPI(axios, 'GET', `items/operators`);
     if (response.http_status != 200) return false;
     for (var i in response.data){
         $this.data_operators[response.data[i].id] = response.data[i];
@@ -106,7 +99,8 @@ async function saveLineSectionsData(line$, axios){
         var section = line$.stations[i];
         if (section.to_remove){
             if (section.id){
-                var response = await $.callAPI(axios, 'DELETE', `items/lines_stations/${encodeURI(section.id)}`);
+                var $route = `items/lines_stations/${encodeURIComponent(section.id)}`;
+                var response = await $.callAPI(axios, 'DELETE', $route);
                 if (response.http_status != 200) return false;
             }
             line$.stations.splice(i, 1);
@@ -149,7 +143,8 @@ async function saveLineSectionsData(line$, axios){
         }
         //...
         if (Object.keys(data).length){
-            var response = await $.callAPI(axios, 'PATCH', `items/lines_stations/${encodeURI(section.id)}`, data);
+            var $route = `items/lines_stations/${encodeURIComponent(section.id)}`;
+            var response = await $.callAPI(axios, 'PATCH', $route, data);
             if (response.http_status != 200) return false;
             line$.stations[i].sort = i;
             line$.stations[i].unsaved_segments = false;
@@ -160,7 +155,8 @@ async function saveLineSectionsData(line$, axios){
     //Update length_km of Line
     var length_km = line$.stations[line$.stations.length - 1]?.mileage_km;
     if (line$.length_km != length_km){
-        var response = await $.callAPI(axios, 'PATCH', `items/lines/${encodeURI(line$.id)}`, {length_km});
+        var $route = `items/lines/${encodeURIComponent(line$.id)}`;
+        var response = await $.callAPI(axios, 'PATCH', $route, {length_km});
     }
     line$.length_km = length_km;
 }

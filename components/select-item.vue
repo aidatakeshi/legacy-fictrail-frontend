@@ -13,6 +13,7 @@ export default {
         value: null,
         type: null,
         nullable: Boolean,
+        remember: Boolean,
         filter: null,
         size: null,
     },
@@ -95,6 +96,17 @@ export default {
             this.options = options;
             //Selected
             this.selected = this.value ? this.value : null;
+            if (this.selected == null && this.remember){
+                this.selected = localStorage.getItem('select-'+this.type);
+            }
+        },
+
+        inputHandler(){
+            if (this.remember){
+                localStorage.setItem('select-'+this.type, this.selected);
+            }
+            this.$emit('input', this.selected);
+            this.$emit('focus');
         },
     },
 }
@@ -103,7 +115,7 @@ export default {
 <template>
     <div>
         <b-form-select v-model="selected" :options="options" :size="size"
-            @input="$emit('input', selected); $emit('focus');"
+            @input="inputHandler"
             @change="$emit('change', selected)"
             @focus="$emit('focus')"
         ></b-form-select>

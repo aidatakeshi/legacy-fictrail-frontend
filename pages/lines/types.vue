@@ -47,6 +47,7 @@
                 <b-breadcrumb-item to="/lines">路線</b-breadcrumb-item>
                 <b-breadcrumb-item to="/lines/groups">路線組合</b-breadcrumb-item>
                 <b-breadcrumb-item to="/lines/types" active>路線類別</b-breadcrumb-item>
+                <b-breadcrumb-item to="/lines/stats-hr">HR的路線統計</b-breadcrumb-item>
             </b-breadcrumb>
         </div>
 
