@@ -39,6 +39,7 @@ export default {
                 major: false, is_signal_only: false, is_abandoned: false,
                 tracks: ['1','2'],
             },
+            isAPIProcessing: false,
         };
     },
 
@@ -78,13 +79,16 @@ export default {
             return parseFloat(val).toFixed(digits);
         },
         async submitStation(){
+            if (this.isAPIProcessing) return false;
             if (!this.edit.x || !this.edit.y) return false;
             //Call API
             if (!this.isNew){
                 var response = await $.callAPI(axios, 'PATCH', `items/stations/${this.edit.id}`, this.edit);
             }else{
+                this.isAPIProcessing = true;
                 var response = await $.callAPI(axios, 'POST', `items/stations`, this.edit);
                 this.edit.id = response?.data?.id;
+                this.isAPIProcessing = false;
             }
             //Proceed...
             if (response.http_status >= 400){

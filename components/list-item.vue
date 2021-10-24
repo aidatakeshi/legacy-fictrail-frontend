@@ -159,7 +159,7 @@ export default {
                             <!-- "name" -->
                             <td :key="i" v-else-if="listConfig.format == 'name'" class="name">
                                 {{item[listConfig.field]}}
-                                <small v-if="listConfig.field_bracket">
+                                <small v-if="item[listConfig.field_bracket]">
                                     ({{item[listConfig.field_bracket]}})
                                 </small>
                                 <template v-if="listConfig.field_sub">
@@ -167,7 +167,7 @@ export default {
                                     <small v-if="listConfig.field_sub">
                                         {{item[listConfig.field_sub]}}
                                     </small>
-                                    <small v-if="listConfig.field_sub_bracket">
+                                    <small v-if="item[listConfig.field_sub_bracket]">
                                         ({{item[listConfig.field_sub_bracket]}})
                                     </small>
                                 </template>

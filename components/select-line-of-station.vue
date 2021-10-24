@@ -19,7 +19,7 @@ export default {
         value(){
             this.selected = this.value ? this.value : null;
         },
-        lineId(){
+        stationId(){
             this.updateOptions();
             this.selected = null;
             this.$emit('input', this.selected);

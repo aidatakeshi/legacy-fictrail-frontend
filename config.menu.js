@@ -22,7 +22,10 @@ exports.menu = [
     /*{'href': "/fares/hr", 'text': "票價", 'sub': [
         {'href': "/fares/hr", 'text': "HR票價"},
     ]},*/
-    {'href': "/mapedit", 'text': "地圖編輯"},
+    {'href': "/mapedit", 'text': "地圖編輯", 'sub': [
+        {'href': "/mapedit", 'text': "地圖編輯"},
+        {'href': "/mapedit/tools", 'text': "地圖編輯輔助工具"},
+    ]},
     {'text': "時刻表", 'sub': [
         {'href': "/schdraft", 'text': "時刻表編輯"},
     ]},

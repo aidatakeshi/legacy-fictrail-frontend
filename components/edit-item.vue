@@ -26,6 +26,7 @@ export default {
             editorConfig: [],
             dataDefault: {},
             editing_failed: false,
+            isAPIProcessing: false,
         };
     },
     watch: {
@@ -71,6 +72,8 @@ export default {
 
         //Submit
         async submit(){
+            if (this.isAPIProcessing) return false;
+            this.isAPIProcessing = true;
             //Submit New
             if (this.isNew){
                 var url = "items/"+this.type;
@@ -81,6 +84,7 @@ export default {
                 var url = "items/"+this.type+"/"+encodeURI(this.data$.id);
                 var response = await $.callAPI(axios, "PATCH", url, this.data$);
             }
+            this.isAPIProcessing = false;
             //Failed
             if (response.http_status >= 400){
                 this.editing_failed = true;

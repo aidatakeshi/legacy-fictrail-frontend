@@ -57,6 +57,7 @@ exports.data = {
     "line_group": {
         list: [
             {label: '名稱', field: 'name_chi', field_sub: 'name_eng', field_sub_bracket: 'name_eng_short', format: 'name'},
+            {label: '總長度', field: 'length_km_total', format: 'number', decimals: 1, unit: 'km'},
             {label: '備註', field: 'remarks', format: 'remarks'},
             {label: 'ID', field: 'id', format: 'id'},
         ],
