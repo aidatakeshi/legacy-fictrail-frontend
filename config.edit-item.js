@@ -174,4 +174,36 @@ exports.data = {
         //Use Dedicated Editor
     },
 
+    /**
+     * Schedule Draft
+     */
+    "schdraft_category": {
+        editor: [
+            {label: 'ID', field: 'id', format: 'id'},
+            {label: '標題', field: 'title'},
+            {label: '啟用', field: 'is_enabled', format: 'boolean'},
+            {label: 'Sort', field: 'sort', format: 'number'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
+        ],
+        default: {
+            'is_enabled': true,
+        },
+    },
+    "schdraft_group": {
+        editor: [
+            {label: 'ID', field: 'id', format: 'id'},
+            {label: '時刻表分類', field: 'category_id', format: 'select', select_type: 'schdraft_category'},
+            {label: '標題', field: 'title'},
+            {label: '啟用', field: 'is_enabled', format: 'boolean'},
+            {label: 'Sort', field: 'sort', format: 'number'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
+        ],
+        default: {
+            'is_enabled': true,
+        },
+    },
+    "schdraft_template": {
+        //Use Dedicated Editor
+    },
+
 };

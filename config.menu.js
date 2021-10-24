@@ -26,8 +26,6 @@ exports.menu = [
         {'href': "/mapedit", 'text': "地圖編輯"},
         {'href': "/mapedit/tools", 'text': "地圖編輯輔助工具"},
     ]},
-    {'text': "時刻表", 'sub': [
-        {'href': "/schdraft", 'text': "時刻表編輯"},
-    ]},
+    {'href': "/schdraft", 'text': "時刻表"},
     {'href': "/logout", 'text': "登出"},
 ];

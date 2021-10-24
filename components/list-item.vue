@@ -13,7 +13,7 @@ import { BIcon, BIconPen, BIconX, BIconCheck, BIconLayers, BIconGraphDown, BIcon
 
 export default {
     components:{
-        BIcon, BIconPen, BIconX, BIconCheck, BIconLayers, BIconGraphDown, BIconTrash,
+        BIcon, BIconPen, BIconX, BIconCheck, BIconLayers, BIconGraphDown, BIconTrash
     },
     props: {
         type: null,
@@ -44,6 +44,9 @@ export default {
         this.reload();
     },
     methods:{
+        displayTime: $.displayTime,
+        displaySignedNumber: $.displaySignedNumber,
+
         //Reload
         async reload(){
             //Get Config of Type
@@ -195,10 +198,12 @@ export default {
                             <!-- "boolean" -->
                             <td :key="i" v-else-if="listConfig.format == 'boolean'">
                                 <span class="text-success" v-if="item[listConfig.field]">
-                                    <b-icon-check scale="1.5" />
+                                    <b-icon-check v-if="!listConfig.text_true" scale="1.5" />
+                                    <strong v-else>{{listConfig.text_true}}</strong>
                                 </span>
                                 <span class="text-danger" v-else>
-                                    <b-icon-x scale="1.5" />
+                                    <b-icon-x v-if="!listConfig.text_false" scale="1.5" />
+                                    <strong v-else>{{listConfig.text_false}}</strong>
                                 </span>
                             </td>
                             <!-- "number" -->
@@ -209,27 +214,55 @@ export default {
                                 </template>
                                 <template v-else>-</template>
                             </td>
-                            <!-- "s_line_station_count" -->
-                            <td :key="i" v-else-if="listConfig.format == 's_line_station_count'">
-                                <b-button variant="outline-secondary" class="px-2 py-1" style="min-width: 2em;"
-                                @click="$emit('view-line', item.id)" v-if="item[listConfig.field]">
+                            <!-- "sort" -->
+                            <td :key="i" v-else-if="listConfig.format == 'sort'">
+                                <b-badge v-if="item[listConfig.field]" variant="warning">
                                     {{item[listConfig.field]}}
-                                </b-button>
-                                <span v-else>-</span>
+                                </b-badge>
                             </td>
-                            <!-- "s_vehicle_performance_graph" -->
-                            <td :key="i" v-else-if="listConfig.format == 's_vehicle_performance_graph'">
+                            <!-- "button_graph" -->
+                            <td :key="i" v-else-if="listConfig.format == 'button_graph'">
                                 <b-button variant="outline-secondary" class="px-2 py-1" v-if="item.has_calc_results"
                                 @click="$emit('view-graph', item.id)">
                                     <b-icon-graph-down />
                                 </b-button>
                             </td>
-                            <!-- "s_vehicle_performance_duplicate" -->
-                            <td :key="i" v-else-if="listConfig.format == 's_vehicle_performance_duplicate'">
+                            <!-- "button_duplicate" -->
+                            <td :key="i" v-else-if="listConfig.format == 'button_duplicate'">
                                 <b-button variant="outline-info" class="px-2 py-1"
                                 @click="$emit('duplicate', item.id)">
                                     <b-icon-layers />
                                 </b-button>
+                            </td>
+                            <!-- "s_line_station_count" -->
+                            <td :key="i" v-else-if="listConfig.format == 's_line_station_count'">
+                                <b-button variant="outline-secondary" class="px-2 py-1" style="min-width: 2em;"
+                                @click="$emit('view-line', item.id)" v-if="item.station_count">
+                                    {{item.station_count}}
+                                </b-button>
+                                <span v-else>-</span>
+                            </td>
+                            <!-- "s_schdraft_pivot_time" -->
+                            <td :key="i" v-else-if="listConfig.format == 's_schdraft_pivot_time'">
+                                {{displayTime(item.pivot_time, true)}}<!---
+                            ---><small class="text-secondary">{{displaySignedNumber(item.pivot_time_adj)}}</small>
+                            </td>
+                            <!-- "s_schdraft_train_type_name" -->
+                            <td :key="i" v-else-if="listConfig.format == 's_schdraft_train_type_name'">
+                                <template v-if="item.train_name_id">
+                                    <b-badge>{{item.train_type_name_chi_short}}</b-badge>
+                                    <color-box :color="item.train_name_color" />
+                                    <strong>{{item.train_name_name_chi}}</strong>
+                                </template>
+                                <template v-else>
+                                    <color-box :color="item.train_type_color" />
+                                    <strong>{{item.train_type_name_chi}}</strong>
+                                </template>
+                            </td>
+                            <!-- "s_schdraft_operator" -->
+                            <td :key="i" v-else-if="listConfig.format == 's_schdraft_operator'">
+                                <color-box :color="item.operator_color" />
+                                <strong>{{item.operator_name_chi}}</strong>
                             </td>
                             <!-- Default -->
                             <td :key="i" v-else>

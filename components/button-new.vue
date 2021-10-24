@@ -9,6 +9,7 @@ export default {
     props: {
         variant: String,
         size: String,
+        text: String,
     },
     data() {
         return {
@@ -26,7 +27,7 @@ export default {
 <template>
     <div class="text-center my-2">
         <b-button :variant="variant||'success'" :size="size||'sm'" @click="$emit('click')">
-            <b-icon-plus scale="1.2"></b-icon-plus> 新增
+            <b-icon-plus scale="1.2"></b-icon-plus> {{text||'新增'}}
         </b-button>
     </div>
 </template>

@@ -27,6 +27,11 @@
                     vehiclePerformanceGroup: null,
                     vehiclePerformanceItem: null,
                     vehiclePerformanceItemOfGroup: null,
+                    schdraftCategory: null,
+                    schdraftGroup: null,
+                    schdraftGroupOfCategory: null,
+                    schdraftTemplate: null,
+                    schdraftTemplateOfGroup: null,
                 },
                 selectItem2: {
                     operatorType: null,
@@ -151,6 +156,32 @@
                     <strong>type="vehicle_performance_item of group" filter="hr-hsr"</strong>
                     <select-item type="vehicle_performance_item of group" filter="hr-hsr" v-model="selectItem.vehiclePerformanceItemOfGroup" />
                     Selected: {{selectItem.vehiclePerformanceItemOfGroup}}
+                </div>
+
+                <div class="col-sm-6">
+                    <strong>type="schdraft_category"</strong>
+                    <select-item type="schdraft_category" v-model="selectItem.schdraftCategory" />
+                    Selected: {{selectItem.schdraftCategory}}
+                </div>
+                <div class="col-sm-6">
+                    <strong>type="schdraft_group"</strong>
+                    <select-item type="schdraft_group" v-model="selectItem.schdraftGroup" />
+                    Selected: {{selectItem.schdraftGroup}}
+                </div>
+                <div class="col-sm-6">
+                    <strong>type="schdraft_group of category" filter="hsr-a"</strong>
+                    <select-item type="schdraft_group of category" filter="hsr-a" v-model="selectItem.schdraftGroupOfCategory" />
+                    Selected: {{selectItem.schdraftGroupOfCategory}}
+                </div>
+                <div class="col-sm-6">
+                    <strong>type="schdraft_template"</strong>
+                    <select-item type="schdraft_template" v-model="selectItem.schdraftTemplate" />
+                    Selected: {{selectItem.schdraftTemplate}}
+                </div>
+                <div class="col-sm-6">
+                    <strong>type="schdraft_template of group" filter="hsr-a-w1"</strong>
+                    <select-item type="schdraft_template of group" filter="hsr-a-w1" v-model="selectItem.schdraftTemplateOfGroup" />
+                    Selected: {{selectItem.schdraftTemplateOfGroup}}
                 </div>
             </div>
 

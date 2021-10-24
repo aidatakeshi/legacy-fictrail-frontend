@@ -68,7 +68,7 @@ exports.data = {
             {label: '營運者', field: 'operator_name_chi', field_sub: 'operator_name_eng', format: 'name'},
             {label: '', field: 'color', format: 'color'},
             {label: '名稱', field: 'name_chi', field_sub: 'name_eng', field_sub_bracket: 'name_eng_short', format: 'name'},
-            {label: '車站', field: 'station_count', format: 's_line_station_count'},
+            {label: '車站', format: 's_line_station_count'},
             {label: '長度', field: 'length_km', format: 'number', decimals: 1, unit: 'km'},
             {label: '最高速度', field: 'max_speed_kph', format: 'number', unit: 'km/h'},
             {label: '備註', field: 'remarks', format: 'remarks'},
@@ -131,7 +131,7 @@ exports.data = {
     },
     "vehicle_performance_item": {
         list: [
-            {label: '', format: 's_vehicle_performance_graph'},
+            {label: '', format: 'button_graph'},
             {label: '標題', field: 'name_chi', format: 'name'},
             {label: '最高速度', field: 'max_speed_kph', format: 'number', unit: 'km/h', decimals: 0},
             {label: '起動加速', field: 'max_accel_kph_s', format: 'number', unit: 'km/h/s', decimals: 1},
@@ -139,7 +139,41 @@ exports.data = {
             {label: '定格出力', field: 'motor_rated_kw', format: 'number', unit: 'kW', decimals: 0},
             {label: '備註', field: 'remarks', format: 'remarks'},
             {label: 'ID', field: 'id', format: 'id'},
-            {label: '', format: 's_vehicle_performance_duplicate'},
+            {label: '', format: 'button_duplicate'},
+        ],
+    },
+
+    /**
+     * Schedule Draft
+     */
+    "schdraft_category": {
+        list: [
+            {label: '時刻表分類', field: 'title', format: 'link', url: '/schdraft/category/'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
+            {label: '啟用', field: 'is_enabled', format: 'boolean'},
+            {label: 'ID', field: 'id', format: 'id'},
+            {label: 'Sort', field: 'sort', format: 'sort'},
+        ],
+    },
+    "schdraft_group": {
+        list: [
+            {label: '時刻表群組', field: 'title', format: 'name'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
+            {label: '啟用', field: 'is_enabled', format: 'boolean'},
+            {label: 'ID', field: 'id', format: 'id'},
+            {label: 'Sort', field: 'sort', format: 'sort'},
+        ],
+    },
+    "schdraft_template": {
+        list: [
+            {label: '時刻表模板', field: 'title', format: 'name'},
+            {label: '方向', field: 'is_upbound', format: 'boolean', text_true: '上行', text_false: '下行'},
+            {label: '預設種別', format: 's_schdraft_train_type_name'},
+            {label: '基準時間', format: 's_schdraft_pivot_time'},
+            {label: '營運者', format: 's_schdraft_operator'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
+            {label: '啟用', field: 'is_enabled', format: 'boolean'},
+            {label: 'Sort', field: 'sort', format: 'sort'},
         ],
     },
 

@@ -21,6 +21,22 @@ pre {
     margin: 0.5rem 0;
 }
 
+/* Remarks */
+.my-remarks {
+    border: solid 1px #ccc;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+}
+.my-remarks span {
+    white-space: pre-line;
+}
+
+/* Button */
+.my-button-small{
+    padding: 0 0.2em !important;
+}
+
 /* My Table */
 
 .my-table th{

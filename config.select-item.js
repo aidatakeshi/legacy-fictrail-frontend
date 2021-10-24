@@ -125,4 +125,41 @@ exports.data = {
         display2: "id",
     },
 
+    /**
+     * Schedule Draft
+     */
+    "schdraft_category": {
+        api_call: "schdraft_category",
+        display: "title",
+        display2: "id",
+    },
+    "schdraft_group": {
+        api_call: "schdraft_category",
+        display: "title",
+        display2: "id",
+        api_query: "groups",
+        api_sub: "groups",
+        display_sub: "title",
+        display_sub2: "id",
+    },
+    "schdraft_group of category": {
+        api_call: "schdraft_group",
+        api_filter: "category_id",
+        display: "title",
+        display2: "id",
+    },
+    "schdraft_template": {
+        api_call: "schdraft_group",
+        display: "title",
+        display2: "id",
+        api_query: "templates",
+        api_sub: "templates",
+        display_sub: "title",
+    },
+    "schdraft_template of group": {
+        api_call: "schdraft_template",
+        api_filter: "group_id",
+        display: "title",
+    },
+
 };

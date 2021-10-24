@@ -75,3 +75,27 @@ exports.displaySignedInteger = function(value){
     if (val < 0) return '' + val;
     return '+' + val;
 }
+
+//Value to time display
+exports.displayTime = function(value, hideSeconds = false){
+    if (!value) return null;
+    if (isNaN(value) || value < 0) return null;
+    var h = Math.floor(value / 3600) % 24;
+    var m = Math.floor(value / 60) % 60;
+    var s = Math.round(value % 60);
+    if (hideSeconds){
+        return `${h}:${zero(m)}`;
+    }
+    return `${h}:${zero(m)}:${zero(s)}`;
+}
+
+var zero = function(value){
+    return (value < 10 ? '0' : '') + value;
+}
+
+//Display Signed
+exports.displaySignedNumber = function(value){
+    if (value === 0) return '±0';
+    if (value < 0) return '' + value;
+    if (value > 0) return '+' + value;
+}
