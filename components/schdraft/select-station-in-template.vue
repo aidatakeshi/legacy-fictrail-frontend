@@ -1,12 +1,20 @@
 <script>
+
+/**
+ * Select Item (Generic Use)
+ */
+
 import axios from '~/plugins/axios'
 const $ = require('~/common.js');
+const config = require('~/config.select-item.js');
 
 export default {
     props: {
         value: null,
-        lineId: null,
+        schTemplate: Array,
         nullable: Boolean,
+        disabled: Boolean,
+        remember: Boolean,
         size: String,
     },
     data() {
@@ -19,10 +27,8 @@ export default {
         value(){
             this.selected = this.value ? this.value : null;
         },
-        lineId(){
+        schTemplate(){
             this.updateOptions();
-            this.selected = null;
-            this.$emit('input', this.selected);
         },
     },
     mounted(){
@@ -30,27 +36,34 @@ export default {
     },
     methods:{
         async updateOptions(){
+            var station_ids = [];
+            for (var i in this.schTemplate){
+                if (!this.schTemplate[i].line_id) continue;
+                station_ids.push(this.schTemplate[i].station_id);
+            }
+            var response = await $.callAPI(axios, 'POST', 'station/get-by-ids?from_selecter=1', {
+                ids: station_ids,
+            })
+            if (!response.http_status == 200) return false;
             //Null Option
             if (this.nullable){
                 var options = [{ value: null, text: '-- 不設定 --' }];
             }else{
                 var options = [{ value: null, text: '-- 請選擇 --', disabled: true }];
             }
-
-            //Call API
-            var response = await $.callAPI(axios, 'GET', 'line/'+this.lineId+'/stations?from_selecter=1');
-            if (response.http_response >= 400) return false;
+            //Other Options
             var result = response.data;
             for (var i in result){
-                options.push({
-                    value: result[i].station_id,
-                    text: `${result[i].name_chi} [${result[i].name_eng}]`,
-                });
+                var value = result[i].id;
+                var label = `${result[i].name_chi} [${result[i].name_eng}]`
+                options.push({ value: value, text: label });
             }
-            //Output Options
             this.options = options;
-            //Selected
-            this.selected = this.value ? this.value : null;
+        },
+
+        inputHandler(){
+            this.$emit('input', this.selected);
+            this.$emit('focus');
         },
     },
 }
@@ -58,8 +71,9 @@ export default {
 
 <template>
     <div>
-        <b-form-select v-model="selected" :options="options" :size="size"
-            @input="$emit('input', selected); $emit('focus');"
+        <b-form-select v-model="selected" :options="options"
+            :size="size" :disabled="disabled"
+            @input="inputHandler"
             @change="$emit('change', selected)"
             @focus="$emit('focus')"
         ></b-form-select>

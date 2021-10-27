@@ -4,11 +4,13 @@
     const $ = require('~/common.js');
 
     import { BIcon, BIconPen, BIconTrash } from 'bootstrap-vue'
+    import EditSchdraftTemplate from '../../../components/schdraft/edit-schdraft-template.vue';
 
     export default {
 
         layout: "dashboard",
         components:{
+            EditSchdraftTemplate,
             BIcon, BIconPen, BIconTrash,
         },
 
@@ -52,6 +54,15 @@
                 if (response.http_response >= 400) return false;
                 this.loadData();
             },
+            showTemplateEdit(id){
+                this.$refs.template_modal.showEdit(id);
+            },
+            showTemplateNew(data){
+                this.$refs.template_modal.showNew(data);
+            },
+            duplicateTemplate(id){
+                this.$refs.template_modal.showEdit(id, true);
+            },
         },
 
     }
@@ -84,6 +95,9 @@
         <!-- Edit Group Modal -->
         <edit-item ref="edit_modal" type="schdraft_group" @change="loadData" />
 
+        <!-- Edit Template Modal -->
+        <edit-schdraft-template ref="template_modal" @change="loadData" />
+
         <!-- Content (Templates in Each Group) -->
         <div v-for="group in data" :key="group.id">
 
@@ -114,10 +128,10 @@
             </div>
 
             <list-item type="schdraft_template" :data="group.templates" :trigger="trigger"
-                @change="loadData"
+                @change="loadData" @edit="showTemplateEdit" @duplicate="duplicateTemplate"
             />
 
-            <button-new text="新增時刻表模板" />
+            <button-new text="新增時刻表模板" @click="showTemplateNew({group_id: group.id})" />
 
         </div>
 

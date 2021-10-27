@@ -93,10 +93,10 @@ export default {
                 //ID Mandatory
                 if (!this.editing.id) return false;
                 //Submit New
-                var response = await $.callAPI(axios, "POST", "items/vehicle_performance_items", data);
+                var response = await $.callAPI(axios, "POST", "items/vehicle_performance_item", data);
             }else{
                 //Submit Edit
-                var url = "items/vehicle_performance_items/"+encodeURIComponent(id);
+                var url = "items/vehicle_performance_item/"+encodeURIComponent(id);
                 var response = await $.callAPI(axios, "PATCH", url, data);
             }
             if (response.http_status >= 400){
@@ -234,6 +234,7 @@ export default {
 <template>
     <div>
         <b-modal ref="_modal" centered scrollable hide-footer size="xl"
+        header-bg-variant="dark" header-text-variant="light" 
         :title="isNew ? '新增項目' : '編輯項目'">
 
             <!--------------------------------------------------------------------->

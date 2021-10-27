@@ -86,7 +86,8 @@
         <edit-vehicle-performance-item ref="edit_modal" @change="loadData" />
 
         <!-- View Modal -->
-        <b-modal ref="calc_result_modal" centered scrollable hide-footer size="xl" title="計算結果">
+        <b-modal ref="calc_result_modal" centered scrollable hide-footer size="xl"
+        title="計算結果" header-bg-variant="dark" header-text-variant="light" >
             <view-vehicle-performance-item :item-id="viewing_item_id" />
         </b-modal>
 

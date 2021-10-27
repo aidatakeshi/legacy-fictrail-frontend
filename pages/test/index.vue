@@ -17,6 +17,7 @@
 
         <ul>
             <li><nuxt-link to="/test/components-select">Components - Select</nuxt-link></li>
+            <li><nuxt-link to="/test/components-input">Components - Input</nuxt-link></li>
         </ul>
 
     </div>

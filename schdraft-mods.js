@@ -1,5 +1,4 @@
 const $ = require('~/common.js');
-const sd = require('~/schdraft.js');
 
 exports.rules = {
     'pivot_remainder_eq': {
@@ -72,20 +71,22 @@ exports.rules = {
 
 exports.rules_param_value_mappers = {
     "minsec": async function(value){
-        return sd.displaySecondsAlt(value, false);
+        return $.displaySecondsAlt(value, false);
     },
     "minsec-rel": async function(value){
-        return sd.displaySecondsAlt(value, true);
+        return $.displaySecondsAlt(value, true);
     },
     "time": async function(value){
-        return sd.displayTime(value);
+        return $.displayTime(value);
     },
     "template": async function(value, axios){
-        var response = await $.callAPI(axios, 'GET', `items/schdraft_templates/${encodeURI(value)}`);
+        var $route = `items/schdraft_templates/${encodeURIComponent(value)}?from_selecter=1`;
+        var response = await $.callAPI(axios, 'GET', $route);
         return response.data?.title;
     },
     "station": async function(value, axios){
-        var response = await $.callAPI(axios, 'GET', `items/stations/${encodeURI(value)}`);
+        var $route = `items/stations/${encodeURIComponent(value)}?from_selecter=1`;
+        var response = await $.callAPI(axios, 'GET', $route);
         return response.data?.name_chi;
     },
 };

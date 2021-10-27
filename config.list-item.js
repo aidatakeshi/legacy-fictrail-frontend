@@ -173,7 +173,7 @@ exports.data = {
             {label: '營運者', format: 's_schdraft_operator'},
             {label: '備註', field: 'remarks', format: 'remarks'},
             {label: '啟用', field: 'is_enabled', format: 'boolean'},
-            {label: 'Sort', field: 'sort', format: 'sort'},
+            {label: '', format: 'button_duplicate'},
         ],
     },
 

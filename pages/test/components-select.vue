@@ -39,6 +39,7 @@
                 },
                 selectStationOfLine: null,
                 selectLineOfStation: null,
+                selectSchdraftTemplate: "7df81af6-a61c-4122-9f56-8bde8809a915",
             }
         },
 
@@ -56,7 +57,7 @@
 <template>
     <div class="my-4">
 
-        <h1>Test Components 1</h1>
+        <h1>Test Components</h1>
 
         <h2>select-item</h2>
 
@@ -224,6 +225,17 @@
                     <select-line-of-station v-model="selectLineOfStation"
                     station-id="369864db-f29a-40c8-84dd-c8eca786c66b" />
                     Selected: {{selectLineOfStation}}
+                </div>
+            </div>
+        </b-card>
+
+        <h2>select-schdraft-template</h2>
+
+        <b-card>
+            <div class="row">
+                <div class="col-sm-6">
+                    <select-schdraft-template v-model="selectSchdraftTemplate" />
+                    Selected: {{selectSchdraftTemplate}}
                 </div>
             </div>
         </b-card>

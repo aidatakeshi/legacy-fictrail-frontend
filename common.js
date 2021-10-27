@@ -66,17 +66,9 @@ async function callAPI(axios, APIMethod, APIRoute, data = {}, tokenRequired = tr
 }
 exports.callAPI = callAPI;
 
-//Display signed integer
-exports.displaySignedInteger = function(value){
-    var val = parseInt(value);
-    if (!val) val = 0;
-    if (isNaN(val)) return '#!';
-    if (!val) return '±0';
-    if (val < 0) return '' + val;
-    return '+' + val;
-}
-
 //Value to time display
+exports.day_cutoff = 3 * 3600; //3AM
+
 exports.displayTime = function(value, hideSeconds = false){
     if (!value) return null;
     if (isNaN(value) || value < 0) return null;
@@ -94,8 +86,84 @@ var zero = function(value){
 }
 
 //Display Signed
-exports.displaySignedNumber = function(value){
+exports.displaySignedNumber = function(value, decimals = 0){
+    if (value === null || isNaN(value)) return null;
     if (value === 0) return '±0';
+    if (decimals !== null) value = value.toFixed(decimals);
     if (value < 0) return '' + value;
     if (value > 0) return '+' + value;
+}
+
+//Display Seconds (#s / #m##s)
+exports.displaySeconds = function(value){
+    if (isNaN(value)) return null;
+    var before = false;
+    if (value < 0){
+        var before = true;
+        value = -value;
+    }
+    var m = Math.floor(value / 60);
+    var s = Math.round(value % 60);
+    if (m <= 0) return `${s}s`;
+    return `${before ? '-' : ''}${m}:${zero(s)}`;
+}
+
+//Display Seconds Alt (e.g. x秒 / x分 / x分xx秒 / 前 / 後)
+exports.displaySecondsAlt = function(value, relative = false){
+    if (isNaN(value)) return null;
+    var before = false;
+    if (value < 0){
+        var before = true;
+        value = -value;
+    }
+    var m = Math.floor(value / 60);
+    var s = Math.round(value % 60);
+    if (m == 0) var m_s = `${s}秒`;
+    else if (s == 0) var m_s = `${m}分`;
+    else var m_s = `${m}分${zero(s)}秒`;
+    if (relative) return m_s + ((before) ? '前' : '後');
+    return (before ? '(' : '') + m_s + (before ? ')' : '');
+}
+
+//Display Time Interval (#h#m#s / #m#s / #s)
+exports.displayTimeInterval = function(value){
+    if (value === null) return null;
+    if (isNaN(value)) return null;
+    var lessThen0 = false;
+    if (value < 0){
+        lessThen0 = true;
+        value = -value;
+    }
+    value = Math.round(value);
+    var h = Math.round(Math.floor(value / 3600));
+    var m = Math.round(Math.floor(value / 60) % 60);
+    var s = Math.round(value % 60);
+    var mark = '';
+    if (lessThen0) mark = '-';
+    if (value < 60){
+        return `${s}s`;
+    }else if (value < 3600){
+        if (!(value % 60)) return `${mark}${m}m`;
+        return `${mark}${m}m${zero(s)}s`;
+    }else{
+        if (!(value % 3600)) return `${mark}${h}h`;
+        if (!(value % 60)) return `${mark}${h}h${zero(m)}m`;
+        return `${mark}${h}h${zero(m)}m${zero(s)}s`;
+    }
+}
+
+//#### (mmss)
+exports.displayTimeIntervalAlt = function(a = 0, b = 0){
+    if (a === null || b === null) return '-';
+    if (isNaN(a) || isNaN(b)) return '-';
+    var value = a - b;
+    if (value < 0) return '-';
+    value = Math.round(value);
+    var m = Math.round(Math.floor(value / 60));
+    var s = Math.round(value % 60);
+    if (value < 60){
+        return `${s}s`;
+    }else{
+        return `${m}${zero(s)}`;
+    }
 }

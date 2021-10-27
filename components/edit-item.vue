@@ -103,6 +103,7 @@ export default {
 <template>
     <div>
         <b-modal ref="_modal" centered scrollable hide-footer size="md"
+        header-bg-variant="dark" header-text-variant="light" 
         :title="isNew ? '新增項目' : '編輯項目'">
 
             <div class="row" v-for="(editorField, i) in editorConfig" :key="i">

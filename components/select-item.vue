@@ -13,9 +13,10 @@ export default {
         value: null,
         type: null,
         nullable: Boolean,
+        disabled: Boolean,
         remember: Boolean,
         filter: null,
-        size: null,
+        size: String,
     },
     data() {
         return {
@@ -28,9 +29,9 @@ export default {
             this.selected = this.value ? this.value : null;
         },
         filter(){
-            this.updateOptions();
-            this.selected = null;
+            this.selected = this.value ? this.value : null;
             this.$emit('input', this.selected);
+            this.updateOptions();
         },
     },
     mounted(){
@@ -65,6 +66,7 @@ export default {
             var response = await $.callAPI(axios, 'GET', 'items/'+configOfItem.api_call, queries);
             if (response.http_response >= 400) return false;
             var result = response.data;
+            var option_matched = false;
 
             //Make Options (case 1: no api_query & api_sub)
             if (!configOfItem.api_query && !configOfItem.api_sub){
@@ -73,6 +75,7 @@ export default {
                     var label = result[i][configOfItem.display];
                     if (configOfItem.display2) label += ` [${result[i][configOfItem.display2]}]`
                     options.push({ value: value, text: label });
+                    if (value == this.value) option_matched = true;
                 }
             }
             //Make Options (case 2: with api_query & api_sub)
@@ -89,6 +92,7 @@ export default {
                         var label = sub_result[i][configOfItem.display_sub];
                         if (configOfItem.display_sub2) label += ` [${sub_result[i][configOfItem.display_sub2]}]`
                         options.push({ value: value, text: label });
+                        if (value == this.value) option_matched = true;
                     }
                 }
             }
@@ -98,6 +102,12 @@ export default {
             this.selected = this.value ? this.value : null;
             if (this.selected == null && this.remember){
                 this.selected = localStorage.getItem('select-'+this.type);
+                this.$emit('input', this.selected);
+            }
+            //No Option Matched? Emit null
+            if (this.value !== null && !option_matched){
+                this.selected = null;
+                this.$emit('input', null);
             }
         },
 
@@ -114,7 +124,8 @@ export default {
 
 <template>
     <div>
-        <b-form-select v-model="selected" :options="options" :size="size"
+        <b-form-select v-model="selected" :options="options"
+            :size="size" :disabled="disabled"
             @input="inputHandler"
             @change="$emit('change', selected)"
             @focus="$emit('focus')"

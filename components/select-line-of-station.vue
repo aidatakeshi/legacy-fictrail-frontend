@@ -7,7 +7,7 @@ export default {
         value: null,
         stationId: null,
         nullable: Boolean,
-        size: null,
+        size: String,
     },
     data() {
         return {

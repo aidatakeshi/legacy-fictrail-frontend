@@ -168,6 +168,7 @@ export default {
     <div>
         <!-- Main Modal -->
         <b-modal ref="_modal" centered scrollable hide-footer size="xl"
+        header-bg-variant="dark" header-text-variant="light" 
         :title="data_line.name_chi">
 
         <div class="table-responsive">

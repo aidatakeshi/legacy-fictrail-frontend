@@ -161,5 +161,14 @@ exports.data = {
         api_filter: "group_id",
         display: "title",
     },
+    "schdraft_template of category": {
+        api_call: "schdraft_group",
+        api_filter: "category_id",
+        display: "title",
+        display2: "id",
+        api_query: "templates",
+        api_sub: "templates",
+        display_sub: "title",
+    },
 
 };
