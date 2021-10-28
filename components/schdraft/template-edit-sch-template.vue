@@ -2,19 +2,30 @@
 
 import axios from '~/plugins/axios'
 const $ = require('~/common.js');
+const sd_common = require('~/schdraft-common.js');
 
-import { BIcon, BIconPen, BIconX } from 'bootstrap-vue'
+import {
+    BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown,
+} from 'bootstrap-vue'
+import TemplateEditSchTemplateRow from './template-edit-sch-template-row.vue';
+import TemplateEditSchTemplateFirstStation from './template-edit-sch-template-first-station.vue';
+import TemplateEditSchTemplateRowMenu from './template-edit-sch-template-row-menu.vue';
+import TemplateEditSchTemplateRowActionModals from './template-edit-sch-template-row-action-modals.vue';
 
 export default {
     components:{
-        BIcon, BIconPen, BIconX,
+        BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown,
+        TemplateEditSchTemplateRow,
+        TemplateEditSchTemplateFirstStation,
+        TemplateEditSchTemplateRowMenu,
+        TemplateEditSchTemplateRowActionModals,
     },
     props: {
         value: Object,
     },
     data() {
         return {
-
+            row_menu_index: null,
         };
     },
     watch: {
@@ -27,15 +38,151 @@ export default {
         changed(){
             this.$emit('input', this.value);
         },
+
+        //Get Previous Stop Item (bypassing items with cross_id)
+        getPrevStopItem(index){
+            if (!(this.value.sch_template||[]).length) return {};
+            for (var i = index - 1; i >= 0; i--){
+                if (!this.value.sch_template[i].cross_id){
+                    return this.value.sch_template[i];
+                }
+            }
+            return {};
+        },
+
+        //Whether Line Header Needed
+        lineHeaderNeeded(index){
+            if (this.value.sch_template[index].cross_id) return false;
+            var thisItem = this.value.sch_template[index] || {};
+            if (!thisItem.line_id) return false;
+            var prevItem = this.getPrevStopItem(index);
+            if (thisItem.line_id != prevItem.line_id) return true;
+            if (thisItem.is_upbound != prevItem.is_upbound) return true;
+            return false;
+        },
+
+        //Get Previous / Next Time Value (excluding items with cross_id)
+        getPrevTimeValue(index){
+            if (!(this.value.sch_template||[]).length) return null;
+            for (var i = index - 1; i >= 0; i--){
+                if (this.value.sch_template[i].cross_id) continue;
+                if (this.value.sch_template[i].time2) return this.value.sch_template[i].time2;
+                if (this.value.sch_template[i].time1) return this.value.sch_template[i].time1;
+            }
+            return null;
+        },
+        getNextTimeValue(index){
+            if (!(this.value.sch_template||[]).length) return null;
+            for (var i = index + 1; i < this.value.sch_template.length; i++){
+                if (this.value.sch_template[i].cross_id) continue;
+                if (this.value.sch_template[i].time1) return this.value.sch_template[i].time1;
+                if (this.value.sch_template[i].time2) return this.value.sch_template[i].time2;
+            }
+            return null;
+        },
+
+        //Show Modal
+        showEditStationModal(id){
+            this.$refs.edit_station_modal.showEdit(id);
+        },
+        showEditLineStationsModal(id){
+            this.$refs.edit_line_stations_modal.show(id);
+        },
+
+        //Insert First Station
+        insertFirstStation(station_id){
+            this.value.sch_template.push(sd_common.getNewStationItem({station_id: station_id}));
+            this.changed();
+        },
+
+        //Row Menu
+        showRowMenu(index){
+            this.row_menu_index = index;
+            this.$refs.row_menu_modal.show();
+        },
+        rowMenuAction(index, action, isUpper){
+            this.$refs.row_menu_modal.hide();
+            this.$refs.row_action_modals.showModal(index, action, isUpper);
+        },
+
     },
     computed: {
-
     },
 }
 </script>
 
 <template>
     <div>
-        {{value.sch_template}}
+
+        <!-- Main Table -------------------------------------------------------------------------->
+        <div class="table-responsive" v-if="(value.sch_template||[]).length">
+            <table class="table my-table">
+                <!-- Header ------------------------------------------------------------>
+                <thead>
+                    <tr class="thead-light">
+                        <th></th>
+                        <th style="min-width: 7em;">車站</th>
+                        <th style="line-height: 1em;">距離<br/><small>(km)</small></th>
+                        <th style="line-height: 1em;">里程<br/><small>(km)</small></th>
+                        <th style="width: 1em;"></th>
+                        <th style="min-width: 6em; width: 6em;">時刻<br/><small>(預設)</small></th>
+                        <th style="width: 1em;"></th>
+                        <th style="line-height: 1em;">月台<br/><small>/軌道</small></th>
+                        <th>快線</th>
+                        <th>Mods</th>
+                        <th>備註</th>
+                    </tr>
+                </thead>
+                <!-- Body -------------------------------------------------------------->
+                <tbody>
+                    <template v-for="(item, i) in value.sch_template">
+                        <!-- Line Header-->
+                        <tr class="thead-dark text-light" :key="i+'h'" v-if="lineHeaderNeeded(i)">
+                            <th colspan="11" class="text-center">
+                                <name-line color :id="value.sch_template[i].line_id" />
+                                <small>
+                                    ({{value.sch_template[i].is_upbound ? '上行' : '下行'}})
+                                </small>
+                                <b-button variant="link" class="p-0 text-light" size="sm"
+                                @click="showEditLineStationsModal(value.sch_template[i].line_id)">
+                                    <b-icon-pen />
+                                </b-button>
+                            </th>
+                        </tr>
+                        <!-- Stopping Station (Cross ID Not Exists) -->
+                        <template-edit-sch-template-row v-if="!value.sch_template[i].cross_id"
+                            v-model="value.sch_template[i]" :key="i" :index="i"
+                            :is-first="i == 0" :is-last="i == value.sch_template.length - 1"
+                            :prev-value="getPrevTimeValue(i)" :next-value="getNextTimeValue(i)"
+                            @show-menu="showRowMenu"
+                            @edit-station="showEditStationModal"
+                        />
+                        <!-------------------------------------------->
+                    </template>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- First Station Dialog -->
+        <template-edit-sch-template-first-station v-if="!(value.sch_template||[]).length"
+        @selected="insertFirstStation" />
+
+        <!-- Row Menu -->
+        <b-modal ref="row_menu_modal" size="sm" hide-header hide-footer centered>
+            <template-edit-sch-template-row-menu :sch-template="value.sch_template||[]" :index="row_menu_index"
+            @menu="rowMenuAction" />
+        </b-modal>
+        
+        <!-- Edit Line Stations Modals -->
+        <template-edit-sch-template-row-action-modals ref="row_action_modals" v-model="value.sch_template" />
+
+        <!-- Edit Station Modal -->
+        <edit-item ref="edit_station_modal" type="station" />
+
+        <!-- Edit Line Stations Modal -->
+        <edit-line-stations ref="edit_line_stations_modal" />
+
+        <!---------------------------------------------------------------------------------------->
+
     </div>
 </template>

@@ -16,6 +16,7 @@ export default {
         disabled: Boolean,
         remember: Boolean,
         size: String,
+        placeholder: String,
     },
     data() {
         return {
@@ -33,6 +34,7 @@ export default {
     },
     mounted(){
         this.updateOptions();
+        this.selected = this.value ? this.value : null;
     },
     methods:{
         async updateOptions(){
@@ -47,9 +49,9 @@ export default {
             if (!response.http_status == 200) return false;
             //Null Option
             if (this.nullable){
-                var options = [{ value: null, text: '-- 不設定 --' }];
+                var options = [{ value: null, text: this.placeholder || '-- 不設定 --' }];
             }else{
-                var options = [{ value: null, text: '-- 請選擇 --', disabled: true }];
+                var options = [{ value: null, text: this.placeholder || '-- 請選擇 --', disabled: true }];
             }
             //Other Options
             var result = response.data;
@@ -59,6 +61,8 @@ export default {
                 options.push({ value: value, text: label });
             }
             this.options = options;
+            //Update selected
+            this.selected = this.value ? this.value : null;
         },
 
         inputHandler(){

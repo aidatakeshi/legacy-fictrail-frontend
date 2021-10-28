@@ -17,7 +17,6 @@ export default {
     },
     props: {
         type: null,
-        nullable: Boolean,
     },
     data() {
         return {

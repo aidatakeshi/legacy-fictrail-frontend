@@ -26,7 +26,10 @@ export default {
     watch: {
         value(){
             this.handleValueUpdated();
-        }
+        },
+        suffix(){
+            this.handleValueUpdated();
+        },
     },
     async mounted(){
         this.handleValueUpdated();

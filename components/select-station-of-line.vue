@@ -42,6 +42,7 @@ export default {
             if (response.http_response >= 400) return false;
             var result = response.data;
             for (var i in result){
+                if (!result[i].name_chi) continue;
                 options.push({
                     value: result[i].station_id,
                     text: `${result[i].name_chi} [${result[i].name_eng}]`,
