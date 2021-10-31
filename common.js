@@ -66,13 +66,26 @@ async function callAPI(axios, APIMethod, APIRoute, data = {}, tokenRequired = tr
 }
 exports.callAPI = callAPI;
 
+//Display Signed
+exports.displaySignedNumber = function(value, decimals = 0){
+    if (value === null || isNaN(value)) return null;
+    if (value === 0) return '±0';
+    if (decimals !== null) value = value.toFixed(decimals);
+    if (value < 0) return '' + value;
+    if (value > 0) return '+' + value;
+}
+
 //Value to time display
 exports.day_cutoff = 3 * 3600; //3AM
 
-exports.displayTime = function(value, hideSeconds = false){
+exports.displayTime = function(value, hideSeconds = false, noDayChange = false){
     if (!value) return null;
     if (isNaN(value) || value < 0) return null;
-    var h = Math.floor(value / 3600) % 24;
+    if (!noDayChange){
+        var h = Math.floor(value / 3600) % 24;
+    }else{
+        var h = Math.floor(value / 3600);
+    }
     var m = Math.floor(value / 60) % 60;
     var s = Math.round(value % 60);
     if (hideSeconds){
@@ -85,48 +98,8 @@ var zero = function(value){
     return (value < 10 ? '0' : '') + value;
 }
 
-//Display Signed
-exports.displaySignedNumber = function(value, decimals = 0){
-    if (value === null || isNaN(value)) return null;
-    if (value === 0) return '±0';
-    if (decimals !== null) value = value.toFixed(decimals);
-    if (value < 0) return '' + value;
-    if (value > 0) return '+' + value;
-}
-
-//Display Seconds (#s / #m##s)
-exports.displaySeconds = function(value){
-    if (isNaN(value)) return null;
-    var before = false;
-    if (value < 0){
-        var before = true;
-        value = -value;
-    }
-    var m = Math.floor(value / 60);
-    var s = Math.round(value % 60);
-    if (m <= 0) return `${s}s`;
-    return `${before ? '-' : ''}${m}:${zero(s)}`;
-}
-
-//Display Seconds Alt (e.g. x秒 / x分 / x分xx秒 / 前 / 後)
-exports.displaySecondsAlt = function(value, relative = false){
-    if (isNaN(value)) return null;
-    var before = false;
-    if (value < 0){
-        var before = true;
-        value = -value;
-    }
-    var m = Math.floor(value / 60);
-    var s = Math.round(value % 60);
-    if (m == 0) var m_s = `${s}秒`;
-    else if (s == 0) var m_s = `${m}分`;
-    else var m_s = `${m}分${zero(s)}秒`;
-    if (relative) return m_s + ((before) ? '前' : '後');
-    return (before ? '(' : '') + m_s + (before ? ')' : '');
-}
-
 //Display Time Interval (#h#m#s / #m#s / #s)
-exports.displayTimeInterval = function(value){
+exports.displayTimeInterval = function(value, signed = false){
     if (value === null) return null;
     if (isNaN(value)) return null;
     var lessThen0 = false;
@@ -138,7 +111,7 @@ exports.displayTimeInterval = function(value){
     var h = Math.round(Math.floor(value / 3600));
     var m = Math.round(Math.floor(value / 60) % 60);
     var s = Math.round(value % 60);
-    var mark = '';
+    var mark = signed ? '+' : '';
     if (lessThen0) mark = '-';
     if (value < 60){
         return `${s}s`;
@@ -166,4 +139,21 @@ exports.displayTimeIntervalAlt = function(a = 0, b = 0){
     }else{
         return `${m}${zero(s)}`;
     }
+}
+
+//Display Time Interval Chinese (e.g. x秒 / x分 / x分xx秒 / 前 / 後)
+exports.displayTimeIntervalChinese = function(value, relative = false){
+    if (isNaN(value)) return null;
+    var before = false;
+    if (value < 0){
+        var before = true;
+        value = -value;
+    }
+    var m = Math.floor(value / 60);
+    var s = Math.round(value % 60);
+    if (m == 0) var m_s = `${s}秒`;
+    else if (s == 0) var m_s = `${m}分`;
+    else var m_s = `${m}分${zero(s)}秒`;
+    if (relative) return m_s + ((before) ? '前' : '後');
+    return (before ? '(' : '') + m_s + (before ? ')' : '');
 }

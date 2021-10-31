@@ -65,15 +65,15 @@ export default {
         <table class="table table-hover my-table mb-0">
             <thead>
                 <tr class="thead-light">
-                    <th>備註</th>
                     <th>ID</th>
+                    <th>備註</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(item, i) in value$" :key="i">
                     <td class="break-word" style="max-width: 5em;">
-                        <small><strong>{{item.id}}</strong></small>
+                        <strong>{{item.id}}</strong>
                     </td>
                     <td>
                         <b-form-input v-model="value$[i].label" size="sm" @input="inputHandler" />

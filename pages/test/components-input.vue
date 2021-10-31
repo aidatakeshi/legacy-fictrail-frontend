@@ -13,6 +13,8 @@
                 minSec2: null,
                 time1: null,
                 time2: null,
+                time3: null,
+                time4: null,
             }
         },
 
@@ -71,24 +73,26 @@
         <b-card>
             <div class="row">
                 <div class="col-sm-6">
-                    <input-time v-model="time1" :next-value="time2" size="sm" />
+                    no-day-change
+                    <input-time v-model="time1" :next-value="time2" no-day-change size="sm" />
                     {{time1}}
                 </div>
                 <div class="col-sm-6">
-                    <input-time v-model="time2" :prev-value="time1" size="sm" />
+                    no-day-change
+                    <input-time v-model="time2" :prev-value="time1" no-day-change size="sm" />
                     {{time2}}
                 </div>
                 <div class="col-sm-6">
                     size="sm" bold center suffix="發"
-                    <input-time v-model="time1" :next-value="time2"
+                    <input-time v-model="time3" :next-value="time2"
                     size="sm" bold center suffix="發" />
-                    {{time1}}
+                    {{time3}}
                 </div>
                 <div class="col-sm-6">
                     size="sm" italic center small suffix="↓"
-                    <input-time v-model="time2" :prev-value="time1"
+                    <input-time v-model="time4" :prev-value="time1"
                     size="sm" italic center small suffix="↓" />
-                    {{time2}}
+                    {{time4}}
                 </div>
             </div>
         </b-card>

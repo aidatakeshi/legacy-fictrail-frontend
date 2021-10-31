@@ -3,11 +3,15 @@
 import axios from '~/plugins/axios'
 const $ = require('~/common.js');
 
-import { BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconCheck, BIconChevronDown } from 'bootstrap-vue'
+import {
+    BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconCheck, BIconChevronDown,
+} from 'bootstrap-vue';
+import TemplateEditSchTemplateMod from './template-edit-sch-template-mod.vue';
 
 export default {
     components:{
         BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconCheck, BIconChevronDown,
+        TemplateEditSchTemplateMod,
     },
     props: {
         value: Object,
@@ -139,14 +143,15 @@ export default {
                 {{value.track || '-'}}
             </b-button>
             <!-- Tracks Selecter Modal -->
-            <b-modal ref="track_select_modal" hide-header hide-footer centered>
+            <b-modal ref="track_select_modal" title="月台/軌道" hide-footer scrollable centered>
                 <div class="my-remarks mb-1" v-if="station_remarks">
                     <strong>車站備註：</strong><br/>
                     <span>{{station_remarks}}</span>
                 </div>
                 <div class="row">
                     <div class="col-3 col-sm-2" v-for="(track, i) in options_tracks" :key="i">
-                        <b-button variant="outline-secondary" class="my-1" block @click="trackSelected(track)">
+                        <b-button :variant="(track != value.track ? 'outline-' : '') + 'secondary'"
+                        class="my-1 py-1" block @click="trackSelected(track)">
                             {{track}}
                         </b-button>
                     </div>
@@ -167,13 +172,21 @@ export default {
         </td>
 
         <!-- Mods -->
-        <td>
-            TBD
+        <td class="mods">
+            <template-edit-sch-template-mod v-model="value.mod" :default-value="value"
+            :station-id="value.station_id" />
         </td>
 
         <!-- Remarks -->
         <td>
-            TBD
+            <!-- Remarks Here -->
+            <div class="remarks w-100" @click="$refs.remarks_modal.show()"><!---
+            --->{{value.remarks}} <!---
+            ---><span class="text-primary"><b-icon-pen /></span><!---
+        ---></div>
+            <b-modal ref="remarks_modal" title="備註" hide-footer centered>
+                <b-form-textarea size="sm" rows="8" v-model="value.remarks" />
+            </b-modal>
         </td>
 
         <!------------------------------------------------------------------>

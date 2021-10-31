@@ -61,15 +61,22 @@ export default {
 
             //移除車站
             if (action == 'remove-station'){
-                this.remove_station_submit();
+                return this.remove_station_submit();
             }
 
             //增加軌道相交點
             if (action == 'add-crossing'){
-                this.add_crossing_options = [];
-                this.add_crossing_selected = null;
-                this.add_crossing_loadData();
-                return this.$refs.add_crossing_modal.show();
+                return this.add_crossing_submit();
+            }
+
+            //移除軌道相交點
+            if (action == 'remove-crossing'){
+                return this.remove_crossing_submit();
+            }
+
+            //
+            if (action == 'move-crossing'){
+                return this.move_crossing_submit();
             }
         },
 
@@ -151,7 +158,7 @@ export default {
             var station_id = this.value[this.index]?.station_id;
             var station2_id = null;
             for (var i = this.index + 1; i < this.value.length; i++){
-                if (!this.value[i].cross_id){
+                if (!this.value[i].is_cross){
                     station2_id = this.value[i]?.station_id;
                     break;
                 }
@@ -217,12 +224,32 @@ export default {
             this.$emit('input', this.value);
         },
 
-        //Add Crossing Modal
-        async add_crossing_loadData(){
-
-        },
+        //Add Crossing Modal (no modal)
         add_crossing_submit(){
+            var $index = this.index + (this.isUpper ? 0 : 1);
+            this.value.splice($index, 0, sd_common.getNewCrossingItem({
+                station_id: this.station_id,
+            }));
+            this.$emit('input', this.value);
+        },
 
+        //Remove Crossing (no modal)
+        remove_crossing_submit(){
+            if (!confirm('確認移除？')) return false;
+            //Remove
+            this.value.splice(this.index, 1);
+            this.$emit('input', this.value);
+        },
+
+        //Move Crossing (no modal)
+        move_crossing_submit(){
+            var index1 = this.index * 1;
+            var index2 = (this.isUpper ? index1 - 1 : index1 + 1);
+            var temp1 = this.value[index1];
+            var temp2 = this.value[index2];
+            this.value[index1] = Object.assign({}, temp2);
+            this.value[index2] = Object.assign({}, temp1);
+            this.$emit('input', this.value);
         },
     },
     computed: {
@@ -267,10 +294,6 @@ export default {
 
             </div>
             <div v-else>兩站之間並沒有其他車站。</div>
-        </b-modal>
-
-        <b-modal ref="add_crossing_modal" title="增加軌道相交點" size="sm" hide-footer centered>
-
         </b-modal>
 
     </div>

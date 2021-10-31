@@ -8,6 +8,7 @@ import {
     BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown,
 } from 'bootstrap-vue'
 import TemplateEditSchTemplateRow from './template-edit-sch-template-row.vue';
+import TemplateEditSchTemplateRowCross from './template-edit-sch-template-row-cross.vue';
 import TemplateEditSchTemplateFirstStation from './template-edit-sch-template-first-station.vue';
 import TemplateEditSchTemplateRowMenu from './template-edit-sch-template-row-menu.vue';
 import TemplateEditSchTemplateRowActionModals from './template-edit-sch-template-row-action-modals.vue';
@@ -16,6 +17,7 @@ export default {
     components:{
         BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown,
         TemplateEditSchTemplateRow,
+        TemplateEditSchTemplateRowCross,
         TemplateEditSchTemplateFirstStation,
         TemplateEditSchTemplateRowMenu,
         TemplateEditSchTemplateRowActionModals,
@@ -39,11 +41,11 @@ export default {
             this.$emit('input', this.value);
         },
 
-        //Get Previous Stop Item (bypassing items with cross_id)
+        //Get Previous Stop Item (bypassing items with is_cross)
         getPrevStopItem(index){
             if (!(this.value.sch_template||[]).length) return {};
             for (var i = index - 1; i >= 0; i--){
-                if (!this.value.sch_template[i].cross_id){
+                if (!this.value.sch_template[i].is_cross){
                     return this.value.sch_template[i];
                 }
             }
@@ -52,7 +54,7 @@ export default {
 
         //Whether Line Header Needed
         lineHeaderNeeded(index){
-            if (this.value.sch_template[index].cross_id) return false;
+            if (this.value.sch_template[index].is_cross) return false;
             var thisItem = this.value.sch_template[index] || {};
             if (!thisItem.line_id) return false;
             var prevItem = this.getPrevStopItem(index);
@@ -61,11 +63,11 @@ export default {
             return false;
         },
 
-        //Get Previous / Next Time Value (excluding items with cross_id)
+        //Get Previous / Next Time Value (excluding items with is_cross)
         getPrevTimeValue(index){
             if (!(this.value.sch_template||[]).length) return null;
             for (var i = index - 1; i >= 0; i--){
-                if (this.value.sch_template[i].cross_id) continue;
+                if (this.value.sch_template[i].is_cross) continue;
                 if (this.value.sch_template[i].time2) return this.value.sch_template[i].time2;
                 if (this.value.sch_template[i].time1) return this.value.sch_template[i].time1;
             }
@@ -74,7 +76,7 @@ export default {
         getNextTimeValue(index){
             if (!(this.value.sch_template||[]).length) return null;
             for (var i = index + 1; i < this.value.sch_template.length; i++){
-                if (this.value.sch_template[i].cross_id) continue;
+                if (this.value.sch_template[i].is_cross) continue;
                 if (this.value.sch_template[i].time1) return this.value.sch_template[i].time1;
                 if (this.value.sch_template[i].time2) return this.value.sch_template[i].time2;
             }
@@ -126,7 +128,7 @@ export default {
                         <th style="line-height: 1em;">里程<br/><small>(km)</small></th>
                         <th style="width: 1em;"></th>
                         <th style="min-width: 6em; width: 6em;">時刻<br/><small>(預設)</small></th>
-                        <th style="width: 1em;"></th>
+                        <th></th>
                         <th style="line-height: 1em;">月台<br/><small>/軌道</small></th>
                         <th>快線</th>
                         <th>Mods</th>
@@ -150,12 +152,17 @@ export default {
                             </th>
                         </tr>
                         <!-- Stopping Station (Cross ID Not Exists) -->
-                        <template-edit-sch-template-row v-if="!value.sch_template[i].cross_id"
+                        <template-edit-sch-template-row v-if="!value.sch_template[i].is_cross"
                             v-model="value.sch_template[i]" :key="i" :index="i"
                             :is-first="i == 0" :is-last="i == value.sch_template.length - 1"
                             :prev-value="getPrevTimeValue(i)" :next-value="getNextTimeValue(i)"
                             @show-menu="showRowMenu"
                             @edit-station="showEditStationModal"
+                        />
+                        <!-- Crossing (Cross ID Exists) -->
+                        <template-edit-sch-template-row-cross v-else
+                            v-model="value.sch_template[i]" :key="i" :index="i"
+                            @show-menu="showRowMenu"
                         />
                         <!-------------------------------------------->
                     </template>
@@ -174,7 +181,8 @@ export default {
         </b-modal>
         
         <!-- Edit Line Stations Modals -->
-        <template-edit-sch-template-row-action-modals ref="row_action_modals" v-model="value.sch_template" />
+        <template-edit-sch-template-row-action-modals ref="row_action_modals" v-model="value.sch_template"
+        @input="$forceUpdate()" />
 
         <!-- Edit Station Modal -->
         <edit-item ref="edit_station_modal" type="station" />

@@ -93,12 +93,16 @@ export default {
             }
             if (response.http_status >= 400){
                 //Failed
-                this.$bvToast.toast(`保存失敗`, {title: '保存失敗', variant: 'danger'});
+                this.$bvToast.toast(`保存失敗`, {
+                    title: '保存失敗', variant: 'danger', toaster: 'b-toaster-bottom-right',
+                });
             }else{
                 //Success
                 this.$emit(this.isNew ? 'created' : 'edited', id);
                 this.$emit('change', id);
-                this.$bvToast.toast(`已保存`, {title: '已保存', variant: 'success'});
+                this.$bvToast.toast(`已保存`, {
+                    title: '已保存', variant: 'success', toaster: 'b-toaster-bottom-right',
+                });
                 //New / Copy Mode -> Close
                 if (this.isNew || this.isCopy){
                     this.$refs._modal.hide();

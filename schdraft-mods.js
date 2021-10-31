@@ -71,10 +71,10 @@ exports.rules = {
 
 exports.rules_param_value_mappers = {
     "minsec": async function(value){
-        return $.displaySecondsAlt(value, false);
+        return $.displayTimeIntervalChinese(value, false);
     },
     "minsec-rel": async function(value){
-        return $.displaySecondsAlt(value, true);
+        return $.displayTimeIntervalChinese(value, true);
     },
     "time": async function(value){
         return $.displayTime(value);

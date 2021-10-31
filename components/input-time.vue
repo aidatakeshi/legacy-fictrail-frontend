@@ -7,10 +7,12 @@ export default {
         tabindex: null,
         prevValue: null,
         nextValue: null,
+        noDayChange: Boolean,
         placeholder: String,
         size: String,
         disabled: Boolean,
         bold: Boolean,
+        backgroundColor: String,
         italic: Boolean,
         small: Boolean,
         center: Boolean,
@@ -105,8 +107,12 @@ export default {
                     var value = prevValue + delta;
                 }
             }
-            //Cap range
-            return (value - $.day_cutoff) % 86400 + $.day_cutoff;
+            //Return Value
+            if (!this.noDayChange){
+                return (value - $.day_cutoff + 86400) % 86400 + $.day_cutoff;
+            }else{
+                return value;
+            }
         },
         handleValueUpdated(){
             if (isNaN(this.value)){
@@ -127,7 +133,7 @@ export default {
             }
         },
         displayString(){
-            var str = $.displayTime(this.value$);
+            var str = $.displayTime(this.value$, false, this.noDayChange);
             if (str === null){
                 this.display = "";
             }else{
@@ -142,6 +148,7 @@ export default {
             if (this.small) obj['font-size'] = '80%';
             if (this.center) obj['text-align'] = 'center';
             if (this.right) obj['text-align'] = 'right';
+            if (this.backgroundColor) obj['background-color'] = this.backgroundColor;
             return obj;
         },
     },
