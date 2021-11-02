@@ -6,12 +6,14 @@ const $ = require('~/common.js');
 const schdraft_mod = require('~/schdraft-mods.js');
 
 import TemplateModRuleDisplay from './template-mod-rule-display.vue';
-import { BIcon, BIconPencil, BIconPlus, BIconGripVertical, BIconX } from 'bootstrap-vue'
+import {
+    BIcon, BIconPencilSquare, BIconPlusSquare, BIconGripVertical, BIconXSquare,
+} from 'bootstrap-vue'
 import SelectStationInTemplate from './select-station-in-template.vue';
 
 export default {
     components:{
-        BIcon, BIconPencil, BIconPlus, BIconGripVertical, BIconX,
+        BIcon, BIconPencilSquare, BIconPlusSquare, BIconGripVertical, BIconXSquare,
         draggable, TemplateModRuleDisplay,
         SelectStationInTemplate,
     },
@@ -125,7 +127,7 @@ export default {
                             <small>(當以下所有條件成立)</small>
                         </div>
                         <b-button variant="link" class="p-0 mr-1 text-danger" @click="removeRuleGroup(i)">
-                            <b-icon-x scale="1.2" />
+                            <b-icon-x-square scale="1.2" />
                         </b-button>
                     </div>
                     <!-- Rules of the Mod -->
@@ -136,19 +138,19 @@ export default {
                                 <b-button variant="link" class="handle2 text-secondary p-0">
                                     <b-icon-grip-vertical scale="1.2" />
                                 </b-button>
-                                <b-button variant="link" class="p-0 text-info" @click="editRuleModal(i, j)">
-                                    <b-icon-pencil scale="1" />
+                                <b-button variant="link" class="p-0 text-primary" @click="editRuleModal(i, j)">
+                                    <b-icon-pencil-square scale="1" />
                                 </b-button>
-                                <template-mod-rule-display class="mr-auto" :rule="rule" />
+                                <template-mod-rule-display class="ml-1 mr-auto" :rule="rule" />
                                 <b-button variant="link" class="p-0 text-danger" @click="removeRule(i, j)">
-                                    <b-icon-x scale="1.2" />
+                                    <b-icon-x-square scale="1.2" />
                                 </b-button>
                             </b-list-group-item>
                         </draggable>
                     </b-list-group>
                     <!-- New Rule -->
                     <b-button variant="link" class="p-0 ml-1 text-success" @click="newRuleModal(i)">
-                        <b-icon-plus scale="1.2" />
+                        <b-icon-plus-square scale="1.2" />
                     </b-button>
                     <!---------------------------------------------------------------------->
                 </div>
@@ -160,7 +162,7 @@ export default {
         <b-card class="mb-2" body-class="p-1 d-flex align-items-center">
             <strong class="mr-2" style="white-space: nowrap;">Mod名稱</strong>
             <b-button variant="link" class="p-0 ml-2 mr-1 text-success" @click="newRuleGroup()">
-                <b-icon-plus scale="1.2" />
+                <b-icon-plus-square scale="1.2" />
             </b-button>
         </b-card>
 

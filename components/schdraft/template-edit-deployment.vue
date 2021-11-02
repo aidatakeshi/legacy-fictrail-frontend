@@ -4,12 +4,12 @@ import axios from '~/plugins/axios'
 import draggable from 'vuedraggable'
 const $ = require('~/common.js');
 
-import { BIcon, BIconPen, BIconX, BIconPlus, BIconGripVertical } from 'bootstrap-vue'
+import { BIcon, BIconPencilSquare, BIconXSquare, BIconPlusSquare, BIconGripVertical } from 'bootstrap-vue'
 import SelectStationInTemplate from './select-station-in-template.vue';
 
 export default {
     components:{
-        BIcon, BIconPen, BIconX, BIconPlus, BIconGripVertical,
+        BIcon, BIconPencilSquare, BIconXSquare, BIconPlusSquare, BIconGripVertical,
         SelectStationInTemplate, draggable,
     },
     props: {
@@ -24,18 +24,16 @@ export default {
                 pivot_from: null, pivot_to: null, interval: null,
                 station_begin: null, station_terminate: null,
                 station_begin_reverse: null, station_terminate_reverse: null,
-                station_begin_mod: null, station_terminate_mod: null,
-                mods: null,
+                mods: null, pivot_shift: null,
                 service_no_min: null, service_no_step: null,
                 wk: null, ph: null, is_temp: null,
             },
             editing_default: {
                 interval: 900,
-                mods: [],
+                mods: [], pivot_shift: 0,
                 service_no_step: 2,
                 wk: true, ph: true, is_temp: false,
                 station_begin_reverse: false, station_terminate_reverse: false,
-                station_begin_mod: [], station_terminate_mod: [],
             },
             show_wk: true,
             show_ph: true,
@@ -156,8 +154,8 @@ export default {
             <b-card :key="i" class="mb-2" v-if="(item.wk && show_wk) || (item.ph && show_ph)"
             body-class="p-1 d-flex align-items-center">
                 <!-- Edit Button -->
-                <b-button variant="link" class="p-0 mr-2 text-info" @click="editItem(i)">
-                    <b-icon-pen scale="1" />
+                <b-button variant="link" class="p-0 mr-2 text-primary" @click="editItem(i)">
+                    <b-icon-pencil-square scale="1" />
                 </b-button>
                 <!---------------------------->
                 <div class="row w-100">
@@ -214,6 +212,9 @@ export default {
                             </template>
                             號)
                         </small>
+                        <small v-if="item.pivot_shift" class="text-primary">
+                            (基準時間調整: {{displayTimeInterval(item.pivot_shift)}})
+                        </small>
                     </div>
                     <!-- Station Begin / Mod -->
                     <div class="col-lg-6"
@@ -244,7 +245,7 @@ export default {
                 </div>
                 <!-- Remove Button -->
                 <b-button variant="link" class="p-0 ml-2 text-danger" @click="removeItem(i)">
-                    <b-icon-x scale="1.2" />
+                    <b-icon-x-square scale="1.2" />
                 </b-button>
                 <!----------------------------------------------------------->
             </b-card>
@@ -252,7 +253,7 @@ export default {
 
         <!-- New Button -->
         <b-button variant="link" class="p-0 ml-1 text-success" @click="newItem()">
-            <b-icon-plus scale="1.2" />
+            <b-icon-plus-square scale="1.2" />
         </b-button>
 
         <!-- Editing / New Modal -->
@@ -305,9 +306,8 @@ export default {
             </b-card>
             
             <b-card body-class="p-1" class="mb-2">
-                <!-- Default -->
                 <div class="row">
-                    <div class="col-sm-4">起點 (預設)</div>
+                    <div class="col-sm-4">起點</div>
                     <div class="col-sm-8">
                         <select-station-in-template v-model="editing.station_begin"
                         :sch-template="value.sch_template" nullable
@@ -317,41 +317,8 @@ export default {
                         </b-form-checkbox>
                     </div>
                 </div>
-                <!-- Mods -->
-                <draggable v-model="editing.station_begin_mod" handle=".handle1">
-                    <div class="row" :key="i" v-for="(item, i) in editing.station_begin_mod">
-                        <div class="col-sm-4">
-                            <b-button variant="link" class="text-danger p-0"
-                            @click="editing.station_begin_mod.splice(i, 1)">
-                                <b-icon-x scale="1.2" />
-                            </b-button>
-                            <b-button variant="link" class="handle1 text-secondary p-0">
-                                <b-badge>{{item.mod}}</b-badge>
-                            </b-button>
-                        </div>
-                        <div class="col-sm-8">
-                            <select-station-in-template v-model="editing.station_begin_mod[i].station_id"
-                            :sch-template="value.sch_template" nullable
-                            placeholder="-- 此模板最頭車站 --" size="sm" />
-                            <b-form-checkbox switch v-model="editing.station_begin_mod[i].reverse" size="sm">
-                                如此車站出現了兩次，選擇較後者
-                            </b-form-checkbox>
-                        </div>
-                    </div>
-                </draggable>
-                <!-- New Button -->
-                <div class="col-12 text-center">
-                    <b-button variant="link" class="py-0 ml-1 text-success" @click="newStationBeginMod">
-                        <b-icon-plus scale="1.2" />
-                    </b-button>
-                </div>
-                <!---------------->
-            </b-card>
-
-            <b-card body-class="p-1" class="mb-2">
-                <!-- Default -->
                 <div class="row">
-                    <div class="col-sm-4">終點點 (預設)</div>
+                    <div class="col-sm-4">終點</div>
                     <div class="col-sm-8">
                         <select-station-in-template v-model="editing.station_terminate"
                         :sch-template="value.sch_template" nullable
@@ -361,35 +328,15 @@ export default {
                         </b-form-checkbox>
                     </div>
                 </div>
-                <!-- Mods -->
-                <draggable v-model="editing.station_terminate_mod" handle=".handle2">
-                    <div class="row" :key="i" v-for="(item, i) in editing.station_terminate_mod">
-                        <div class="col-sm-4">
-                            <b-button variant="link" class="text-danger p-0"
-                            @click="editing.station_terminate_mod.splice(i, 1)">
-                                <b-icon-x scale="1.2" />
-                            </b-button>
-                            <b-button variant="link" class="handle2 text-secondary p-0">
-                                <b-badge>{{item.mod}}</b-badge>
-                            </b-button>
-                        </div>
-                        <div class="col-sm-8">
-                            <select-station-in-template v-model="editing.station_terminate_mod[i].station_id"
-                            :sch-template="value.sch_template" nullable
-                            placeholder="-- 此模板最頭車站 --" size="sm" />
-                            <b-form-checkbox switch v-model="editing.station_terminate_mod[i].reverse" size="sm">
-                                如此車站出現了兩次，選擇較前者
-                            </b-form-checkbox>
-                        </div>
+                <div class="row">
+                    <div class="col-sm-4">基準時間調整</div>
+                    <div class="col-sm-8">
+                        <input-min-sec v-model="editing.pivot_shift" size="sm" signed />
                     </div>
-                </draggable>
-                <!-- New Button -->
-                <div class="col-12 text-center">
-                    <b-button variant="link" class="py-0 ml-1 text-success" @click="newStationTerminateMod">
-                        <b-icon-plus scale="1.2" />
-                    </b-button>
+                    <div class="col-12">
+                        <small>* 作為排序用途，尤其是不途徑時刻表基準車站的短途班次。</small>
+                    </div>
                 </div>
-                <!---------------->
             </b-card>
 
             <b-card body-class="row p-1" class="mb-2">

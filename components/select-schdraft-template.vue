@@ -9,6 +9,8 @@ export default {
         value: null,
         size: String,
         disabled: Boolean,
+        nullable: Boolean,
+        hideSecondSelect: Boolean
     },
     data() {
         return {
@@ -33,18 +35,25 @@ export default {
             this.category_id = response?.data?.group?.category_id;
             this.selected = this.value;
         },
+        handleNullCase(){
+            if (this.category_id === null){
+                this.selected = null;
+                this.$emit('input', null);
+                this.$emit('change', null);
+            }
+        },
     },
 }
 </script>
 
 <template>
     <div>
-        <select-item type="schdraft_category" v-model="category_id"
-            :disabled="disabled" :size="size"
+        <select-item type="schdraft_category" v-model="category_id" @change="handleNullCase"
+            :disabled="disabled" :size="size" :nullable="nullable"
         />
-        <select-item type="schdraft_template of category"
+        <select-item type="schdraft_template of category" v-if="category_id !== null || !hideSecondSelect"
             :filter="category_id" v-model="selected"
-            :disabled="(category_id === null) || (disabled === true)" :size="size"
+            :disabled="(category_id === null) || (disabled === true)" :size="size" :nullable="nullable"
             @input="$emit('input', selected)" @change="$emit('change', selected)"
         />
     </div>

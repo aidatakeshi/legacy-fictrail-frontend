@@ -89,6 +89,11 @@ export default {
         <div class="col-sm-6">
             <input-number-signed v-model="value.pivot_time_adj" size="sm" @input="changed" />
         </div>
+        <div class="col-sm-6"><strong>相應併結列車的模板 (如有)</strong></div>
+        <div class="col-sm-6">
+            <select-schdraft-template v-model="value.coupled_template_id" size="sm" hide-second-select
+            @input="changed" nullable />
+        </div>
         <div class="col-sm-6"><strong>啟用模板？</strong></div>
         <div class="col-sm-6 py-1">
             <b-form-checkbox switch v-model="value.is_enabled" size="sm" @input="changed" />

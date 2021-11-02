@@ -5,7 +5,7 @@ const $ = require('~/common.js');
 const sd_common = require('~/schdraft-common.js');
 
 import {
-    BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown,
+    BIcon, BIconPencilSquare, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown,
 } from 'bootstrap-vue'
 import TemplateEditSchTemplateRow from './template-edit-sch-template-row.vue';
 import TemplateEditSchTemplateRowCross from './template-edit-sch-template-row-cross.vue';
@@ -15,7 +15,7 @@ import TemplateEditSchTemplateRowActionModals from './template-edit-sch-template
 
 export default {
     components:{
-        BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown,
+        BIcon, BIconPencilSquare, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown,
         TemplateEditSchTemplateRow,
         TemplateEditSchTemplateRowCross,
         TemplateEditSchTemplateFirstStation,
@@ -165,7 +165,7 @@ export default {
                                 </small>
                                 <b-button variant="link" class="p-0 text-light" size="sm"
                                 @click="showEditLineStationsModal(value.sch_template[i].line_id)">
-                                    <b-icon-pen />
+                                    <b-icon-pencil-square />
                                 </b-button>
                             </th>
                         </tr>

@@ -8,11 +8,13 @@ import TemplateEditBasic from './template-edit-basic.vue';
 import TemplateEditDeployment from './template-edit-deployment.vue';
 import TemplateEditMods from './template-edit-mods.vue';
 import TemplateEditSchTemplate from './template-edit-sch-template.vue';
+import TemplateEditStationMod from './template-edit-station-mod.vue';
 
 export default {
     components:{
         BIcon, BIconPen, BIconX,
-        TemplateEditBasic, TemplateEditDeployment, TemplateEditMods, TemplateEditSchTemplate,
+        TemplateEditBasic, TemplateEditDeployment, TemplateEditMods,
+        TemplateEditSchTemplate, TemplateEditStationMod,
     },
     props: {
         type: null,
@@ -27,12 +29,14 @@ export default {
                 pivot_time: null, pivot_time_adj: null, operator_id: null, operator_id_mod: null,
                 train_type_id: null, train_type_mod: null, train_name_id: null, train_name_mod: null,
                 vehicle_performance_id: null, coupled_template_id: null,
+                station_begin_mod: null, station_terminate_mod: null,
                 remarks: null, is_enabled: null,
                 sch_template: null, mods: null, deployment: null,
             },
             editing_default: {
                 is_upbound: true, pivot_time: 12 * 3600, pivot_time_adj: 0,
                 train_type_mod: [], train_name_mod: [], operator_id_mod: [], is_enabled: true,
+                station_begin_mod: [], station_terminate_mod: [],
                 sch_template: [], mods: [],
                 deployment: [],
             },
@@ -150,9 +154,9 @@ export default {
                 <b-button variant="primary" class="w-50" @click="submit">保存</b-button>
             </div>
 
-            <!-- Mod設定規則 -------------------------------------------------------------------------------------->
-            <b-card title="Mod設定規則">
-                <template-edit-mods v-model="editing" />
+            <!-- 班次安排 -------------------------------------------------------------------------------------->
+            <b-card title="班次安排">
+                <template-edit-deployment v-model="editing" />
             </b-card>
 
             <!-- Submit -->
@@ -160,9 +164,28 @@ export default {
                 <b-button variant="primary" class="w-50" @click="submit">保存</b-button>
             </div>
 
-            <!-- 班次安排 -------------------------------------------------------------------------------------->
-            <b-card title="班次安排">
-                <template-edit-deployment v-model="editing" />
+            <!-- Mod縮短起點/終點安排 ------------------------------------------------------------------------------>
+            <b-card title="Mod更改起點/終點站安排">
+                <div class="row">
+                    <div class="col-md-6">
+                        <template-edit-station-mod v-model="editing.station_begin_mod"
+                        :sch-template="editing.sch_template" is-begin />
+                    </div>
+                    <div class="col-md-6">
+                        <template-edit-station-mod v-model="editing.station_terminate_mod"
+                        :sch-template="editing.sch_template" is-terminate />
+                    </div>
+                </div>
+            </b-card>
+
+            <!-- Submit -->
+            <div class="my-2 text-center">
+                <b-button variant="primary" class="w-50" @click="submit">保存</b-button>
+            </div>
+
+            <!-- Mod設定規則 -------------------------------------------------------------------------------------->
+            <b-card title="Mod設定規則">
+                <template-edit-mods v-model="editing" />
             </b-card>
 
             <!-- Submit -->
