@@ -5,12 +5,14 @@ import draggable from 'vuedraggable'
 const $ = require('~/common.js');
 
 import {
-    BIcon, BIconPen, BIconPencil, BIconX, BIconPlus, BIconTrash, BIconClock, BIconClockFill,
+    BIcon, BIconPen, BIconPencil, BIconX, BIconPlus, BIconTrash, BIconClock,
+    BIconClockFill, BIconCodeSquare, BIconPlusSquare,
 } from 'bootstrap-vue'
 
 export default {
     components:{
-        BIcon, BIconPen, BIconPencil, BIconX, BIconPlus, BIconTrash, BIconClock, BIconClockFill,
+        BIcon, BIconPen, BIconPencil, BIconX, BIconPlus, BIconTrash, BIconClock,
+        BIconClockFill, BIconCodeSquare, BIconPlusSquare,
         draggable,
     },
     props: {
@@ -173,12 +175,12 @@ export default {
                 <!------------------------------------------------>
             </div>
         </draggable>
-        <div>
-            <b-button variant="link" class="py-0 text-success" @click="newModItem()">
-                <b-icon-plus />
+        <div class="mt-1">
+            <b-button variant="link" size="sm" class="py-0 text-success" @click="newModItem()">
+                <b-icon-plus-square />
             </b-button>
-            <b-button variant="link" class="py-0 text-info" @click="showJSONModal()">
-                <small>JSON</small>
+            <b-button variant="link" size="sm" class="py-0 text-info" @click="showJSONModal()">
+                <b-icon-code-square />
             </b-button>
         </div>
 

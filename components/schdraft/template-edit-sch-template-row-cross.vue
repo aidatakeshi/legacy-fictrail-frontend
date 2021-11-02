@@ -70,8 +70,9 @@ export default {
 
         <!-- Cross ID -->
         <td colspan="3" class="text-left">
-            <b-button variant="outline-dark" size="sm" tabindex="3" class="px-2" @click="showCrossIDModal">
-                {{value.cross_id}}
+            <b-button variant="outline-dark" size="sm" tabindex="3" class="px-2" style="min-width: 2em;"
+            @click="showCrossIDModal">
+                {{value.cross_id || '-'}}
             </b-button>
             <!-- Track Cross Point Modal -->
             <b-modal ref="track_cross_point_modal" size="md" hide-header hide-footer scrollable centered>
@@ -107,14 +108,17 @@ export default {
 
         <!-- Remarks -->
         <td>
-            <!-- Remarks Here -->
-            <div class="remarks w-100" @click="$refs.remarks_modal.show()"><!---
-            --->{{value.remarks}} <!---
-            ---><span class="text-primary"><b-icon-pen /></span><!---
-        ---></div>
-            <b-modal ref="remarks_modal" title="備註" hide-footer centered>
-                <b-form-textarea size="sm" rows="8" v-model="value.remarks" />
-            </b-modal>
+            <div class="d-flex align-items-center">
+                <div class="remarks mr-auto">{{value.remarks}}</div>
+                <div>
+                    <b-button variant="link" class="text-primary" size="sm" @click="$refs.remarks_modal.show()">
+                        <b-icon-pen />
+                    </b-button>
+                    <b-modal ref="remarks_modal" title="備註" hide-footer centered>
+                        <b-form-textarea size="sm" rows="8" v-model="value.remarks" />
+                    </b-modal>
+                </div>
+            </div>
         </td>
 
         <!------------------------------------------------------------------>

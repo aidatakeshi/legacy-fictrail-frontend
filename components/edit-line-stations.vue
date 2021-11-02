@@ -18,14 +18,14 @@ export default {
             data_line: {},
             data$: {},
             additional_time_types: {
-                'upbound': '上行',
-                'downbound': '下行',
-                'local': '慢線',
-                'express': '快線',
-                'stop_up': '上停',
-                'pass_up': '上通',
-                'stop_down': '下停',
-                'pass_down': '下通',
+                'upbound': ['上行加算', '上行'],
+                'downbound': ['下行加算', '下行'],
+                'local': ['慢線加算', '慢線'],
+                'express': ['快線加算', '快線'],
+                'stop_up': ['上站停車加算', '上停'],
+                'pass_up': ['上站通過加算', '上通'],
+                'stop_down': ['此站停車加算', '此停'],
+                'pass_down': ['此站通過加算', '此通'],
             },
             editing_additional_time: {
                 basic: 0,
@@ -168,8 +168,8 @@ export default {
     <div>
         <!-- Main Modal -->
         <b-modal ref="_modal" centered scrollable hide-footer size="xl"
-        header-bg-variant="dark" header-text-variant="light" 
-        :title="data_line.name_chi">
+        header-bg-variant="dark" header-text-variant="light" :title="data_line.name_chi"
+        @hide="$emit('hide')">
 
         <div class="table-responsive">
             <table class="table table-hover my-table">
@@ -249,13 +249,13 @@ export default {
                                 {{plusMinus(item.additional_time.basic)}}
                             </b-button>
                             <b-button variant="outline-danger" class="p-0" @click="showSetAdditionalTimeModal(item)"
-                            v-else style="line-height: 0.75rem; font-size: 0.5rem;">
-                                <div>
+                            v-else style="line-height: 0.8rem; font-size: 0.67rem;">
+                                <div v-if="item.additional_time.basic">
                                     基本: {{plusMinus(item.additional_time.basic)}}
                                 </div>
                                 <template v-for="(name, key) in additional_time_types">
                                     <div :key="key" v-if="item.additional_time[key]">
-                                        {{name}}: {{plusMinus(item.additional_time[key])}}
+                                        {{name[1]}}: {{plusMinus(item.additional_time[key])}}
                                     </div>
                                 </template>
                             </b-button>
@@ -292,16 +292,16 @@ export default {
         </b-modal>
         
         <!-- Set Additional Time Modal -->
-        <b-modal ref="set_additional_time_modal" title="加算時間" hide-footer size="sm" centered>
+        <b-modal ref="set_additional_time_modal" title="加算時間" hide-footer size="md" centered>
             <div class="row">
-                <div class="col-4">基本:</div>
-                <div class="col-8">
+                <div class="col-md-6">基本加算秒數:</div>
+                <div class="col-md-6">
                     <b-form-input type="number" v-model="editing_additional_time.basic" size="sm" />
                 </div>
             </div>
             <div class="row" v-for="(name, key) in additional_time_types" :key="key">
-                <div class="col-4">{{name}}:</div>
-                <div class="col-8">
+                <div class="col-md-6">{{name[0]}}:</div>
+                <div class="col-md-6">
                     <b-form-input type="number" v-model="editing_additional_time[key]" size="sm" />
                 </div>
             </div>

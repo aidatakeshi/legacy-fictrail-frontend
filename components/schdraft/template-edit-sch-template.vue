@@ -28,17 +28,29 @@ export default {
     data() {
         return {
             row_menu_index: null,
+            info: [],
         };
     },
     watch: {
 
     },
     mounted(){
-
+        this.getSchTemplateInfo();
     },
     methods:{
         changed(){
             this.$emit('input', this.value);
+        },
+
+        //Get Info
+        async getSchTemplateInfo(){
+            var response = await $.callAPI(axios, 'POST', 'schdraft-editor/sch-template-info', {
+                vehicle_performance_id: this.value?.vehicle_performance_id,
+                sch_template: this.value?.sch_template || [],
+            })
+            if (response.http_status >= 400) return false;
+            this.info = response.data;
+            this.$forceUpdate();
         },
 
         //Get Previous Stop Item (bypassing items with is_cross)
@@ -95,6 +107,7 @@ export default {
         insertFirstStation(station_id){
             this.value.sch_template.push(sd_common.getNewStationItem({station_id: station_id}));
             this.changed();
+            this.getSchTemplateInfo();
         },
 
         //Row Menu
@@ -109,6 +122,11 @@ export default {
 
     },
     computed: {
+        secondStopIndex(){
+            for (var i = 1; i < (this.value.sch_template||[]).length; i++){
+                if (!this.value.sch_template[i].is_cross) return i;
+            }
+        },
     },
 }
 </script>
@@ -117,7 +135,7 @@ export default {
     <div>
 
         <!-- Main Table -------------------------------------------------------------------------->
-        <div class="table-responsive" v-if="(value.sch_template||[]).length">
+        <div class="table-responsive mb-0" v-if="(value.sch_template||[]).length">
             <table class="table my-table">
                 <!-- Header ------------------------------------------------------------>
                 <thead>
@@ -154,14 +172,18 @@ export default {
                         <!-- Stopping Station (Cross ID Not Exists) -->
                         <template-edit-sch-template-row v-if="!value.sch_template[i].is_cross"
                             v-model="value.sch_template[i]" :key="i" :index="i"
-                            :is-first="i == 0" :is-last="i == value.sch_template.length - 1"
+                            :info="info[i] || {}"
+                            :is-first="i == 0" :is-second="i == secondStopIndex"
+                            :is-last="i == value.sch_template.length - 1"
                             :prev-value="getPrevTimeValue(i)" :next-value="getNextTimeValue(i)"
+                            :prev-item="getPrevStopItem(i)"
                             @show-menu="showRowMenu"
                             @edit-station="showEditStationModal"
                         />
                         <!-- Crossing (Cross ID Exists) -->
                         <template-edit-sch-template-row-cross v-else
                             v-model="value.sch_template[i]" :key="i" :index="i"
+                            :info="info[i] || {}"
                             @show-menu="showRowMenu"
                         />
                         <!-------------------------------------------->
@@ -182,13 +204,13 @@ export default {
         
         <!-- Edit Line Stations Modals -->
         <template-edit-sch-template-row-action-modals ref="row_action_modals" v-model="value.sch_template"
-        @input="$forceUpdate()" />
+        @input="getSchTemplateInfo()" />
 
         <!-- Edit Station Modal -->
         <edit-item ref="edit_station_modal" type="station" />
 
         <!-- Edit Line Stations Modal -->
-        <edit-line-stations ref="edit_line_stations_modal" />
+        <edit-line-stations ref="edit_line_stations_modal" @hide="getSchTemplateInfo" />
 
         <!---------------------------------------------------------------------------------------->
 

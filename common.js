@@ -99,7 +99,7 @@ var zero = function(value){
 }
 
 //Display Time Interval (#h#m#s / #m#s / #s)
-exports.displayTimeInterval = function(value, signed = false){
+exports.displayTimeInterval = function(value, signed = false, forceSeconds = false, noHours = false){
     if (value === null) return null;
     if (isNaN(value)) return null;
     var lessThen0 = false;
@@ -115,14 +115,20 @@ exports.displayTimeInterval = function(value, signed = false){
     if (lessThen0) mark = '-';
     if (value < 60){
         return `${s}s`;
+    }else if (noHours){
+        if (!(value % 60) && !forceSeconds) return `${mark}${h*60+m}m`;
+        return `${mark}${h*60+m}m${zero(s)}s`;
     }else if (value < 3600){
-        if (!(value % 60)) return `${mark}${m}m`;
+        if (!(value % 60) && !forceSeconds) return `${mark}${m}m`;
         return `${mark}${m}m${zero(s)}s`;
     }else{
-        if (!(value % 3600)) return `${mark}${h}h`;
-        if (!(value % 60)) return `${mark}${h}h${zero(m)}m`;
+        if (!(value % 3600) && !forceSeconds) return `${mark}${h}h`;
+        if (!(value % 60) && !forceSeconds) return `${mark}${h}h${zero(m)}m`;
         return `${mark}${h}h${zero(m)}m${zero(s)}s`;
     }
+}
+exports.displayTimeIntervalMMSS = function(value, signed = false){
+    return exports.displayTimeInterval(value, signed, true, true);
 }
 
 //#### (mmss)
