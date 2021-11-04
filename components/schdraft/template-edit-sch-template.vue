@@ -12,6 +12,7 @@ import TemplateEditSchTemplateRowCross from './template-edit-sch-template-row-cr
 import TemplateEditSchTemplateFirstStation from './template-edit-sch-template-first-station.vue';
 import TemplateEditSchTemplateRowMenu from './template-edit-sch-template-row-menu.vue';
 import TemplateEditSchTemplateRowActionModals from './template-edit-sch-template-row-action-modals.vue';
+import TemplateEditSchTemplateShiftTime from './template-edit-sch-template-shift-time.vue';
 
 export default {
     components:{
@@ -21,6 +22,7 @@ export default {
         TemplateEditSchTemplateFirstStation,
         TemplateEditSchTemplateRowMenu,
         TemplateEditSchTemplateRowActionModals,
+        TemplateEditSchTemplateShiftTime,
     },
     props: {
         value: Object,
@@ -134,6 +136,13 @@ export default {
 <template>
     <div>
 
+        <!-- Buttons -->
+        <div class="mb-2">
+            <b-button class="px-1 py-0" variant="outline-secondary" @click="$refs.shift_time_modal.show()">
+                推前/推後時間
+            </b-button>
+        </div>
+
         <!-- Main Table -------------------------------------------------------------------------->
         <div class="table-responsive mb-0" v-if="(value.sch_template||[]).length">
             <table class="table my-table">
@@ -195,6 +204,9 @@ export default {
         <!-- First Station Dialog -->
         <template-edit-sch-template-first-station v-if="!(value.sch_template||[]).length"
         @selected="insertFirstStation" />
+
+        <!-- Shift Time -->
+        <template-edit-sch-template-shift-time ref="shift_time_modal" v-model="value.sch_template" />
 
         <!-- Row Menu -->
         <b-modal ref="row_menu_modal" size="sm" hide-header hide-footer centered>

@@ -86,6 +86,10 @@ export default {
         newModItem(){
             var mod = prompt('請輸入mod名稱。');
             if (!mod) return false;
+            for (var i in this.value){
+                if (this.value[i].mod == mod) return false;
+            }
+            //Push
             if (!this.isCross){
                 this.value.push({
                     mod: mod, track: null, is_express_track: null,
@@ -96,6 +100,12 @@ export default {
                     mod: mod, time1: null, time1_shift: null, time2: null, time2_shift: null,
                 });
             }
+            //Sort
+            this.value.sort(function(a, b){
+                if (a.mod > b.mod) return +1;
+                if (a.mod < b.mod) return -1;
+                return 0;
+            });
             this.changed();
         },
         //
@@ -142,39 +152,37 @@ export default {
 
 <template>
     <div>
-        <draggable v-model="value" @end="changed()" handle=".handle">
-            <div v-for="(mod, i) in value" :key="i" @click="editModItem(i)">
-                <!-- For each mod -------------------------------->
-                <b-badge class="handle">{{mod.mod}}</b-badge>
-                <ul class="my-list">
-                    <li v-if="isDefined(i, 'track')">
-                        軌{{mod.track}}
-                    </li>
-                    <li v-if="isDefined(i, 'is_express_track')">
-                        {{mod.is_express_track ? '快線' : '普線'}}
-                    </li>
-                    <li v-if="isDefined(i, 'is_pass')">
-                        {{mod.is_pass ? '通過' : '停車'}}
-                    </li>
-                    <li v-if="isDefined(i, 'time1') || isDefined(i, 'time1_shift')">
-                        <b-icon-clock />
-                        <span v-if="mod.time1_shift">{{displayTimeInterval(mod.time1_shift, true)}}</span>
-                        <span v-else-if="mod.time1 !== false">{{displayTime(mod.time1)}}</span>
-                        <span v-else>N/A</span>
-                    </li>
-                    <li v-if="isDefined(i, 'time2') || isDefined(i, 'time2_shift')">
-                        <b-icon-clock-fill />
-                        <span v-if="mod.time2_shift">{{displayTimeInterval(mod.time2_shift, true)}}</span>
-                        <span v-else-if="mod.time2 !== false">{{displayTime(mod.time2)}}</span>
-                        <span v-else>N/A</span>
-                    </li>
-                </ul>
-                <span class="text-info">
-                    <b-icon-pencil />
-                </span>
-                <!------------------------------------------------>
-            </div>
-        </draggable>
+        <div v-for="(mod, i) in value" :key="i" @click="editModItem(i)">
+            <!-- For each mod -------------------------------->
+            <b-badge>{{mod.mod}}</b-badge>
+            <ul class="my-list">
+                <li v-if="isDefined(i, 'track')">
+                    軌{{mod.track}}
+                </li>
+                <li v-if="isDefined(i, 'is_express_track')">
+                    {{mod.is_express_track ? '快線' : '普線'}}
+                </li>
+                <li v-if="isDefined(i, 'is_pass')">
+                    {{mod.is_pass ? '通過' : '停車'}}
+                </li>
+                <li v-if="isDefined(i, 'time1') || isDefined(i, 'time1_shift')">
+                    <b-icon-clock />
+                    <span v-if="mod.time1_shift">{{displayTimeInterval(mod.time1_shift, true)}}</span>
+                    <span v-else-if="mod.time1 !== false">{{displayTime(mod.time1)}}</span>
+                    <span v-else>N/A</span>
+                </li>
+                <li v-if="isDefined(i, 'time2') || isDefined(i, 'time2_shift')">
+                    <b-icon-clock-fill />
+                    <span v-if="mod.time2_shift">{{displayTimeInterval(mod.time2_shift, true)}}</span>
+                    <span v-else-if="mod.time2 !== false">{{displayTime(mod.time2)}}</span>
+                    <span v-else>N/A</span>
+                </li>
+            </ul>
+            <span class="text-info">
+                <b-icon-pencil />
+            </span>
+            <!------------------------------------------------>
+        </div>
         <div class="mt-1">
             <b-button variant="link" size="sm" class="py-0 text-success" @click="newModItem()">
                 <b-icon-plus-square />
