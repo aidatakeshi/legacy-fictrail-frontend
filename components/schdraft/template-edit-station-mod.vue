@@ -59,7 +59,7 @@ export default {
 
     },
     computed: {
-        header(){
+        headerText(){
             return this.isBegin ? '縮短起點站' : '縮短終點站';
         },
     },
@@ -70,7 +70,7 @@ export default {
     <b-card body-class="p-1">
         <!-- Header & Edit Button -->
         <div>
-            <strong>{{header}}</strong>
+            <strong>{{headerText}}</strong>
             <b-button variant="link" class="p-0 text-primary" @click="$refs._modal.show()">
                 <b-icon-pencil-square />
             </b-button>

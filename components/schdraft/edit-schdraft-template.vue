@@ -124,14 +124,15 @@ export default {
 <template>
     <div>
         <b-modal ref="_modal" centered scrollable size="xl" no-close-on-backdrop
-        header-bg-variant="dark" header-text-variant="light" hide-footer>
-            <template #modal-title>
-                <div class="d-flex align-items-center">
-                    <div class="mr-2">{{((isNew || isCopy) ? '新增' : '編輯') + '時刻表模板'}}</div>
-                    <b-button class="my-0" variant="dark" @click="$refs.json_modal.show()">
-                        查看JSON
-                    </b-button>
-                </div>
+        header-bg-variant="dark" header-text-variant="light" footer-class="py-1"
+        :title="((isNew || isCopy) ? '新增' : '編輯') + '時刻表模板'">
+            <template #modal-footer>
+                <b-button class="my-0 ml-1" variant="secondary" @click="$refs.json_modal.show()">
+                    JSON
+                </b-button>
+                <b-button class="my-0 ml-1" variant="primary" @click="submit()">
+                    保存
+                </b-button>
             </template>
 
             <!-- 基本資料 -------------------------------------------------------------------------------------->

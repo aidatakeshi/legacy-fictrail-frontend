@@ -44,7 +44,7 @@ export default {
                 mark = (value) ? '+' : '±';
             }
             if (value < 60){
-                this.display = `${s}s`;
+                this.display = `${mark}${s}s`;
             }else if (value < 3600){
                 this.display = `${mark}${m}m${this.zero(s)}s`;
             }else{
