@@ -3,18 +3,20 @@
 import axios from '~/plugins/axios'
 const $ = require('~/common.js');
 
-import { BIcon, BIconPen, BIconX } from 'bootstrap-vue'
+import { BIcon, BIconPen, BIconX, BIconCode, BIconTable } from 'bootstrap-vue'
 import TemplateEditBasic from './template-edit-basic.vue';
 import TemplateEditDeployment from './template-edit-deployment.vue';
 import TemplateEditMods from './template-edit-mods.vue';
 import TemplateEditSchTemplate from './template-edit-sch-template.vue';
 import TemplateEditStationMod from './template-edit-station-mod.vue';
+import ViewTemplateOutput from './view-template-output.vue';
 
 export default {
     components:{
-        BIcon, BIconPen, BIconX,
+        BIcon, BIconPen, BIconX, BIconCode, BIconTable,
         TemplateEditBasic, TemplateEditDeployment, TemplateEditMods,
         TemplateEditSchTemplate, TemplateEditStationMod,
+        ViewTemplateOutput,
     },
     props: {
         type: null,
@@ -98,14 +100,14 @@ export default {
             if (response.http_status >= 400){
                 //Failed
                 this.$bvToast.toast(`保存失敗`, {
-                    title: '保存失敗', variant: 'danger', toaster: 'b-toaster-bottom-right',
+                    title: '保存失敗', variant: 'danger', toaster: 'b-toaster-top-left',
                 });
             }else{
                 //Success
                 this.$emit(this.isNew ? 'created' : 'edited', id);
                 this.$emit('change', id);
                 this.$bvToast.toast(`已保存`, {
-                    title: '已保存', variant: 'success', toaster: 'b-toaster-bottom-right',
+                    title: '已保存', variant: 'success', toaster: 'b-toaster-top-left',
                 });
                 //New / Copy Mode -> Close
                 if (this.isNew || this.isCopy){
@@ -116,7 +118,11 @@ export default {
 
     },
     computed: {
-
+        modalTitle(){
+            var str = ((this.isNew || this.isCopy) ? '新增' : '編輯') + `時刻表模板`;
+            str += (this.editing.title) ? ` (${this.editing.title})` : '';
+            return str;
+        },
     },
 }
 </script>
@@ -125,10 +131,13 @@ export default {
     <div>
         <b-modal ref="_modal" centered scrollable size="xl" no-close-on-backdrop
         header-bg-variant="dark" header-text-variant="light" footer-class="py-1"
-        :title="((isNew || isCopy) ? '新增' : '編輯') + '時刻表模板'">
+        :title="modalTitle">
             <template #modal-footer>
-                <b-button class="my-0 ml-1" variant="secondary" @click="$refs.json_modal.show()">
-                    JSON
+                <b-button class="my-0 ml-1" variant="outline-dark" @click="$refs.output_modal.show()">
+                    <b-icon-table scale="1.2" />
+                </b-button>
+                <b-button class="my-0 ml-1" variant="outline-secondary" @click="$refs.json_modal.show()">
+                    <b-icon-code scale="1.2" />
                 </b-button>
                 <b-button class="my-0 ml-1" variant="primary" @click="submit()">
                     保存
@@ -200,6 +209,12 @@ export default {
         <b-modal ref="json_modal" title="查看JSON" centered scrollable hide-footer size="lg"
         header-bg-variant="warning" header-text-variant="dark" >
             <vue-json-pretty :data="editing" />
+        </b-modal>
+
+        <!-- Output Modal -->
+        <b-modal ref="output_modal" title="輸出班次" centered scrollable hide-footer size="lg"
+        header-bg-variant="warning" header-text-variant="dark" >
+            <view-template-output :template-id="editing.id" />
         </b-modal>
 
     </div>
