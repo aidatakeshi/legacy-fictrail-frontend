@@ -60,7 +60,7 @@ export default {
             //Load Data
             var route = 'items/'+this.type+'/'+encodeURIComponent(id);
             var response = await $.callAPI(axios, 'GET', route, {});
-            if (response.http_response >= 400) return false;
+            if (response.http_status >= 400) return false;
             this.data$ = response.data;
             //Open Modal
             this.isNew = false;
@@ -119,6 +119,22 @@ export default {
                     <div class="col-sm-4"><strong>{{editorField.label}}</strong></div>
                     <div class="col-sm-8">
                         <b-form-input type="number" v-model="data$[editorField.field]" size="sm"
+                        @focus="editing_failed = false" />
+                    </div>
+                </template>
+                <!-- format: time -->
+                <template v-else-if="editorField.format == 'time'">
+                    <div class="col-sm-4"><strong>{{editorField.label}}</strong></div>
+                    <div class="col-sm-8">
+                        <input-time v-model="data$[editorField.field]" size="sm"
+                        @focus="editing_failed = false" />
+                    </div>
+                </template>
+                <!-- format: time_shift -->
+                <template v-else-if="editorField.format == 'time_shift'">
+                    <div class="col-sm-4"><strong>{{editorField.label}}</strong></div>
+                    <div class="col-sm-8">
+                        <input-number-signed v-model="data$[editorField.field]" size="sm"
                         @focus="editing_failed = false" />
                     </div>
                 </template>
@@ -199,10 +215,10 @@ export default {
 
             <!-- Submit Button -->
             <div class="d-flex">
-                <b-button variant="outline-secondary" block class="mt-2" @click="$refs._modal.hide()">
+                <b-button variant="outline-secondary" size="sm" block class="mt-2" @click="$refs._modal.hide()">
                     取消
                 </b-button>
-                <b-button variant="primary" block class="mt-2" @click="submit">
+                <b-button variant="primary" size="sm" block class="mt-2" @click="submit">
                     提交
                 </b-button>
             </div>

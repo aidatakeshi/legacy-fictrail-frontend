@@ -64,7 +64,7 @@ export default {
 
             //Call API
             var response = await $.callAPI(axios, 'GET', 'items/'+configOfItem.api_call, queries);
-            if (response.http_response >= 400) return false;
+            if (response.http_status >= 400) return false;
             var result = response.data;
             var option_matched = false;
 

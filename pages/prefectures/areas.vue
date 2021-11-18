@@ -21,7 +21,7 @@
         methods: {
             async loadData(){
                 var response = await $.callAPI(axios, 'GET', 'items/prefecture_area', {});
-                if (response.http_response >= 400) return false;
+                if (response.http_status >= 400) return false;
                 this.data = response.data;
                 this.trigger++;
             },

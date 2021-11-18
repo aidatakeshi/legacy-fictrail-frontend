@@ -155,11 +155,13 @@ exports.data = {
         api_query: "templates",
         api_sub: "templates",
         display_sub: "title",
+        display_sub2: "id",
     },
     "schdraft_template of group": {
         api_call: "schdraft_template",
         api_filter: "group_id",
         display: "title",
+        display_sub: "id",
     },
     "schdraft_template of category": {
         api_call: "schdraft_group",
@@ -169,6 +171,7 @@ exports.data = {
         api_query: "templates",
         api_sub: "templates",
         display_sub: "title",
+        display_sub2: "id",
     },
 
 };

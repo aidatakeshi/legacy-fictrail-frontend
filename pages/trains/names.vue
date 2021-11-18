@@ -24,7 +24,7 @@
         methods: {
             async loadData(){
                 var response = await $.callAPI(axios, 'GET', 'items/train_types?more=1&list=1', this.query);
-                if (response.http_response >= 400) return false;
+                if (response.http_status >= 400) return false;
                 this.data = response.data;
                 this.trigger++;
             },

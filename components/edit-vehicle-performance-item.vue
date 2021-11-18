@@ -66,7 +66,7 @@ export default {
             //Load Data
             var url = `items/vehicle_performance_item/${encodeURIComponent(id)}`;
             var response = await $.callAPI(axios, 'GET', url);
-            if (response.http_response >= 400) return false;
+            if (response.http_status >= 400) return false;
             for (var i in this.editing){
                 this.editing[i] = response.data[i];
             }

@@ -203,7 +203,26 @@ exports.data = {
         },
     },
     "schdraft_template": {
-        //Use Dedicated Editor
+        editor: [
+            {label: 'ID', field: 'id', format: 'id'},
+            {label: '時刻表群組', field: 'group_id', format: 'select', select_type: 'schdraft_group'},
+            {label: '標題', field: 'title'},
+            {label: '啟用', field: 'is_enabled', format: 'boolean'},
+            {label: '上行?', field: 'is_upbound', format: 'boolean'},
+            {label: '基準時間', field: 'pivot_time', format: 'time'},
+            {label: '基準時間調整', field: 'pivot_time_adj', format: 'time_shift'},
+            {label: '列車種別', field: 'train_type_id', format: 'select', select_type: 'train_type'},
+            {label: '列車名稱', field: 'train_name_id', format: 'select', select_type: 'train_name', nullable: true},
+            {label: '營運者', field: 'operator_id', format: 'select', select_type: 'operator'},
+            {label: '車輛性能', field: 'vehicle_performance_id', format: 'select', select_type: 'vehicle_performance_item'},
+            {label: '備註', field: 'remarks', format: 'remarks'},
+        ],
+        default: {
+            'is_enabled': true,
+            'is_upbound': false,
+            'pivot_time': 43200,
+            'pivot_time_adj': 0,
+        },
     },
 
 };

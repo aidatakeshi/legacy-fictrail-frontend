@@ -19,6 +19,10 @@
                 data_category: {},
                 data: [],
                 trigger: 0,
+                duplicate_modal_data: {},
+                duplicate_modal_title: null,
+                duplicate_modal_id: null,
+                duplicate_modal_error: false,
             }
         },
 
@@ -26,7 +30,7 @@
             //Load data of categories
             var $route = `items/schdraft_category/${encodeURIComponent(this.$route.params.id)}`;
             var response = await $.callAPI(axios, 'GET', $route);
-            if (response.http_response >= 400) return false;
+            if (response.http_status >= 400) return false;
             this.data_category = response.data;
             //Load data of groups & templates
             await this.loadData();
@@ -36,7 +40,7 @@
             async loadData(){
                 var $route = `items/schdraft_group?templates=1&category_id=${encodeURIComponent(this.$route.params.id)}&list=1`;
                 var response = await $.callAPI(axios, 'GET', $route);
-                if (response.http_response >= 400) return false;
+                if (response.http_status >= 400) return false;
                 this.data = response.data;
                 this.trigger++;
             },
@@ -51,7 +55,7 @@
                 if (!c) return false;
                 var route = 'items/schdraft_group/'+encodeURIComponent(id);
                 var response = await $.callAPI(axios, 'DELETE', route, {});
-                if (response.http_response >= 400) return false;
+                if (response.http_status >= 400) return false;
                 this.loadData();
             },
             showTemplateEdit(id){
@@ -60,8 +64,28 @@
             showTemplateNew(data){
                 this.$refs.template_modal.showNew(data);
             },
-            duplicateTemplate(id){
-                this.$refs.template_modal.showEdit(id, true);
+            async duplicateTemplateModal(id){
+                var $route = `items/schdraft_template/${encodeURIComponent(id)}`;
+                var response = await $.callAPI(axios, 'GET', $route);
+                if (response.http_status >= 400) return false;
+                this.duplicate_modal_data = response.data;
+                this.duplicate_modal_title = (this.duplicate_modal_data||{}).title;
+                this.duplicate_modal_id = (this.duplicate_modal_data||{}).id;
+                this.duplicate_modal_error = false;
+                this.$refs.duplicate_template_modal.show();
+            },
+            async duplicateTemplateSubmit(){
+                var data = this.duplicate_modal_data;
+                data.title = this.duplicate_modal_title;
+                data.id = this.duplicate_modal_id;
+                var $route = `items/schdraft_template`;
+                var response = await $.callAPI(axios, 'POST', $route, data);
+                if (response.http_status >= 400){
+                    this.duplicate_modal_error = true;
+                }else{
+                    this.$refs.duplicate_template_modal.hide();
+                    this.loadData();
+                }
             },
         },
 
@@ -96,7 +120,32 @@
         <edit-item ref="edit_modal" type="schdraft_group" @change="loadData" />
 
         <!-- Edit Template Modal -->
-        <edit-schdraft-template ref="template_modal" @change="loadData" />
+        <edit-item ref="template_modal" type="schdraft_template" @change="loadData" />
+        
+        <!-- Duplicate Template Modal -->
+        <b-modal ref="duplicate_template_modal" size="md" title="複製模板" centered hide-footer>
+            <div class="row">
+                <div class="col-sm-4">ID</div>
+                <div class="col-sm-8">
+                    <b-form-input v-model="duplicate_modal_id" size="sm"
+                    @focus="duplicate_modal_error = false;" />
+                </div>
+                <div class="col-sm-4">標題</div>
+                <div class="col-sm-8">
+                    <b-form-input v-model="duplicate_modal_title" size="sm"
+                    @focus="duplicate_modal_error = false;" />
+                </div>
+                <div class="col-12 text-danger text-center" v-if="duplicate_modal_error">
+                    提交錯誤
+                </div>
+                <div class="col-12 mt-2">
+                    <b-button variant="primary" block size="sm" @click="duplicateTemplateSubmit">
+                        提交
+                    </b-button>
+                </div>
+            </div>
+
+        </b-modal>
 
         <!-- Content (Templates in Each Group) -->
         <div v-for="group in data" :key="group.id">
@@ -128,10 +177,10 @@
             </div>
 
             <list-item type="schdraft_template" :data="group.templates" :trigger="trigger"
-                @change="loadData" @edit="showTemplateEdit" @duplicate="duplicateTemplate"
+                @change="loadData" @edit="showTemplateEdit" @duplicate="duplicateTemplateModal"
             />
 
-            <button-new text="新增時刻表模板" @click="showTemplateNew({group_id: group.id})" />
+            <button-new variant="outline-success" text="新增時刻表模板" @click="showTemplateNew({group_id: group.id})" />
 
         </div>
 

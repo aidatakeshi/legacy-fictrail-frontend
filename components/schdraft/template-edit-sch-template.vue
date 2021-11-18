@@ -26,6 +26,7 @@ export default {
     },
     props: {
         value: Object,
+        vehiclePerformanceId: String,
     },
     data() {
         return {
@@ -34,10 +35,11 @@ export default {
         };
     },
     watch: {
-
+        vehiclePerformanceId(val){
+            if (val) this.getSchTemplateInfo();
+        }
     },
     mounted(){
-        this.getSchTemplateInfo();
     },
     methods:{
         changed(){
@@ -47,7 +49,7 @@ export default {
         //Get Info
         async getSchTemplateInfo(){
             var response = await $.callAPI(axios, 'POST', 'schdraft-editor/sch-template-info', {
-                vehicle_performance_id: this.value?.vehicle_performance_id,
+                vehicle_performance_id: this.vehiclePerformanceId,
                 sch_template: this.value?.sch_template || [],
             })
             if (response.http_status >= 400) return false;
@@ -108,7 +110,7 @@ export default {
         showTimetableModal(i){
             var line_id = this.value.sch_template[i].line_id;
             var direction = this.value.sch_template[i].is_upbound ? 'up' : 'dn';
-            this.$refs.timetable_modal.show(line_id, direction);
+            this.$refs.timetable_modal.show(line_id, direction, this.value.id);
         },
 
         //Insert First Station

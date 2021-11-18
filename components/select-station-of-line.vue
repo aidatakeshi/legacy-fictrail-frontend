@@ -39,7 +39,7 @@ export default {
 
             //Call API
             var response = await $.callAPI(axios, 'GET', 'line/'+this.lineId+'/stations?from_selecter=1');
-            if (response.http_response >= 400) return false;
+            if (response.http_status >= 400) return false;
             var result = response.data;
             for (var i in result){
                 if (!result[i].name_chi) continue;

@@ -9,11 +9,13 @@ const $ = require('~/common.js');
 const config = require('~/config.list-item.js');
 const env = require('~/config.js');
 
-import { BIcon, BIconPen, BIconX, BIconCheck, BIconLayers, BIconGraphDown, BIconTrash } from 'bootstrap-vue'
+import {
+    BIcon, BIconPen, BIconX, BIconCheck, BIconLayers, BIconGraphDown, BIconTrash, BIconTable,
+} from 'bootstrap-vue'
 
 export default {
     components:{
-        BIcon, BIconPen, BIconX, BIconCheck, BIconLayers, BIconGraphDown, BIconTrash
+        BIcon, BIconPen, BIconX, BIconCheck, BIconLayers, BIconGraphDown, BIconTrash, BIconTable,
     },
     props: {
         type: null,
@@ -60,7 +62,7 @@ export default {
                 query.limit = this.limit;
                 //Call API
                 var response = await $.callAPI(axios, 'GET', 'items/'+this.type, query);
-                if (response.http_response >= 400) return false;
+                if (response.http_status >= 400) return false;
                 this.data$ = response.data;
                 this.page = response.page;
                 this.limit_b = response.limit;
@@ -78,7 +80,7 @@ export default {
             if (!c) return false;
             var route = 'items/'+this.type+'/'+encodeURIComponent(id);
             var response = await $.callAPI(axios, 'DELETE', route, {});
-            if (response.http_response >= 400) return false;
+            if (response.http_status >= 400) return false;
             this.$emit('removed', id);
             this.$emit('change', id);
         },
@@ -222,9 +224,16 @@ export default {
                             </td>
                             <!-- "button_graph" -->
                             <td :key="i" v-else-if="listConfig.format == 'button_graph'">
-                                <b-button variant="outline-secondary" class="px-2 py-1" v-if="item.has_calc_results"
+                                <b-button variant="outline-info" class="px-2 py-1" v-if="item.has_calc_results"
                                 @click="$emit('view-graph', item.id)">
                                     <b-icon-graph-down />
+                                </b-button>
+                            </td>
+                            <!-- "button_table" -->
+                            <td :key="i" v-else-if="listConfig.format == 'button_table'">
+                                <b-button variant="outline-info" class="px-2 py-1"
+                                @click="$emit('view-table', item.id)">
+                                    <b-icon-table />
                                 </b-button>
                             </td>
                             <!-- "button_duplicate" -->

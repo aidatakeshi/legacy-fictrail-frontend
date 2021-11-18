@@ -25,7 +25,7 @@
             async loadData(){
                 //Groups
                 var response = await $.callAPI(axios, 'GET', `items/vehicle_performance_group`);
-                if (response.http_response >= 400) return false;
+                if (response.http_status >= 400) return false;
                 this.data_groups = response.data;
                 for (var i in this.data_groups){
                     if (this.data_groups[i].id == this.$route.params.id){
@@ -36,7 +36,7 @@
                 var response = await $.callAPI(axios, 'GET', `items/vehicle_performance_item`, {
                     group_id: this.$route.params.id,
                 });
-                if (response.http_response >= 400) return false;
+                if (response.http_status >= 400) return false;
                 this.data = response.data;
                 this.trigger++;
             },

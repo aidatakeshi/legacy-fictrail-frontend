@@ -15,8 +15,6 @@ export default {
     },
     props: {
         value: Object,
-        isNew: Boolean,
-        isCopy: Boolean,
     },
     data() {
         return {
@@ -101,9 +99,6 @@ export default {
         <div class="col-sm-12">
             <strong>備註</strong>
             <b-form-textarea v-model="value.remarks" size="sm" rows="5" @input="changed" />
-        </div>
-        <div v-if="!isNew && !isCopy">
-            <small>ID: {{value.id}}</small>
         </div>
     </div>
 </template>

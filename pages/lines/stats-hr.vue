@@ -16,7 +16,7 @@
 
         async mounted(){
             var response = await $.callAPI(axios, 'GET', 'line-stats-hr');
-            if (response.http_response >= 400) return false;
+            if (response.http_status >= 400) return false;
             this.data = response;
             this.dataLoaded = true;
         },

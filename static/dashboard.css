@@ -79,10 +79,6 @@ pre {
     line-height: 1rem;
     background-color: #f8f8f8;
 }
-.my-table .sticky{
-    position: sticky;
-    left: 0;
-}
 .my-table .name{
     font-weight: bold;
     line-height: 1rem;

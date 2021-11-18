@@ -69,6 +69,7 @@ exports.data = {
             {label: '', field: 'color', format: 'color'},
             {label: '名稱', field: 'name_chi', field_sub: 'name_eng', field_sub_bracket: 'name_eng_short', format: 'name'},
             {label: '車站', format: 's_line_station_count'},
+            {label: '時刻表', format: 'button_table'},
             {label: '長度', field: 'length_km', format: 'number', decimals: 1, unit: 'km'},
             {label: '最高速度', field: 'max_speed_kph', format: 'number', unit: 'km/h'},
             {label: '備註', field: 'remarks', format: 'remarks'},
@@ -166,13 +167,14 @@ exports.data = {
     },
     "schdraft_template": {
         list: [
-            {label: '時刻表模板', field: 'title', format: 'name'},
+            {label: '時刻表模板', field: 'title', format: 'link', url: '/schdraft/template/'},
             {label: '方向', field: 'is_upbound', format: 'boolean', text_true: '上行', text_false: '下行'},
             {label: '預設種別', format: 's_schdraft_train_type_name'},
             {label: '基準時間', format: 's_schdraft_pivot_time'},
             {label: '營運者', format: 's_schdraft_operator'},
             {label: '備註', field: 'remarks', format: 'remarks'},
             {label: '啟用', field: 'is_enabled', format: 'boolean'},
+            {label: 'ID', field: 'id', format: 'id'},
             {label: '', format: 'button_duplicate'},
         ],
     },
