@@ -55,7 +55,8 @@ export default {
 
         //Load Data
         async loadData(){
-            var response = await $.callAPI(axios, "GET", "line/"+encodeURI(this.line_id)+"/stations", {});
+            var $route = `line/${encodeURIComponent(this.line_id)}/stations`;
+            var response = await $.callAPI(axios, "GET", $route, {});
             if (response.http_status != 200) return false;
             this.data_line = response.data_line || {};
             this.data$ = response.data;
@@ -64,7 +65,8 @@ export default {
         //Show Arrival
         async toggleShowArrival(item){
             var newValue = !item.show_arrival;
-            var response = await $.callAPI(axios, "PATCH", "items/lines_stations/"+encodeURI(item.id), {
+            var $route = `items/lines_stations/${encodeURIComponent(item.id)}`;
+            var response = await $.callAPI(axios, "PATCH", $route, {
                 show_arrival: newValue,
             });
             if (response.http_status != 200) return false;
@@ -172,7 +174,7 @@ export default {
         @hide="$emit('hide')">
 
         <div class="table-responsive">
-            <table class="table table-hover my-table">
+            <table class="table table-bordered table-hover my-table">
                 <thead class="thead-light">
                     <tr>
                         <th>#</th>

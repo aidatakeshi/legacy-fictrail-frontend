@@ -5,7 +5,7 @@ const $ = require('~/common.js');
 const sd_common = require('~/schdraft-common.js');
 
 import {
-    BIcon, BIconPencilSquare, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown,
+    BIcon, BIconPencilSquare, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown, BIconTable,
 } from 'bootstrap-vue'
 import TemplateEditSchTemplateRow from './template-edit-sch-template-row.vue';
 import TemplateEditSchTemplateRowCross from './template-edit-sch-template-row-cross.vue';
@@ -16,7 +16,7 @@ import TemplateEditSchTemplateShiftTime from './template-edit-sch-template-shift
 
 export default {
     components:{
-        BIcon, BIconPencilSquare, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown,
+        BIcon, BIconPencilSquare, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown, BIconTable,
         TemplateEditSchTemplateRow,
         TemplateEditSchTemplateRowCross,
         TemplateEditSchTemplateFirstStation,
@@ -101,8 +101,14 @@ export default {
         showEditStationModal(id){
             this.$refs.edit_station_modal.showEdit(id);
         },
-        showEditLineStationsModal(id){
-            this.$refs.edit_line_stations_modal.show(id);
+        showEditLineStationsModal(i){
+            var line_id = this.value.sch_template[i].line_id;
+            this.$refs.edit_line_stations_modal.show(line_id);
+        },
+        showTimetableModal(i){
+            var line_id = this.value.sch_template[i].line_id;
+            var direction = this.value.sch_template[i].is_upbound ? 'up' : 'dn';
+            this.$refs.timetable_modal.show(line_id, direction);
         },
 
         //Insert First Station
@@ -145,7 +151,7 @@ export default {
 
         <!-- Main Table -------------------------------------------------------------------------->
         <div class="table-responsive mb-0" v-if="(value.sch_template||[]).length">
-            <table class="table my-table">
+            <table class="table table-bordered my-table">
                 <!-- Header ------------------------------------------------------------>
                 <thead>
                     <tr class="thead-light">
@@ -167,15 +173,24 @@ export default {
                     <template v-for="(item, i) in value.sch_template">
                         <!-- Line Header-->
                         <tr class="thead-dark text-light" :key="i+'h'" v-if="lineHeaderNeeded(i)">
-                            <th colspan="11" class="text-center">
-                                <name-line color :id="value.sch_template[i].line_id" />
-                                <small>
-                                    ({{value.sch_template[i].is_upbound ? '上行' : '下行'}})
-                                </small>
-                                <b-button variant="link" class="p-0 text-light" size="sm"
-                                @click="showEditLineStationsModal(value.sch_template[i].line_id)">
-                                    <b-icon-pencil-square />
-                                </b-button>
+                            <th />
+                            <th colspan="10" class="text-left">
+                                <div class="d-flex align-items-center">
+                                    <div class="mr-2">
+                                        <name-line color :id="value.sch_template[i].line_id" />
+                                        <small>
+                                            ({{value.sch_template[i].is_upbound ? '上行' : '下行'}})
+                                        </small>
+                                    </div>
+                                    <b-button variant="outline-light" class="ml-1 p-0" size="sm"
+                                    @click="showEditLineStationsModal(i)">
+                                        <b-icon-pencil-square /> 查看車站
+                                    </b-button>
+                                    <b-button variant="outline-light" class="ml-1 p-0" size="sm"
+                                    @click="showTimetableModal(i)">
+                                        <b-icon-table /> 時刻表
+                                    </b-button>
+                                </div>
                             </th>
                         </tr>
                         <!-- Stopping Station (Cross ID Not Exists) -->
@@ -223,6 +238,9 @@ export default {
 
         <!-- Edit Line Stations Modal -->
         <edit-line-stations ref="edit_line_stations_modal" @hide="getSchTemplateInfo" />
+
+        <!-- View Line Timetable -->
+        <line-timetable ref="timetable_modal" />
 
         <!---------------------------------------------------------------------------------------->
 

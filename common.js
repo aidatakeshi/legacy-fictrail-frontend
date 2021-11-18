@@ -78,7 +78,7 @@ exports.displaySignedNumber = function(value, decimals = 0){
 //Value to time display
 exports.day_cutoff = 3 * 3600; //3AM
 
-exports.displayTime = function(value, hideSeconds = false, noDayChange = false){
+exports.displayTime = function(value, hideSeconds = false, noDayChange = false, hideColon = false){
     if (!value) return null;
     if (isNaN(value) || value < 0) return null;
     if (!noDayChange){
@@ -89,9 +89,11 @@ exports.displayTime = function(value, hideSeconds = false, noDayChange = false){
     var m = Math.floor(value / 60) % 60;
     var s = Math.round(value % 60);
     if (hideSeconds){
-        return `${h}:${zero(m)}`;
+        if (!hideColon) return `${h}:${zero(m)}`;
+        else return `${h}${zero(m)}`;
     }
-    return `${h}:${zero(m)}:${zero(s)}`;
+    if (!hideColon) return `${h}:${zero(m)}:${zero(s)}`;
+    else return `${h}${zero(m)}${zero(s)}`;
 }
 
 var zero = function(value){

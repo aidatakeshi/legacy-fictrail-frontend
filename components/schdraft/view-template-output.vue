@@ -42,7 +42,7 @@ export default {
 <template>
     <div>
         <div class="mb-2">
-            <b-form-checkbox switch v-model="showSeconds">顯示起點／終點時間</b-form-checkbox>
+            <b-form-checkbox switch v-model="showSeconds">顯示起點／終點秒數</b-form-checkbox>
         </div>
 
         <b-card v-for="(trips, day_type) in data" :key="day_type" class="mb-2" body-class="p-2">
@@ -54,7 +54,7 @@ export default {
 
             <!-- Content -->
             <div class="table-responsive mb-0">
-                <table class="table my-table">
+                <table class="table table-bordered my-table">
                     <!-- Header ------------------------------------------------------------>
                     <thead>
                         <tr class="thead-light">
