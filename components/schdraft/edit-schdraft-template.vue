@@ -65,7 +65,7 @@ export default {
 <template>
     <div>
         <div class="py-1"
-        style="position: sticky; top: 0; z-index: 99; background-color: white;">
+        style="position: sticky; top: 0; z-index: 2; background-color: white;">
             <b-button size="sm" variant="primary" @click="submit">
                 <b-icon-file-earmark /> 保存
             </b-button>

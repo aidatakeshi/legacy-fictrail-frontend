@@ -68,34 +68,115 @@ export default {
             return true;
         },
 
-        //Show Passing
-        showPassing(time){
+        //Show Text
+        showPassing(time = null, alt_text = ""){
             var str = "↓";
             if (time && this.showPass){
                 var time_str = $.displayTime(time, !this.showSeconds, false, true);
-                str = time_str + str;
+                return time_str + str;
             }
-            return str;
+            return alt_text + str;
+        },
+        showArriveDepart(time1 = null, time2 = null){
+            if (time1 !== null) return $.displayTime(time1, !this.showSeconds);
+            if (time2 !== null) return $.displayTime(time2, !this.showSeconds);
+            return null;
         },
 
-        //Is Thru In
-        isThruIn(trip, i){
-            if (i != trip.begin_index) return false;
-            if (this.data.stations?.[i]?.station_id == trip.station_begin_id) return false;
-            return true;
+        //Get Cell Content
+        getContent(trip, i){
+            var showArrival = this.showArrival(i);
+            var showDeparture = this.showDeparture(i);
+            var item = trip.schedule_line?.[i] || null;
+            var item_prev = trip.schedule_line?.[i-1] || null;
+            var item_next = trip.schedule_line?.[i+1] || null;
+            //Item Null Case
+            if (item === null){
+                if ((item_next||{}).is_thru_in){
+                    var doubleRowNextItem = this.showArrival(i+1) && this.showDeparture(i+1);
+                    if (doubleRowNextItem) return [];
+                    if (!showArrival || !showDeparture) return [{text: '⯅'}];
+                    return [{}, {text: '⯅'}];
+                }
+                if ((item_prev||{}).is_thru_out){
+                    var doubleRowPrevItem = this.showArrival(i-1) && this.showDeparture(i-1);
+                    if (doubleRowPrevItem) return [];
+                    if (!showArrival || !showDeparture) return [{text: '⯆'}];
+                    return [{text: '⯆'}, {}];
+                }
+            }
+            //Double Item Case
+            else if (showArrival && showDeparture){
+                var $upper = {text: null, style: null};
+                var $lower = {text: null, style: null};
+                //Passing
+                if (item.is_pass){
+                    var $EXP = (item_prev||{}).is_express_track ? 'EXP' : '';
+                    if (item.is_thru_in){
+                        $upper = {text: '⯅'};
+                    }else{
+                        $upper = {text: this.showPassing(item.time1, $EXP), style: 'passing'};
+                    }
+                    if (item.is_thru_out){
+                        $lower = {text: '⯆'};
+                    }else{
+                        $lower = {text: this.showPassing(item.time2, $EXP), style: 'passing'};
+                    }
+                }
+                //Not Passing
+                else{
+                    if (item.is_thru_in){
+                        $upper = {text: '⯅'};
+                    }else{
+                        $upper = {text: this.showArriveDepart(item.time1), style: 'arriving'};
+                    }
+                    if (item.is_thru_out){
+                        $lower = {text: '⯆'};
+                    }else{
+                        $lower = {text: this.showArriveDepart(item.time2), style: 'departing'};
+                    }
+                }
+                return [$upper, $lower];
+            }
+            //Single Item Case (Arrival only)
+            else if (showArrival){
+                //Passing
+                if (item.is_pass){
+                    var $time = (item.time1 !== null) ? item.time1 : item.time2;
+                    var $EXP = (item_prev||{}).is_express_track ? 'EXP' : '';
+                    return [{text: this.showPassing($time, $EXP), style: 'passing'}];
+                }
+                //Not Passing
+                else{
+                    return [{text: this.showArriveDepart(item.time1), style: 'arriving'}];
+                }
+            }
+            //Single Item Case (Departure Only)
+            else{
+                //Passing
+                if (item.is_pass){
+                    var $time = (item.time1 !== null) ? item.time1 : item.time2;
+                    var $EXP = (item_prev||{}).is_express_track ? 'EXP' : '';
+                    return [{text: this.showPassing($time, $EXP), style: 'passing'}];
+                }
+                //Not Passing
+                else{
+                    return [{text: this.showArriveDepart(item.time2, item.time1), style: 'departing'}];
+                }
+            }
+            //Default
+            return [];
         },
 
-        //Is Thru Out
-        isThruOut(trip, i){
-            if (i != trip.terminate_index) return false;
-            if (this.data.stations?.[i]?.station_id == trip.station_terminate_id) return false;
-            return true;
-        },
-
-        //Get Cell Color Style
-        getCellColorStyle(obj){
+        /**
+         * CSS Related
+         */
+        styleCellColor(obj){
             return {'background-color': obj.color, 'color': obj.color_text};
-        }
+        },
+        classHighlight(trip){
+            return trip.schdraft_template_id == this.template_id ? 'highlight' : null;
+        },
     },
 }
 </script>
@@ -146,13 +227,13 @@ export default {
                             <th />
                             <th />
                             <template v-for="(trip, i) in data.schedule">
-                                <th colspan="2" :key="i" v-if="trip.train_name" :style="getCellColorStyle(trip.train_name)">
+                                <th colspan="2" :key="i" v-if="trip.train_name" :style="styleCellColor(trip.train_name)">
                                     {{trip.train_name.name_chi}}
                                     <div class="train_number" v-if="trip.train_number">
                                         {{trip.train_number}}號
                                     </div>
                                 </th>
-                                <th colspan="2" :key="i" v-else :style="getCellColorStyle(trip.train_type)">
+                                <th colspan="2" :key="i" v-else :style="styleCellColor(trip.train_type)">
                                     {{trip.train_type.name_chi}}
                                     <div class="train_number" v-if="trip.train_number">
                                         {{trip.train_number}}號
@@ -193,12 +274,13 @@ export default {
                             <td class="header-col"></td>
                             <td class="header-col"></td>
                             <template v-for="(trip, j) in data.schedule">
-                                <td :key="j+'a'" :class="trip.schdraft_template_id == template_id ? 'highlight' : null">
-                                    <div>
-                                        <span v-if="isThruIn(trip, 0)">⯅</span>
+                                <td :key="j+'a'" :class="classHighlight(trip)">
+                                    <div v-for="(content, n) in getContent(trip, -1)" :key="n">
+                                        <span v-if="!content.text">&nbsp;</span>
+                                        <span v-else :class="content.style">{{content.text}}</span>
                                     </div>
                                 </td>
-                                <td :key="j+'b'" :class="trip.schdraft_template_id == template_id ? 'highlight' : null"></td>
+                                <td :key="j+'b'" :class="classHighlight(trip)"></td>
                             </template>
                         </tr>
                         <!-- Main Rows -->
@@ -213,65 +295,22 @@ export default {
                                 {{station.mileage_km.toFixed(1)}}k
                             </td>
                             <td class="header-col" style="width: 1rem;">
-                                <div v-if="showArrival(i)">着</div>
-                                <div v-if="showDeparture(i)"><strong>發</strong></div>
+                                <div v-if="showArrival(i)" class="arriving">着</div>
+                                <div v-if="showDeparture(i)" class="departing">發</div>
                             </td>
                             <!-- For Each Trip -->
                             <template v-for="(trip, j) in data.schedule">
-                                <td :key="j+'a'" :class="trip.schdraft_template_id == template_id ? 'highlight' : null">
-                                    <!-- Not Null (i.e. has data) -->
-                                    <template v-if="item = trip.schedule_line[i]">
-                                        <!-- Arrival Time -->
-                                        <div v-if="showArrival(i)">
-                                            <span class="passing" v-if="item.is_pass">
-                                                {{showPassing(item.time1)}}
-                                            </span>
-                                            <span v-else-if="!item.time1">
-                                                <template v-if="isThruIn(trip, i)">⯅</template>
-                                                <template v-else>&nbsp;</template>
-                                            </span>
-                                            <span v-else>
-                                                {{displayTime(item.time1, !showSeconds)}}
-                                            </span>
-                                        </div>
-                                        <!-- Departure Time -->
-                                        <div v-if="showDeparture(i)">
-                                            <span class="passing" v-if="item.is_pass">
-                                                {{showPassing(item.time2)}}
-                                            </span>
-                                            <span v-else-if="!item.time2">
-                                                <template v-if="showArrival(i)">
-                                                    <template v-if="isThruOut(trip, i)">⯆</template>
-                                                    <template v-else>&nbsp;</template>
-                                                </template>
-                                                <template v-else>
-                                                    <template v-if="item.time1">
-                                                        {{displayTime(item.time1, !showSeconds)}}
-                                                    </template>
-                                                    <template v-else>&nbsp;</template>
-                                                </template>
-                                            </span>
-                                            <span v-else>
-                                                <strong>{{displayTime(item.time2, !showSeconds)}}</strong>
-                                            </span>
-                                        </div>
-                                        <!-- -------------- -->
-                                    </template>
-                                    <!-- Null & Within Index Range -->
-                                    <div class="passing" v-else-if="i >= trip.begin_index && i <= trip.terminate_index">
-                                        <span v-if="item.is_express_track">EXP</span>↓
-                                    </div>
-                                    <!-- Null & Outside Index Range -->
-                                    <div v-else>
-                                        <span v-if="!showArrival(i+1) && isThruIn(trip, i+1)">⯅</span>
-                                        <span v-if="!showArrival(i-1) && isThruOut(trip, i-1)">⯆</span>
+                                <td :key="j+'a'" :class="classHighlight(trip)">
+                                    <div v-for="(content, n) in getContent(trip, i)" :key="n">
+                                        <span v-if="!content.text">&nbsp;</span>
+                                        <span v-else :class="content.style">{{content.text}}</span>
                                     </div>
                                 </td>
-                                <td :key="j+'b'" class="track_no"
-                                :class="trip.schdraft_template_id == template_id ? 'highlight' : null">
-                                    <!-- Track No. -->
+                                <td :key="j+'b'" class="track_no" :class="classHighlight(trip)">
                                     <template v-if="item = trip.schedule_line[i]">
-                                        <div>{{item.track}}</div>
+                                        <div class="track_no" v-if="item.track">
+                                            {{item.track}}
+                                        </div>
                                     </template>
                                 </td>
                             </template>
@@ -282,12 +321,13 @@ export default {
                             <td class="header-col"></td>
                             <td class="header-col"></td>
                             <template v-for="(trip, j) in data.schedule">
-                                <td :key="j+'a'" :class="trip.schdraft_template_id == template_id ? 'highlight' : null">
-                                    <div>
-                                        <span v-if="isThruOut(trip, trip.schedule_line.length - 1)">⯆</span>
+                                <td :key="j+'a'" :class="classHighlight(trip)">
+                                    <div v-for="(content, n) in getContent(trip, (trip.schedule_line||[]).length)" :key="n">
+                                        <span v-if="!content.text">&nbsp;</span>
+                                        <span v-else :class="content.style">{{content.text}}</span>
                                     </div>
                                 </td>
-                                <td :key="j+'b'" :class="trip.schdraft_template_id == template_id ? 'highlight' : null"></td>
+                                <td :key="j+'b'" :class="classHighlight(trip)"></td>
                             </template>
                         </tr>
                     </tbody>
@@ -311,6 +351,12 @@ export default {
 .track_no{
     color: #ccc;
     font-size: 0.6rem;
+}
+.arriving{
+    text-decoration: underline;
+}
+.departing{
+    font-weight: bold;
 }
 .passing{
     color: #999;

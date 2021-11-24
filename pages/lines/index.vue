@@ -3,9 +3,14 @@
     import axios from '~/plugins/axios'
     const $ = require('~/common.js');
 
+    import SchDiagramMain from '../../components/schdiagram/sch-diagram-main.vue';
+
     export default {
 
         layout: "dashboard",
+        components:{
+            SchDiagramMain,
+        },
 
         data() {
             return {
@@ -41,6 +46,9 @@
             },
             viewTimetable(id){
                 this.$refs.timetable_modal.show(id);
+            },
+            viewLineDiagram(id){
+                this.$refs.line_diagram_modal.show(id);
             },
         },
 
@@ -98,7 +106,8 @@
                 <h2>{{line_type.name_chi}}</h2>
 
                 <list-item type="line" :data="line_type.lines" :trigger="trigger"
-                    @change="loadData" @edit="showEdit" @view-line="viewLine" @view-table="viewTimetable"
+                    @change="loadData" @edit="showEdit" @view-line="viewLine"
+                    @view-table="viewTimetable" @view-graph="viewLineDiagram"
                 />
 
                 <button-new @click="showNew({line_type_id: line_type.id})" />
@@ -114,6 +123,9 @@
 
         <!-- Line Timetable Modal -->
         <line-timetable ref="timetable_modal" />
+
+        <!-- Line Diagram -->
+        <sch-diagram-main ref="line_diagram_modal" />
 
     </div>
 </template>

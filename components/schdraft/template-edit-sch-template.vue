@@ -5,7 +5,7 @@ const $ = require('~/common.js');
 const sd_common = require('~/schdraft-common.js');
 
 import {
-    BIcon, BIconPencilSquare, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown, BIconTable,
+    BIcon, BIconPencilSquare, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown, BIconTable, BIconGraphDown,
 } from 'bootstrap-vue'
 import TemplateEditSchTemplateRow from './template-edit-sch-template-row.vue';
 import TemplateEditSchTemplateRowCross from './template-edit-sch-template-row-cross.vue';
@@ -13,16 +13,18 @@ import TemplateEditSchTemplateFirstStation from './template-edit-sch-template-fi
 import TemplateEditSchTemplateRowMenu from './template-edit-sch-template-row-menu.vue';
 import TemplateEditSchTemplateRowActionModals from './template-edit-sch-template-row-action-modals.vue';
 import TemplateEditSchTemplateShiftTime from './template-edit-sch-template-shift-time.vue';
+import SchDiagramMain from '../schdiagram/sch-diagram-main.vue';
 
 export default {
     components:{
-        BIcon, BIconPencilSquare, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown, BIconTable,
+        BIcon, BIconPencilSquare, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown, BIconTable, BIconGraphDown,
         TemplateEditSchTemplateRow,
         TemplateEditSchTemplateRowCross,
         TemplateEditSchTemplateFirstStation,
         TemplateEditSchTemplateRowMenu,
         TemplateEditSchTemplateRowActionModals,
         TemplateEditSchTemplateShiftTime,
+        SchDiagramMain,
     },
     props: {
         value: Object,
@@ -112,6 +114,11 @@ export default {
             var direction = this.value.sch_template[i].is_upbound ? 'up' : 'dn';
             this.$refs.timetable_modal.show(line_id, direction, this.value.id);
         },
+        showLineDiagram(i){
+            var line_id = this.value.sch_template[i].line_id;
+            var direction = this.value.sch_template[i].is_upbound ? 'up' : 'dn';
+            this.$refs.line_diagram_modal.show(line_id, direction, this.value.id);
+        },
 
         //Insert First Station
         insertFirstStation(station_id){
@@ -192,6 +199,10 @@ export default {
                                     @click="showTimetableModal(i)">
                                         <b-icon-table /> 時刻表
                                     </b-button>
+                                    <b-button variant="outline-light" class="ml-1 p-0" size="sm"
+                                    @click="showLineDiagram(i)">
+                                        <b-icon-graph-down /> 運行圖
+                                    </b-button>
                                 </div>
                             </th>
                         </tr>
@@ -243,6 +254,9 @@ export default {
 
         <!-- View Line Timetable -->
         <line-timetable ref="timetable_modal" />
+
+        <!-- Line Diagram -->
+        <sch-diagram-main ref="line_diagram_modal" />
 
         <!---------------------------------------------------------------------------------------->
 

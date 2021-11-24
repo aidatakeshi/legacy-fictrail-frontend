@@ -224,7 +224,7 @@ export default {
                             </td>
                             <!-- "button_graph" -->
                             <td :key="i" v-else-if="listConfig.format == 'button_graph'">
-                                <b-button variant="outline-info" class="px-2 py-1" v-if="item.has_calc_results"
+                                <b-button variant="outline-info" class="px-2 py-1"
                                 @click="$emit('view-graph', item.id)">
                                     <b-icon-graph-down />
                                 </b-button>

@@ -70,6 +70,7 @@ exports.data = {
             {label: '名稱', field: 'name_chi', field_sub: 'name_eng', field_sub_bracket: 'name_eng_short', format: 'name'},
             {label: '車站', format: 's_line_station_count'},
             {label: '時刻表', format: 'button_table'},
+            {label: '運行圖', format: 'button_graph'},
             {label: '長度', field: 'length_km', format: 'number', decimals: 1, unit: 'km'},
             {label: '最高速度', field: 'max_speed_kph', format: 'number', unit: 'km/h'},
             {label: '備註', field: 'remarks', format: 'remarks'},
@@ -133,6 +134,7 @@ exports.data = {
     "vehicle_performance_item": {
         list: [
             {label: '', format: 'button_graph'},
+            {label: '', field: 'has_calc_results', format: 'boolean'},
             {label: '標題', field: 'name_chi', format: 'name'},
             {label: '最高速度', field: 'max_speed_kph', format: 'number', unit: 'km/h', decimals: 0},
             {label: '起動加速', field: 'max_accel_kph_s', format: 'number', unit: 'km/h/s', decimals: 1},
