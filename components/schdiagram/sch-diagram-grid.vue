@@ -30,19 +30,6 @@
             handleDragEnd(event){
                 this.$emit('dragend', event);
             },
-            integersArray(a, b, step){
-                var arr = [];
-                for (var i = a; i <= b; i+= step) arr.push(i);
-                return arr;
-            },
-            getLineWidth(major_scale_limit){
-                if (this.xscale >= major_scale_limit) return schdiagram_config.grid_major_width;
-                return schdiagram_config.grid_minor_width;
-            },
-            getLineColor(major_scale_limit){
-                if (this.xscale >= major_scale_limit) return schdiagram_config.grid_major_color;
-                return schdiagram_config.grid_minor_color;
-            },
         },
 
         computed: {
@@ -58,92 +45,67 @@
             displayed_x_max(){
                 return this.basisWidth * this.xpos + this.contentWidth / 2 / this.xscale;
             },
-            array_0_24_1(){ return this.integersArray(0, 24, 1) },
-            array_0_23_1(){ return this.integersArray(0, 23, 1) },
-            array_0_60_1(){ return this.integersArray(0, 60, 1) },
-            array_0_59_1(){ return this.integersArray(0, 59, 1) },
-            array_0_60_5(){ return this.integersArray(0, 60, 5) },
-            array_0_55_5(){ return this.integersArray(0, 55, 5) },
-            array_0_5_1(){ return this.integersArray(0, 5, 1) },
-            array_0_4_1(){ return this.integersArray(0, 4, 1) },
+            major_line_x_factor(){
+                for (var mode of schdiagram_config.time_display_modes){
+                    if (this.xscale >= mode.min_scale) return mode.major_unit;
+                }
+                return 3600;
+            },
+            major_line_x(){
+                var factor = this.major_line_x_factor;
+                var x_min = Math.ceil(this.displayed_x_min / factor) * factor;
+                var x_max = Math.floor(this.displayed_x_max / factor) * factor;
+                var arr = [];
+                for (var x = x_min; x <= x_max; x+= factor){
+                    arr.push(x);
+                }
+                return arr;
+            },
+            minor_line_x_factor(){
+                for (var mode of schdiagram_config.time_display_modes){
+                    if (this.xscale >= mode.min_scale) return mode.minor_unit;
+                }
+                return 300;
+            },
+            minor_line_x(){
+                var factor = this.minor_line_x_factor;
+                var x_min = Math.ceil(this.displayed_x_min / factor) * factor;
+                var x_max = Math.floor(this.displayed_x_max / factor) * factor;
+                var arr = [];
+                for (var x = x_min; x <= x_max; x+= factor){
+                    if (x % this.major_line_x_factor){
+                        arr.push(x);
+                    }
+                }
+                return arr;
+            },
         },
     }
 
 </script>
 
 <template>
-    <v-group :config="config"
-    @dragstart="handleDragStart" @dragmove="handleDragMove" @dragend="handleDragEnd">
+    <v-group :config="config">
 
         <!-- Base (Draggable) -->
         <v-rect :config="{
             x: 0, y: 0, width: basisWidth, height: basisHeight, fill: 'white',
         }" />
 
-        <!-- Vertical Line (5 Sec) -->
-        <template v-if="xscale >= sdc.time_5s_show_scale">
-            <v-group v-for="h in array_0_23_1" :key="'vs'+h" :config="{x: 3600 * h, y: 0}">
-                <template v-if="3600 * h >= displayed_x_min - 3600 && 3600 * h <= displayed_x_max">
-                    <v-group v-for="m in array_0_59_1" :key="m" :config="{x: 60 * m, y: 0}">
-                        <v-line v-for="s in array_0_55_5" :key="s" :config="{
-                            points: [
-                                s, 0,
-                                s, basisHeight,
-                            ],
-                            stroke: getLineColor(sdc.time_5s_major_scale),
-                            strokeWidth: getLineWidth(sdc.time_5smajor_scale),
-                            strokeScaleEnabled: false,
-                            listening: false,
-                        }" />
-                    </v-group>
-                </template>
-            </v-group>
-        </template>
-
-        <!-- Vertical Line (1 Min) -->
-        <template v-if="xscale >= sdc.time_1m_show_scale">
-            <v-group v-for="h in array_0_23_1" :key="'vm'+h" :config="{x: 3600 * h, y: 0}">
-                <template v-if="3600 * h >= displayed_x_min - 3600 && 3600 * h <= displayed_x_max">
-                    <v-group v-for="f in array_0_55_5" :key="f" :config="{x: 60 * f, y: 0}">
-                        <v-line v-for="m in array_0_4_1" :key="m" :config="{
-                            points: [
-                                60 * m, 0,
-                                60 * m, basisHeight,
-                            ],
-                            stroke: getLineColor(sdc.time_1m_major_scale),
-                            strokeWidth: getLineWidth(sdc.time_1m_major_scale),
-                            strokeScaleEnabled: false,
-                            listening: false,
-                        }" />
-                    </v-group>
-                </template>
-            </v-group>
-        </template>
-
-        <!-- Vertical Line (5 Mins) -->
-        <template v-if="xscale >= sdc.time_5m_show_scale">
-            <v-group v-for="h in array_0_23_1" :key="'vf'+h" :config="{x: 3600 * h, y: 0}">
-                <v-line v-for="m in array_0_55_5" :key="m" :config="{
-                    points: [
-                        60 * m, 0,
-                        60 * m, basisHeight,
-                    ],
-                    stroke: getLineColor(sdc.time_5m_major_scale),
-                    strokeWidth: getLineWidth(sdc.time_5m_major_scale),
-                    strokeScaleEnabled: false,
-                    listening: false,
-                }" />
-            </v-group>
-        </template>
-
-        <!-- Vertical Line (1 Hour) -->
-        <v-line v-for="h in array_0_24_1" :key="'vh'+h" :config="{
-            points: [
-                3600 * h, 0,
-                3600 * h, basisHeight,
-            ],
+        <!-- Vertical Line (Major) -->
+        <v-line v-for="x in major_line_x" :key="x" :config="{
+            points: [x, 0, x, basisHeight],
             stroke: sdc.grid_major_color,
             strokeWidth: sdc.grid_major_width,
+            strokeScaleEnabled: false,
+            listening: false,
+        }" />
+
+        <!-- Vertical Line (Minor) -->
+        <v-line v-for="x in minor_line_x" :key="x" :config="{
+            points: [x, 0, x, basisHeight],
+            stroke: sdc.grid_minor_color,
+            strokeWidth: sdc.grid_minor_width,
             strokeScaleEnabled: false,
             listening: false,
         }" />

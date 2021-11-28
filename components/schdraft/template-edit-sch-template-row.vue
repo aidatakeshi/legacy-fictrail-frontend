@@ -78,7 +78,8 @@ export default {
             if (!this.prevItem) return null;
             if (!this.value.is_pass && !this.prevItem.is_pass) return this.travel_time.time_stop_stop;
             if (this.value.is_pass && this.prevItem.is_pass) return this.travel_time.time_pass_pass;
-            return this.travel_time.time_stop_pass;
+            if (this.value.is_pass) return this.travel_time.time_stop_pass;
+            return this.travel_time.time_pass_stop;
         },
         travel_time_inputted(){
             if (!this.prevValue) return null;
@@ -186,6 +187,11 @@ export default {
                             {{track}}
                         </b-button>
                     </div>
+                    <div class="col-3 col-sm-2">
+                        <b-button variant="outline-danger" class="my-1 py-1" block @click="trackSelected(null)">
+                            -
+                        </b-button>
+                    </div>
                 </div>
             </b-modal>
         </td>
@@ -218,30 +224,21 @@ export default {
                         <div class="text-info">
                             最少: 
                             <span v-if="!value.is_pass && !prevItem.is_pass">
-                                <strong>{{displayTimeIntervalMMSS(travel_time.time_stop_stop)}}</strong>
+                                {{displayTimeIntervalMMSS(travel_time.time_stop_stop)}} (停停)
                                 (v={{travel_time.max_speed_stop_stop}})
                             </span>
-                            <span v-else>
-                                {{displayTimeIntervalMMSS(travel_time.time_stop_stop)}}
-                            </span>
-                            /
-                            <span v-if="xor(value.is_pass, prevItem.is_pass)">
-                                <strong>{{displayTimeIntervalMMSS(travel_time.time_stop_pass)}}</strong>
+                            <span v-if="value.is_pass && !prevItem.is_pass">
+                                {{displayTimeIntervalMMSS(travel_time.time_stop_pass)}} (停通)
                                 (v={{travel_time.max_speed_stop_pass}})
                             </span>
-                            <span v-else>
-                                {{displayTimeIntervalMMSS(travel_time.time_stop_pass)}}
+                            <span v-if="!value.is_pass && prevItem.is_pass">
+                                {{displayTimeIntervalMMSS(travel_time.time_pass_stop)}} (通停)
+                                (v={{travel_time.max_speed_pass_stop}})
                             </span>
-                            <template v-if="!isSecond && !isLast">
-                                /
-                                <span v-if="value.is_pass && prevItem.is_pass">
-                                    <strong>{{displayTimeIntervalMMSS(travel_time.time_pass_pass)}}</strong>
-                                    (v={{travel_time.max_speed_pass_pass}})
-                                </span>
-                                <span v-else>
-                                    {{displayTimeIntervalMMSS(travel_time.time_pass_pass)}}
-                                </span>
-                            </template>
+                            <span v-if="value.is_pass && prevItem.is_pass">
+                                {{displayTimeIntervalMMSS(travel_time.time_pass_pass)}} (通通)
+                                (v={{travel_time.max_speed_pass_pass}})
+                            </span>
                         </div>
                         <div v-if="travel_time_inputted && travel_time_min">
                             <span class="text-danger" v-if="travel_time_inputted < travel_time_min">

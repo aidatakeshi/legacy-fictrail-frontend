@@ -4,7 +4,6 @@
     const $ = require('~/common.js');
 
     const config = require('~/schdiagram-config.js');
-    const _ = require('~/schdiagram.js');
 
     import {
         BIcon, BIconX, BIconGear, BIconBookshelf, BIconClock, BIconZoomIn, BIconZoomOut, BIconEyeglasses,
@@ -12,11 +11,15 @@
     import SchDiagramGrid from './sch-diagram-grid.vue';
     import SchDiagramHeaderFrame from './sch-diagram-header-frame.vue';
     import SchDiagramLabelStations from './sch-diagram-label-stations.vue';
+    import SchDiagramLabelTime from './sch-diagram-label-time.vue';
+    import SchDiagramTripLines from './sch-diagram-trip-lines.vue';
+    import SchDiagramTripTouchPoint from './sch-diagram-trip-touch-point.vue';
 
     export default {
         components: {
             BIcon, BIconX, BIconGear, BIconBookshelf, BIconClock, BIconZoomIn, BIconZoomOut, BIconEyeglasses,
-            SchDiagramHeaderFrame, SchDiagramGrid, SchDiagramLabelStations,
+            SchDiagramHeaderFrame, SchDiagramGrid, SchDiagramLabelStations, SchDiagramLabelTime,
+            SchDiagramTripLines, SchDiagramTripTouchPoint,
         },
         
         head(){
@@ -42,7 +45,6 @@
                 //Display Settings
                 daytype: 'wk', //Day Type: 'wk'/'ph'
                 direction: null, //Direction: 'up'/'dn'/null (both directions)
-                express_track: null, //true (express track only) / false (local track only) / null (both)
                 /**
                  * How to show opposite-direction lines (when direction != null):
                  * 0: Always hide
@@ -51,8 +53,9 @@
                  * 3: Always show low-key
                  * 4: Show normally on single track; show low-key on multi-track
                  */
-                showOppositeDirection: 1, //Show opposite-direction track low-key? (when direction != null)
-                showAnotherTrack: true, //Show another track low-key? (when express_track != null)
+                showOppositeDirection: 4, //Show opposite-direction track low-key? (when direction != null)
+                expressTrack: null, //true (express track only) / false (local track only) / null (both)
+                showAnotherTrack: true, //Show another track low-key? (when expressTrack != null)
                 //Screen Size
                 screenWidth: null,
                 screenHeight: null,
@@ -61,10 +64,10 @@
                 contentMidX: null,
                 contentMidY: null,
                 //Display-related Variables
-                xpos: null,
-                ypos: null,
-                xscale: null,
-                yscale: null,
+                xpos: config.xpos_default,
+                ypos: 0,
+                xscale: config.xscale_default,
+                yscale: 0,
                 //Selection
                 selectedTrip_direction: null,
                 selectedTrip_daytype: null,
@@ -73,8 +76,10 @@
                 tooltip: null,
                 tooltip_x: null,
                 tooltip_y: null,
+                tooltip_by_click: null,
                 //Others
                 touchLastDist: null,
+                touchDirection: null,
                 isDragging: false,
             };
         },
@@ -100,8 +105,9 @@
                 if (typeof document !== 'undefined'){
                     document.body.style.overflow = 'hidden';
                 }
+                this.loadLocalStorage();
                 this.handleScreenResized();
-                this.resetView();
+                this.transformationUpdated();
                 this.$forceUpdate();
             },
 
@@ -116,10 +122,35 @@
                 this.showing = false;
             },
 
-            //Reset x/y pos/scale
-            resetView(){
-                [this.xpos, this.ypos, this.xscale, this.yscale] = [0.5, 0, config.xscale_default, 0];
-                _.constraintTransformation(this);
+            //Local Storage Handling
+            loadLocalStorage(){
+                var data = localStorage.getItem(`schdiagram`);
+                if (data){
+                    data = JSON.parse(data);
+                    for (var key in data){
+                        this[key] = data[key];
+                    }
+                }
+                var data = localStorage.getItem(`schdiagram/${this.line_id}`);
+                if (data){
+                    data = JSON.parse(data);
+                    for (var key in data){
+                        this[key] = data[key];
+                    }
+                }
+            },
+            saveLocalStorage(){
+                var data = {
+                    showOppositeDirection: this.showOppositeDirection,
+                    expressTrack: this.expressTrack,
+                    showAnotherTrack: this.showAnotherTrack,
+                };
+                localStorage.setItem(`schdiagram`, JSON.stringify(data));
+                var data = {
+                    xpos: this.xpos, xscale: this.xscale,
+                    ypos: this.ypos, yscale: this.yscale,
+                };
+                localStorage.setItem(`schdiagram/${this.line_id}`, JSON.stringify(data));
             },
 
             //Load Data
@@ -133,65 +164,84 @@
                 this.data = response.data;
             },
 
-            //Line Display Mode (2: normal; 1: low-key: 0: none)
-            getLineDisplayMode(direction, is_express_track, tracks){
-                //Single Track
-                if (tracks == 1){
-                    if (this.direction === null || this.direction === direction) return 2;
-                    if (this.showOppositeDirection == 4 || this.showOppositeDirection == 2) return 2;
-                    if (this.showOppositeDirection == 1 || this.showOppositeDirection == 3) return 1;
-                    return 0;
+            //Transformation Updated
+            transformationUpdated(target = null){
+                //Scale Constraint
+                if (this.xscale < config.xscale_min) this.xscale = config.xscale_min;
+                if (this.xscale > config.xscale_max) this.xscale = config.xscale_max;
+                if (this.yscale < config.yscale_min) this.yscale = config.yscale_min;
+                if (this.yscale > config.yscale_max) this.yscale = config.yscale_max;
+                if (this.xscale < this.contentWidth / this.basisWidth) this.xscale = this.contentWidth / this.basisWidth;
+                if (this.yscale < this.contentHeight / this.basisHeight) this.yscale = this.contentHeight / this.basisHeight;
+                //Position Constraint
+                var xpos_min = this.contentWidth / 2 / this.basisWidth / this.xscale;
+                var ypos_min = this.contentHeight / 2 / this.basisHeight / this.yscale;
+                if (this.xpos < xpos_min) this.xpos = xpos_min;
+                else if (this.xpos > 1 - xpos_min) this.xpos = 1 - xpos_min;
+                if (this.ypos < ypos_min) this.ypos = ypos_min;
+                else if (this.ypos > 1 - ypos_min) this.ypos = 1 - ypos_min;
+                //Adjust xpos, ypos
+                if (target){
+                    target.setAttr('x', this.contentMidX - this.xpos * this.basisWidth * this.xscale);
+                    target.setAttr('y', this.contentMidY - this.ypos * this.basisHeight * this.yscale);
                 }
-                //Double Track (or Quadraple Track showing both)
-                if (tracks == 2 || (tracks == 4 && this.express_track === null)){
-                    if (this.direction === null || this.direction === direction) return 2;
-                    if (this.showOppositeDirection == 3 || this.showOppositeDirection == 4) return 1;
-                    return 0;
-                }
-                //Quadraple Track (showing only either exp / loc)
-                if (tracks == 4){
-                    var is_another_track = (this.express_track != is_express_track);
-                    if (this.direction === null || this.direction === direction){
-                        return (!is_another_track) ? 2 : (this.showAnotherTrack) ? 1 : 0;
-                    }
-                    if (this.showOppositeDirection == 3 || this.showOppositeDirection == 4){
-                        return (!is_another_track) ? 1 : (this.showAnotherTrack) ? 1 : 0;
-                    }
-                    return 0;
-                }
+                //Redraw
+                this.draw();
             },
 
-            /**
-             * Zoom In / Out Buttons
-             */
+            //Reset x/y pos/scale
+            resetView(){
+                [this.xpos, this.ypos, this.xscale, this.yscale] = [config.xpos_default, 0, config.xscale_default, 0];
+                this.transformationUpdated();
+                this.saveLocalStorage();
+            },
+
+            //Zoom In / Out Buttons
             zoom(d, isIn){
                 if (isIn){
                     this[d+'scale'] *= config.scale_step;
                 }else{
                     this[d+'scale'] /= config.scale_step;
                 }
-                _.constraintTransformation(this);
+                this.transformationUpdated();
+            },
+
+            //Toggle Buttons
+            toggle(attr, options){
+                var index = options.indexOf(this[attr]);
+                if (index === -1){
+                    this[attr] = options[0];
+                }else{
+                    this[attr] = options[(index + 1) % options.length];
+                }
+                this.saveLocalStorage();
             },
 
             /**
              * Handlers
              */
             handleScreenResized(){
-                this.screenWidth = window.innerWidth;
-                this.screenHeight = window.innerHeight;
-                this.contentWidth = window.innerWidth - config.margin_left - config.margin_right;
-                this.contentHeight = window.innerHeight - config.margin_top - config.margin_bottom;
-                this.contentMidX = config.margin_left + this.contentWidth / 2;
-                this.contentMidY = config.margin_top + this.contentHeight / 2;
-                _.constraintTransformation(this);
+                if (this.showing){
+                    this.screenWidth = window.innerWidth;
+                    this.screenHeight = window.innerHeight;
+                    this.contentWidth = window.innerWidth - config.margin_left - config.margin_right;
+                    this.contentHeight = window.innerHeight - config.margin_top - config.margin_bottom;
+                    this.contentMidX = config.margin_left + this.contentWidth / 2;
+                    this.contentMidY = config.margin_top + this.contentHeight / 2;
+                    this.transformationUpdated();
+                    this.saveLocalStorage();
+                }
             },
             handleWheelRoll(e){
                 e.evt.preventDefault();
-                var dy = (e.evt.deltaY > 1) ? 1 : -1;
-                this.ypos += dy * config.scroll_step / this.yscale / this.basisHeight;
-                _.constraintTransformation(this);
+                var multiply = (e.evt.deltaY > 1) ? 1/config.scroll_step : config.scroll_step;
+                this.xscale *= multiply;
+                this.yscale *= multiply;
+                this.transformationUpdated();
+                this.saveLocalStorage();
             },
             handleDragStart(event){
+                this.isDragging = true;
             },
             handleDragMove(event){
                 var x = event.target.getAttr('x');
@@ -199,10 +249,63 @@
                 //Calculate xpos, ypos
                 this.xpos = (this.contentMidX - x) / this.basisWidth / this.xscale;
                 this.ypos = (this.contentMidY - y) / this.basisHeight / this.yscale;
-                _.constraintTransformation(this, event.target);
+                this.transformationUpdated(event.target);
             },
             handleDragEnd(event){
-                this.touchLastDist = 0;
+                this.isDragging = false;
+                this.touchLastDist = null;
+                this.saveLocalStorage();
+            },
+            handleTouchStart(event){
+                this.hideTooltip();
+            },
+            handleTouchMove(event){
+                var touch1 = event.evt.touches[0];
+                var touch2 = event.evt.touches[1];
+                if (touch1 && touch2){
+                    var dist_x = (touch2.clientX - touch1.clientX) / this.xscale;
+                    var dist_y = (touch2.clientY - touch1.clientY) / this.yscale;
+                    if (!this.touchLastDist){
+                        this.touchDirection = (dist_x > dist_y) ? 'x' : 'y';
+                        this.touchLastDist = (this.touchDirection == 'x') ? dist_x : dist_y;
+                    }
+                    if (this.touchDirection == 'x'){
+                        this.xscale = this.xscale / this.touchLastDist * dist_x;
+                    }else{
+                        this.yscale = this.yscale / this.touchLastDist * dist_y;
+                    }
+                    this.touchLastDist = (this.touchDirection == 'x') ? dist_x : dist_y;
+                    this.transformationUpdated();
+                }
+            },
+            handleTouchEnd(event){
+                this.touchLastDist = null;
+                this.saveLocalStorage();
+            },
+
+            //Tooltip
+            showTooltip(captions, x, y, isClick = false){
+                this.tooltip_x = x;
+                this.tooltip_y = y;
+                this.tooltip_by_click = isClick;
+                this.tooltip = captions;
+            },
+            hideTooltip(){
+                this.tooltip = null;
+            },
+            getTooltipPositioning(){
+                var obj = {};
+                if (this.tooltip_x < this.screenWidth / 2){
+                    obj.left = (this.tooltip_x + 5) + 'px';
+                }else{
+                    obj.right = (this.screenWidth - this.tooltip_x + 5) + 'px';
+                }
+                if (this.tooltip_y < this.screenHeight / 2){
+                    obj.top = (this.tooltip_y + 5) + 'px';
+                }else{
+                    obj.bottom = (this.screenHeight - this.tooltip_y + 5) + 'px';
+                }
+                return obj;
             },
 
             /**
@@ -243,29 +346,106 @@
         <v-stage :config="{ width: screenWidth, height: screenHeight }" @wheel="handleWheelRoll">
             <v-layer>
 
-                <!-- Grid -->
-                <sch-diagram-grid :config="getKonvasConfig(true)"
-                :data-stations="data_stations" :data-line="data_line"
-                :xscale="xscale" :yscale="yscale" :xpos="xpos" :ypos="ypos"
-                :contentWidth="contentWidth" :contentHeight="contentHeight"
-                @dragstart="handleDragStart" @dragmove="handleDragMove" @dragend="handleDragEnd" />
+                <!-- Grid (Draggable) -->
+                <v-group @dragstart="handleDragStart" @dragmove="handleDragMove" @dragend="handleDragEnd"
+                @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd">
+                    <sch-diagram-grid :config="getKonvasConfig(true)"
+                        :data-stations="data_stations" :data-line="data_line"
+                        :xscale="xscale" :yscale="yscale" :xpos="xpos" :ypos="ypos"
+                        :contentWidth="contentWidth" :contentHeight="contentHeight"
+                    />
+                </v-group>
 
-                <!-- Frame (Fixed) -->
+                <!-- Trips (Lines) -->
+                <template v-if="direction == 'up'">
+                    <!-- Upbound at Upper Layer -->
+                    <sch-diagram-trip-lines :config="getKonvasConfig(false)"
+                        :data="(data.dn[daytype]||{}).schedule||[]" dataDirection="dn"
+                        :xscale="xscale" :yscale="yscale" :xpos="xpos" :ypos="ypos"
+                        :contentWidth="contentWidth" :contentHeight="contentHeight"
+                        :expressTrack="expressTrack" :direction="direction"
+                        :showOppositeDirection="showOppositeDirection"
+                        :showAnotherTrack="showAnotherTrack"
+                    />
+                    <sch-diagram-trip-lines :config="getKonvasConfig(false)"
+                        :data="(data.up[daytype]||{}).schedule||[]" dataDirection="up"
+                        :xscale="xscale" :yscale="yscale" :xpos="xpos" :ypos="ypos"
+                        :contentWidth="contentWidth" :contentHeight="contentHeight"
+                        :expressTrack="expressTrack" :direction="direction"
+                        :showOppositeDirection="showOppositeDirection"
+                        :showAnotherTrack="showAnotherTrack"
+                    />
+                    <sch-diagram-trip-touch-point :config="getKonvasConfig(false)"
+                        :data="(data.dn[daytype]||{}).schedule||[]" dataDirection="dn"
+                        :xscale="xscale" :yscale="yscale" :xpos="xpos" :ypos="ypos"
+                        :contentWidth="contentWidth" :contentHeight="contentHeight"
+                        @show-tooltip="showTooltip" @hide-tooltip="hideTooltip"
+                    />
+                    <sch-diagram-trip-touch-point :config="getKonvasConfig(false)"
+                        :data="(data.up[daytype]||{}).schedule||[]" dataDirection="up"
+                        :xscale="xscale" :yscale="yscale" :xpos="xpos" :ypos="ypos"
+                        :contentWidth="contentWidth" :contentHeight="contentHeight"
+                        @show-tooltip="showTooltip" @hide-tooltip="hideTooltip"
+                    />
+                </template>
+                <template v-else>
+                    <!-- Downbound at Upper Layer -->
+                    <sch-diagram-trip-lines :config="getKonvasConfig(false)"
+                        :data="(data.up[daytype]||{}).schedule||[]" dataDirection="up"
+                        :xscale="xscale" :yscale="yscale" :xpos="xpos" :ypos="ypos"
+                        :contentWidth="contentWidth" :contentHeight="contentHeight"
+                        :expressTrack="expressTrack" :direction="direction"
+                        :showOppositeDirection="showOppositeDirection"
+                        :showAnotherTrack="showAnotherTrack"
+                    />
+                    <sch-diagram-trip-lines :config="getKonvasConfig(false)"
+                        :data="(data.dn[daytype]||{}).schedule||[]" dataDirection="dn"
+                        :xscale="xscale" :yscale="yscale" :xpos="xpos" :ypos="ypos"
+                        :contentWidth="contentWidth" :contentHeight="contentHeight"
+                        :expressTrack="expressTrack" :direction="direction"
+                        :showOppositeDirection="showOppositeDirection"
+                        :showAnotherTrack="showAnotherTrack"
+                    />
+                    <sch-diagram-trip-touch-point :config="getKonvasConfig(false)"
+                        :data="(data.up[daytype]||{}).schedule||[]" dataDirection="up"
+                        :xscale="xscale" :yscale="yscale" :xpos="xpos" :ypos="ypos"
+                        :contentWidth="contentWidth" :contentHeight="contentHeight"
+                        @show-tooltip="showTooltip" @hide-tooltip="hideTooltip"
+                    />
+                    <sch-diagram-trip-touch-point :config="getKonvasConfig(false)"
+                        :data="(data.dn[daytype]||{}).schedule||[]" dataDirection="dn"
+                        :xscale="xscale" :yscale="yscale" :xpos="xpos" :ypos="ypos"
+                        :contentWidth="contentWidth" :contentHeight="contentHeight"
+                        @show-tooltip="showTooltip" @hide-tooltip="hideTooltip"
+                    />
+                </template>
+
+                <!-- Frame -->
                 <sch-diagram-header-frame :screenWidth="screenWidth" :screenHeight="screenHeight" />
 
-                <!-- Label Stations (Fixed X, Moving Y) -->
-                <sch-diagram-label-stations
-                :data-stations="data_stations" :data-line="data_line"
-                :yscale="yscale" :ypos="ypos"
-                :contentHeight="contentHeight" :contentMidY="contentMidY" />
+                <!-- Label Stations -->
+                <sch-diagram-label-stations :yscale="yscale" :ypos="ypos"
+                    :data-stations="data_stations" :data-line="data_line"
+                    :screenWidth="screenWidth" :contentHeight="contentHeight" :contentMidY="contentMidY"
+                />
+
+                <!-- Label Time -->
+                <sch-diagram-label-time :xscale="xscale" :xpos="xpos"
+                    :contentWidth="contentWidth" :contentMidX="contentMidX"
+                />
 
                 <!-------------------------------------------------------------------->
             </v-layer>
         </v-stage>
 
+        <!-- Label Tooltip -->
+        <div class="my-tooltip" v-if="tooltip && !isDragging" :style="getTooltipPositioning()">
+            <div v-for="(item, i) in tooltip" :key="i">{{item}}</div>
+        </div>
+
         <!-- Zoom Buttons -->
         <div class="zoom-bar">
-            <b-button variant="outline-dark" class="px-1 py-0" @click="resetView">
+            <b-button variant="outline-dark" class="px-1 py-0" @click="resetView()">
                 <b-icon-eyeglasses />
             </b-button>
             <b-icon-clock scale="1.2" class="mx-2" />
@@ -282,7 +462,6 @@
             <b-button variant="outline-dark" class="px-1 py-0" @click="zoom('y', false)">
                 <b-icon-zoom-out />
             </b-button>
-            {{ {xscale} }}
         </div>
 
         <!-- Close Button -->
@@ -293,16 +472,16 @@
         <!-- Settings Bar -->
         <div class="settings-bar">
             <b-button class="px-2 py-0" :variant="direction ? 'secondary' : 'primary'"
-            @click="direction = (direction == 'up') ? 'dn' : (direction == 'dn') ? null : 'up'">
+            @click="toggle('direction', ['up', 'dn', null])">
                 {{(direction == 'up') ? '上行' : (direction == 'dn') ? '下行' : '雙向'}}
             </b-button>
             <b-button class="px-2 py-0"
-            :variant="(express_track === null) ? 'primary' : 'secondary'"
-            @click="express_track = (express_track === true) ? false : (express_track === false) ? null : true">
-                {{(express_track === true) ? '快線' : (express_track === false) ? '慢線' : '快慢'}}
+            :variant="(expressTrack === null) ? 'primary' : 'secondary'"
+            @click="toggle('expressTrack', [true, false, null])">
+                {{(expressTrack === true) ? '快線' : (expressTrack === false) ? '慢線' : '快慢'}}
             </b-button>
             <b-button class="px-2 py-0" :variant="daytype == 'ph' ? 'danger' : 'success'"
-            @click="daytype = (daytype == 'ph') ? 'wk' : 'ph'">
+            @click="toggle('daytype', ['wk', 'ph'])">
                 {{(daytype == 'ph') ? '假日' : '平日'}}
             </b-button>
             <b-button class="px-1 py-0" variant="secondary" @click="$refs.settings_modal.show()">
@@ -311,58 +490,57 @@
         </div>
 
         <!-- Settings Modal -->
-        <b-modal ref="settings_modal" title="顯示設定"
-        header-bg-variant="dark" header-text-variant="light" hide-footer centered>
+        <b-modal ref="settings_modal" title="顯示設定" header-bg-variant="dark" header-text-variant="light"
+        hide-footer centered scrollable @hide="saveLocalStorage()">
             <div class="row">
                 <div class="col-sm-4">
                     方向
                 </div>
                 <div class="col-sm-8">
-                    <b-form-select v-model="direction" size="sm">
-                        <b-form-select-option :value="null">雙向</b-form-select-option>
-                        <b-form-select-option :value="'up'">上行</b-form-select-option>
-                        <b-form-select-option :value="'dn'">下行</b-form-select-option>
-                    </b-form-select>
+                    <b-form-radio-group v-model="direction" size="sm" buttons class="mb-2 w-100">
+                        <b-form-radio :value="null">雙向</b-form-radio>
+                        <b-form-radio :value="'up'">上行</b-form-radio>
+                        <b-form-radio :value="'dn'">下行</b-form-radio>
+                    </b-form-radio-group>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-4">
                     反方向顯示方式
                 </div>
                 <div class="col-sm-8">
-                    <b-form-select v-model="showOppositeDirection" size="sm" :disabled="direction === null">
-                        <b-form-select-option :value="0">全部隱藏</b-form-select-option>
-                        <b-form-select-option :value="1">在單線區間低調顯示；在複線區間隱藏</b-form-select-option>
-                        <b-form-select-option :value="2">在單線區間正常顯示；在複線區間隱藏</b-form-select-option>
-                        <b-form-select-option :value="3">全部低調顯示</b-form-select-option>
-                        <b-form-select-option :value="4">在單線區間正常顯示；在複線區間低調顯示</b-form-select-option>
-                    </b-form-select>
+                    <b-form-radio-group v-model="showOppositeDirection" :disabled="direction === null"
+                    size="sm" buttons stacked class="mb-2 w-100">
+                        <b-form-radio :value="0">全部隱藏</b-form-radio>
+                        <b-form-radio :value="3">全部低調顯示</b-form-radio>
+                        <b-form-radio :value="1">在單線低調顯示；在複線區間隱藏</b-form-radio>
+                        <b-form-radio :value="2">在單線正常顯示；在複線區間隱藏</b-form-radio>
+                        <b-form-radio :value="4">在單線正常顯示；在複線低調顯示</b-form-radio>
+                    </b-form-radio-group>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-4">
                     快慢線 <small>(在四線區間)</small>
                 </div>
                 <div class="col-sm-8">
-                    <b-form-select v-model="express_track" size="sm">
-                        <b-form-select-option :value="null">兩者皆顯示</b-form-select-option>
-                        <b-form-select-option :value="true">快線</b-form-select-option>
-                        <b-form-select-option :value="false">慢線</b-form-select-option>
-                    </b-form-select>
+                    <b-form-radio-group v-model="expressTrack" size="sm" buttons class="mb-2 w-100">
+                        <b-form-radio :value="null">兩者皆顯示</b-form-radio>
+                        <b-form-radio :value="true">快線</b-form-radio>
+                        <b-form-radio :value="false">慢線</b-form-radio>
+                    </b-form-radio-group>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-4">
                     另一線顯示方式
                 </div>
                 <div class="col-sm-8">
-                    <b-form-select v-model="showAnotherTrack" size="sm" :disabled="express_track === null">
-                        <b-form-select-option :value="false">隱藏</b-form-select-option>
-                        <b-form-select-option :value="true">低調顯示</b-form-select-option>
-                    </b-form-select>
-                </div>
-                <div class="col-sm-4">
-                    平日/假日
-                </div>
-                <div class="col-sm-8">
-                    <b-form-select v-model="daytype" size="sm">
-                        <b-form-select-option :value="'wk'">平日</b-form-select-option>
-                        <b-form-select-option :value="'ph'">假日</b-form-select-option>
-                    </b-form-select>
+                    <b-form-radio-group v-model="showAnotherTrack" :disabled="expressTrack === null"
+                    size="sm" buttons class="mb-2 w-100">
+                        <b-form-radio :value="false">隱藏</b-form-radio>
+                        <b-form-radio :value="true">低調顯示</b-form-radio>
+                    </b-form-radio-group>
                 </div>
             </div>
         </b-modal>
@@ -394,5 +572,14 @@
     z-index: 2;
     display: flex;
     align-items: center;
+}
+.my-tooltip{
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.3rem;
+    border-radius: 0.3rem;
+    position: fixed;
+    z-index: 102;
 }
 </style>
