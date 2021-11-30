@@ -54,6 +54,7 @@
                var str = trip.train_type?.name_chi;
                if (trip.train_name?.name_chi) str += ` ${trip.train_name?.name_chi}`;
                if (trip.train_number) str += `${trip.train_number}號`;
+               if (trip.is_temp) str += ' (臨時)';
                arr.push(str);
                //Begin / Terminate Stations
                arr.push(`${trip.station_begin_name_chi} → ${trip.station_terminate_name_chi}`);
@@ -62,19 +63,19 @@
                if (item){
                    if (item.is_pass){
                        if (item.time1 !== null || item.time2 !== null){
-                           arr.push(`${$.displayTime(item.time2 || item.time1)}通過`);
+                           arr.push(`${$.displayTime(item.time2 || item.time1)} 通過`);
                        }else if (item.time1 !== null && item.time2 !== null){
-                           arr.push(`${$.displayTime(item.time1)}到達 / ${$.displayTime(item.time2)}再開 (運轉停車)`);
+                           arr.push(`${$.displayTime(item.time1)} 到達 / ${$.displayTime(item.time2)} 再開 (運轉停車)`);
                        }else{
                            arr.push(`通過 (沒有設定時刻)`);
                        }
                    }else{
                        if (item.time1 !== null && item.time2 !== null){
-                           arr.push(`${$.displayTime(item.time1)}到着 / ${$.displayTime(item.time2)}發車`);
+                           arr.push(`${$.displayTime(item.time1)} 到着 / ${$.displayTime(item.time2)} 發車`);
                        }else if (item.time1 !== null){
-                           arr.push(`${$.displayTime(item.time1)}到着`);
+                           arr.push(`${$.displayTime(item.time1)} 到着`);
                        }else if (item.time2 !== null){
-                           arr.push(`${$.displayTime(item.time2)}發車`);
+                           arr.push(`${$.displayTime(item.time2)} 發車`);
                        }
                    }
                }

@@ -464,6 +464,17 @@
             </b-button>
         </div>
 
+        <!-- Title -->
+        <div class="my-title">
+            {{data_line.name_chi}}運行圖
+            <small>
+                (
+                {{{'up': '上行 /', 'dn': '下行 /'}[direction]}}
+                {{{'wk': '平日', 'ph': '假日'}[daytype]}}
+                )
+            </small>
+        </div>
+
         <!-- Close Button -->
         <b-button variant="link" class="close-btn py-1 px-2" @click="hide()">
             <b-icon-x variant="dark" scale="1.4" />
@@ -559,19 +570,39 @@
 .close-btn{
     position: fixed;
     right: 0; top: 0;
-    z-index: 2;
+    z-index: 5;
 }
 .settings-bar{
     position: fixed;
     right: 5px; bottom: 2px;
+    z-index: 4;
+}
+.my-title{
+    position: fixed;
+    left: 0px;
+    top: 2px;
+    width: 100vw;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
     z-index: 3;
 }
 .zoom-bar{
     position: fixed;
-    left: 5px; top: 2px;
+    left: 5px; bottom: 2px;
     z-index: 2;
     display: flex;
     align-items: center;
+    z-index: 2;
+}
+@media screen and (max-width: 500px) {
+    .zoom-bar{
+        top: 2px;
+        bottom: auto;
+    }
+    .my-title{
+        display: none;
+    }
 }
 .my-tooltip{
     background-color: rgba(0, 0, 0, 0.8);
@@ -580,6 +611,6 @@
     padding: 0.3rem;
     border-radius: 0.3rem;
     position: fixed;
-    z-index: 102;
+    z-index: 1;
 }
 </style>

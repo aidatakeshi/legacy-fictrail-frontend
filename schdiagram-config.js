@@ -5,8 +5,8 @@ exports.xpos_default = (12 - 3) / 24;
 
 //Left / Right / Top / Bottom Margin
 exports.margin_left = 60;
-exports.margin_top = 60;
-exports.margin_bottom = 30;
+exports.margin_top = 55;
+exports.margin_bottom = 32;
 exports.margin_right = 5;
 exports.frame_bg_color = 'white';
 
@@ -81,8 +81,9 @@ exports.time_display_modes = [
 
 //Line
 exports.line_normal_width = 2;
-exports.line_lowkey_width = 1;
+exports.line_lowkey_width = 2;
 exports.line_lowkey_opacity = 0.2;
+exports.line_dash = [3, 3];
 
 //Line Points
 exports.line_point_detect_width = 10;

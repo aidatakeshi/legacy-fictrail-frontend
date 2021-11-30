@@ -161,8 +161,10 @@ export default {
                     return [{text: this.showPassing($time, $EXP), style: 'passing'}];
                 }
                 //Not Passing
-                else{
-                    return [{text: this.showArriveDepart(item.time2, item.time1), style: 'departing'}];
+                else if (item.time2 !== null){
+                    return [{text: this.showArriveDepart(item.time2), style: 'departing'}];
+                }else{
+                    return [{text: this.showArriveDepart(item.time1), style: 'arriving'}];
                 }
             }
             //Default
@@ -178,6 +180,7 @@ export default {
         getTripCellStyle(trip, index = null){
             var arr = [];
             if (trip.schdraft_template_id == this.template_id) arr.push('highlight');
+            if (trip.is_temp) arr.push('temp-train');
             if (index !== null){
                 var a1 = trip.schedule_line?.[index]?.is_express_track;
                 var a2 = trip.schedule_line?.[index]?.no_tracks >= 4;
@@ -237,27 +240,14 @@ export default {
                             <th />
                             <th />
                             <template v-for="(trip, i) in data.schedule">
-                                <th colspan="2" :key="i" v-if="trip.train_name" :style="getHeaderCellColorStyle(trip.train_name)">
-                                    {{trip.train_name.name_chi}}
+                                <th colspan="2" :key="i" :style="getHeaderCellColorStyle(trip.train_name || trip.train_type)">
+                                    {{trip.train_name.name_chi || trip.train_type.name_chi}}
                                     <div class="train_number" v-if="trip.train_number">
                                         {{trip.train_number}}號
                                     </div>
-                                </th>
-                                <th colspan="2" :key="i" v-else :style="getHeaderCellColorStyle(trip.train_type)">
-                                    {{trip.train_type.name_chi}}
-                                    <div class="train_number" v-if="trip.train_number">
-                                        {{trip.train_number}}號
-                                    </div>
+                                    
                                 </th>
                             </template>
-                        </tr>
-                        <tr class="thead-light">
-                            <th class="sticky-left">班次號碼</th>
-                            <th />
-                            <th />
-                            <th colspan="2" v-for="(trip, i) in data.schedule" :key="i">
-                                {{trip.trip_number}}
-                            </th>
                         </tr>
                         <tr class="thead-light">
                             <th class="sticky-left">起點</th>
@@ -276,11 +266,19 @@ export default {
                             </th>
                         </tr>
                         <tr class="thead-light">
-                            <th class="sticky-left">基準時間</th>
+                            <th class="sticky-left">班次號碼</th>
                             <th />
                             <th />
                             <th colspan="2" v-for="(trip, i) in data.schedule" :key="i">
-                                {{displayTime(trip.pivot_time, true)}}<small>{{displaySignedNumber(trip.pivot_shift)}}</small>
+                                {{trip.trip_number}}
+                            </th>
+                        </tr>
+                        <tr class="thead-light">
+                            <th class="sticky-left">備註</th>
+                            <th />
+                            <th />
+                            <th colspan="2" v-for="(trip, i) in data.schedule" :key="i">
+                                <b-badge variant="warning" v-if="trip.is_temp">臨時</b-badge>
                             </th>
                         </tr>
                     </thead>
@@ -385,6 +383,12 @@ export default {
 }
 .express-track .passing{
     color: #99f;
+}
+.temp-train{
+    color: rgb(197, 161, 0) !important;
+}
+.temp-train .passing{
+    color: rgb(197, 161, 0) !important;
 }
 .mileage{
     font-size: 0.6rem;

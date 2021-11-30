@@ -176,6 +176,7 @@
                 <v-line v-if="line.line_display_mode == 2" :key="+j" :config="{
                     points: line.points,
                     stroke: line.stroke_color,
+                    dash: trip.is_temp ? sdc.line_dash : null,
                     strokeWidth: sdc.line_normal_width,
                     strokeScaleEnabled: false,
                 }" />
@@ -183,6 +184,7 @@
                 <v-line v-else-if="line.line_display_mode == 1" :key="j" :config="{
                     points: line.points,
                     stroke: line.stroke_color,
+                    dash: trip.is_temp ? sdc.line_dash : null,
                     strokeWidth: sdc.line_lowkey_width,
                     opacity: sdc.line_lowkey_opacity,
                     strokeScaleEnabled: false,
