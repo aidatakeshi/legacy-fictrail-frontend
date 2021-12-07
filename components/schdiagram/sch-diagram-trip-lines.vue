@@ -149,9 +149,10 @@
                         }
                     }
                 }
-                var time_min = Math.min(time2, time1);
-                var time_max = Math.max(time2, time1);
-                
+                var time_min = Math.min(time2, time1) - schdiagram_config.hour_start * 3600;
+                var time_max = Math.max(time2, time1) - schdiagram_config.hour_start * 3600;
+                if (time_min > this.displayed_x_max) return false;
+                if (time_max < this.displayed_x_min) return false;
                 return true;
             },
         },
@@ -163,6 +164,9 @@
             displayed_x_max(){
                 return this.basisWidth * this.xpos + this.contentWidth / 2 / this.xscale;
             },
+            basisWidth(){
+                return 86400;
+            },
         },
     }
 
@@ -171,24 +175,26 @@
 <template>
     <v-group :config="config">
         <v-group v-for="(trip, i) in data" :key="i">
-            <template v-for="(line, j) in getTripLines(trip)">
-                <!-- Line (Normal) -->
-                <v-line v-if="line.line_display_mode == 2" :key="+j" :config="{
-                    points: line.points,
-                    stroke: line.stroke_color,
-                    dash: trip.is_temp ? sdc.line_dash : null,
-                    strokeWidth: sdc.line_normal_width,
-                    strokeScaleEnabled: false,
-                }" />
-                <!-- Line (Low-key) -->
-                <v-line v-else-if="line.line_display_mode == 1" :key="j" :config="{
-                    points: line.points,
-                    stroke: line.stroke_color,
-                    dash: trip.is_temp ? sdc.line_dash : null,
-                    strokeWidth: sdc.line_lowkey_width,
-                    opacity: sdc.line_lowkey_opacity,
-                    strokeScaleEnabled: false,
-                }" />
+            <template v-if="isTripDisplayed(trip)">
+                <template v-for="(line, j) in getTripLines(trip)">
+                    <!-- Line (Normal) -->
+                    <v-line v-if="line.line_display_mode == 2" :key="+j" :config="{
+                        points: line.points,
+                        stroke: line.stroke_color,
+                        dash: trip.is_temp ? sdc.line_dash : null,
+                        strokeWidth: sdc.line_normal_width,
+                        strokeScaleEnabled: false,
+                    }" />
+                    <!-- Line (Low-key) -->
+                    <v-line v-else-if="line.line_display_mode == 1" :key="j" :config="{
+                        points: line.points,
+                        stroke: line.stroke_color,
+                        dash: trip.is_temp ? sdc.line_dash : null,
+                        strokeWidth: sdc.line_lowkey_width,
+                        opacity: sdc.line_lowkey_opacity,
+                        strokeScaleEnabled: false,
+                    }" />
+                </template>
             </template>
         </v-group>
     </v-group>

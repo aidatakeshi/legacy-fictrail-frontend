@@ -6,7 +6,8 @@
     const config = require('~/schdiagram-config.js');
 
     import {
-        BIcon, BIconX, BIconGear, BIconBookshelf, BIconClock, BIconZoomIn, BIconZoomOut, BIconEyeglasses,
+        BIcon, BIconX, BIconGear, BIconBookshelf, BIconClock, BIconZoomIn, BIconZoomOut,
+        BIconEyeglasses, BIconArrowClockwise,
     } from 'bootstrap-vue'
     import SchDiagramGrid from './sch-diagram-grid.vue';
     import SchDiagramHeaderFrame from './sch-diagram-header-frame.vue';
@@ -17,7 +18,8 @@
 
     export default {
         components: {
-            BIcon, BIconX, BIconGear, BIconBookshelf, BIconClock, BIconZoomIn, BIconZoomOut, BIconEyeglasses,
+            BIcon, BIconX, BIconGear, BIconBookshelf, BIconClock, BIconZoomIn, BIconZoomOut,
+            BIconEyeglasses, BIconArrowClockwise,
             SchDiagramHeaderFrame, SchDiagramGrid, SchDiagramLabelStations, SchDiagramLabelTime,
             SchDiagramTripLines, SchDiagramTripTouchPoint,
         },
@@ -445,7 +447,10 @@
 
         <!-- Zoom Buttons -->
         <div class="zoom-bar">
-            <b-button variant="outline-dark" class="px-1 py-0" @click="resetView()">
+            <b-button variant="outline-danger" class="px-1 py-0" @click="loadData">
+                <b-icon-arrow-clockwise />
+            </b-button>
+            <b-button variant="outline-success" class="px-1 py-0" @click="resetView()">
                 <b-icon-eyeglasses />
             </b-button>
             <b-icon-clock scale="1.2" class="mx-2" />
@@ -466,13 +471,14 @@
 
         <!-- Title -->
         <div class="my-title">
-            {{data_line.name_chi}}運行圖
+            {{data_line.name_chi}}
             <small>
                 (
                 {{{'up': '上行 /', 'dn': '下行 /'}[direction]}}
                 {{{'wk': '平日', 'ph': '假日'}[daytype]}}
                 )
             </small>
+            運行圖
         </div>
 
         <!-- Close Button -->

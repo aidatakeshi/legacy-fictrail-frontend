@@ -102,6 +102,14 @@
             handleMouseLeave(event){
                 this.$emit('hide-tooltip');
             },
+
+            //Is Displayed?
+            isDisplayed(item){
+                var x = item.x - schdiagram_config.hour_start * 3600;
+                if (x < this.displayed_x_min) return false;
+                if (x > this.displayed_x_max) return false;
+                return true;
+            },
         },
 
         computed: {
@@ -110,6 +118,9 @@
             },
             displayed_x_max(){
                 return this.basisWidth * this.xpos + this.contentWidth / 2 / this.xscale;
+            },
+            basisWidth(){
+                return 86400;
             },
         },
     }
@@ -120,17 +131,19 @@
     <v-group :config="config">
         <v-group v-for="(trip, i) in data" :key="i">
             <template v-for="(item, n) in getTouchPoints(trip)">
-                <v-rect :key="n" :config="{
-                    x: item.x - sdc.line_point_detect_width / 2 / xscale - sdc.hour_start * 3600,
-                    y: item.y - sdc.line_point_detect_height / 2 / yscale,
-                    width: item.w + sdc.line_point_detect_width / xscale,
-                    height: sdc.line_point_detect_height / yscale,
-                    fill: 'red',
-                    opacity: 0,
-                }"
-                @touchstart="handleTouch($event, trip, item.i)"
-                @mouseenter="handleMouseEnter($event, trip, item.i)"
-                @mouseleave="handleMouseLeave($event, trip, item.i)" />
+                <template v-if="isDisplayed(item)">
+                    <v-rect :key="n" :config="{
+                        x: item.x - sdc.line_point_detect_width / 2 / xscale - sdc.hour_start * 3600,
+                        y: item.y - sdc.line_point_detect_height / 2 / yscale,
+                        width: item.w + sdc.line_point_detect_width / xscale,
+                        height: sdc.line_point_detect_height / yscale,
+                        fill: 'red',
+                        opacity: 0,
+                    }"
+                    @touchstart="handleTouch($event, trip, item.i)"
+                    @mouseenter="handleMouseEnter($event, trip, item.i)"
+                    @mouseleave="handleMouseLeave($event, trip, item.i)" />
+                </template>
             </template>
         </v-group>
     </v-group>
