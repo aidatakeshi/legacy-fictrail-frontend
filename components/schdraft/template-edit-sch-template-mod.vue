@@ -211,7 +211,7 @@ export default {
                         <small>(預設: {{defaultValue.track}})</small>
                     </div>
                     <div class="col-sm-6">
-                        <b-form-select size="sm" v-model="value[editing_i].track">
+                        <b-form-select size="sm" v-model="value[editing_i].track" tabindex="1">
                             <b-form-select-option :value="null">[不設定]</b-form-select-option>
                             <b-form-select-option v-for="(track, i) in options_tracks" :key="i" :value="track">
                                 {{track}}
@@ -225,7 +225,7 @@ export default {
                         <small>(預設: {{defaultValue.is_express_track ? '快/急' : '慢/普'}})</small>
                     </div>
                     <div class="col-sm-6">
-                        <b-form-select size="sm" v-model="value[editing_i].is_express_track">
+                        <b-form-select size="sm" v-model="value[editing_i].is_express_track" tabindex="2">
                             <b-form-select-option :value="null">[不改動]</b-form-select-option>
                             <b-form-select-option :value="false">慢線/普通線</b-form-select-option>
                             <b-form-select-option :value="true">快線/急行線</b-form-select-option>
@@ -238,7 +238,7 @@ export default {
                         <small>(預設: {{defaultValue.is_pass ? '通過' : '停車'}})</small>
                     </div>
                     <div class="col-sm-6">
-                        <b-form-select size="sm" v-model="value[editing_i].is_pass">
+                        <b-form-select size="sm" v-model="value[editing_i].is_pass" tabindex="3">
                             <b-form-select-option :value="null">[不改動]</b-form-select-option>
                             <b-form-select-option :value="false">停車</b-form-select-option>
                             <b-form-select-option :value="true">通過</b-form-select-option>
@@ -252,8 +252,8 @@ export default {
                         <small>(預設: {{displayTime(defaultValue.time1)}})</small>
                     </div>
                     <div class="col-sm-6">
-                        <input-time v-model="value[editing_i].time1" size="sm" v-if="time1_type == 2" />
-                        <input-min-sec signed v-model="value[editing_i].time1_shift" size="sm" v-if="time1_type == 3" />
+                        <input-time v-model="value[editing_i].time1" size="sm" tabindex="4" v-if="time1_type == 2" />
+                        <input-min-sec signed v-model="value[editing_i].time1_shift" size="sm" tabindex="4" v-if="time1_type == 3" />
                     </div>
                     <div class="col-12 my-1 text-center">
                         <b-button size="sm" class="p-1" :variant="(time1_type != 0 ? 'outline-' : '')+'secondary'"
@@ -281,8 +281,8 @@ export default {
                         <small>(預設: {{displayTime(defaultValue.time2)}})</small>
                     </div>
                     <div class="col-sm-6">
-                        <input-time v-model="value[editing_i].time2" size="sm" v-if="time2_type == 2" />
-                        <input-min-sec signed v-model="value[editing_i].time2_shift" size="sm" v-if="time2_type == 3" />
+                        <input-time v-model="value[editing_i].time2" size="sm" tabindex="5" v-if="time2_type == 2" />
+                        <input-min-sec signed v-model="value[editing_i].time2_shift" size="sm" tabindex="5" v-if="time2_type == 3" />
                     </div>
                     <div class="col-12 my-1 text-center">
                         <b-button size="sm" class="p-1" :variant="(time2_type != 0 ? 'outline-' : '')+'secondary'"
@@ -304,12 +304,12 @@ export default {
                     </div>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-6">
+                    <div class="col-6" tabindex="6">
                         <b-button variant="primary" block @click="changed(); $refs.edit_modal.hide();">
                             提交
                         </b-button>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6" tabindex="7">
                         <b-button variant="danger" block @click="removeModItem(editing_i)">
                             移除
                         </b-button>
