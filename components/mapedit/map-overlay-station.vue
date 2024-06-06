@@ -5,6 +5,10 @@ const $ = require('~/common.js');
 const config = require('~/mapedit-config.js');
 const calc = require('~/mapedit-calc.js');
 
+import ColorBox from '@/components/color-box';
+import SelectItem from '@/components/select-item';
+import InputTrackNumber from '@/components/input-track-number';
+
 import {
     BIcon, BIconPlus, BIconPen, BIconEye, BIconEyeSlash, BIconLock, BIconUnlock,
     BIconChevronUp, BIconChevronDown, BIconChevronLeft, BIconChevronRight,
@@ -15,6 +19,7 @@ export default {
     components: {
         BIcon, BIconPlus, BIconPen, BIconEye, BIconEyeSlash, BIconLock, BIconUnlock,
         BIconChevronUp, BIconChevronDown, BIconChevronLeft, BIconChevronRight,
+        ColorBox, SelectItem, InputTrackNumber,
     },
     props: {
         station: Object,

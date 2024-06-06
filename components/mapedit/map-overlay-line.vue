@@ -7,6 +7,9 @@ const config = require('~/mapedit-config.js');
 const calc = require('~/mapedit-calc.js');
 const data_handling = require('~/mapedit-data-handling.js');
 
+import ColorBox from '@/components/color-box';
+import EditLineStations from '@/components/edit-line-stations';
+
 import {
     BIcon, BIconPlus, BIconPen, BIconEye, BIconEyeSlash, BIconLock, BIconUnlock, BIconBezier2, BIconBoundingBox,
     BIconChevronUp, BIconChevronDown, BIconChevronLeft, BIconChevronRight, BIconArrowDownUp,
@@ -17,6 +20,7 @@ export default {
     components: {
         BIcon, BIconPlus, BIconPen, BIconEye, BIconEyeSlash, BIconLock, BIconUnlock, BIconBezier2, BIconBoundingBox,
         BIconChevronUp, BIconChevronDown, BIconChevronLeft, BIconChevronRight, BIconArrowDownUp,
+        ColorBox, EditLineStations,
     },
     props: {
         value: Object,

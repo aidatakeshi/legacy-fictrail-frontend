@@ -93,3 +93,4 @@ sw.*
 *.ai
 *.ps
 .vscode/sftp.json
+dummy.txt

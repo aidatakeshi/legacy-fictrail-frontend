@@ -6,9 +6,13 @@ const sd_common = require('~/schdraft-common.js');
 
 import { BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconCheck } from 'bootstrap-vue'
 
+import SelectLineOfStation from '@/components/select-line-of-station';
+import SelectStationOfLine from '@/components/select-station-of-line';
+
 export default {
     components:{
         BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconCheck,
+        SelectLineOfStation, SelectStationOfLine,
     },
     props: {
         value: Array,

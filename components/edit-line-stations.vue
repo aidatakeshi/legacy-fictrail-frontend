@@ -5,9 +5,12 @@ const $ = require('~/common.js');
 
 import { BIcon, BIconPen, BIconX, BIconPencil } from 'bootstrap-vue'
 
+import EditItem from '@/components/edit-item';
+
 export default {
     components:{
         BIcon, BIconPen, BIconX, BIconPencil,
+        EditItem,
     },
     props: {
         nullable: Boolean,

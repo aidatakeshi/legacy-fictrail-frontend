@@ -7,11 +7,16 @@ import { BIcon, BIconPen, BIconX } from 'bootstrap-vue'
 import InputTrainTypeMod from './input-train-type-mod.vue';
 import InputTrainNameMod from './input-train-name-mod.vue';
 import InputOperatorMod from './input-operator-mod.vue';
+import SelectItem from '@/components/select-item';
+import InputTime from '@/components/input-time';
+import InputNumberSigned from '@/components/input-number-signed';
+import SelectSchdraftTemplate from '@/components/select-schdraft-template';
 
 export default {
     components:{
         BIcon, BIconPen, BIconX,
         InputTrainTypeMod, InputTrainNameMod, InputOperatorMod,
+        SelectItem, InputTime, InputNumberSigned, SelectSchdraftTemplate,
     },
     props: {
         value: Object,

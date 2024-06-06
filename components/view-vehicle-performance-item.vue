@@ -2,11 +2,18 @@
     import axios from '~/plugins/axios'
     const $ = require('~/common.js');
     import { BIcon, BIconPencil, BIconPlus } from 'bootstrap-vue'
+
+    import ChartScatter from '@/components/chart-scatter';
+
+
     export default {
         props: {
             itemId: null,
         },
-        components: { BIcon, BIconPencil, BIconPlus },
+        components: {
+            BIcon, BIconPencil, BIconPlus,
+            ChartScatter,
+        },
         data() {
             return {
                 data: {},

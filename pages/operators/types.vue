@@ -3,6 +3,10 @@
     import axios from '~/plugins/axios'
     const $ = require('~/common.js');
 
+    import ListItem from '@/components/list-item';
+    import EditItem from '@/components/edit-item';
+    import ButtonNew from '@/components/button-new';
+
     export default {
 
         layout: "dashboard",
@@ -12,6 +16,10 @@
                 data: [],
                 trigger: 0,
             }
+        },
+
+        components: {
+            ListItem, EditItem, ButtonNew,
         },
 
         async mounted(){

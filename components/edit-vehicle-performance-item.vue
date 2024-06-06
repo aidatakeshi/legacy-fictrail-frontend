@@ -5,9 +5,11 @@ const $ = require('~/common.js');
 
 import { BIcon, BIconPen, BIconX } from 'bootstrap-vue'
 
+import SelectItem from '@/components/select-item';
+
 export default {
     components:{
-        BIcon, BIconPen, BIconX,
+        BIcon, BIconPen, BIconX, SelectItem,
     },
     props: {
         type: null,

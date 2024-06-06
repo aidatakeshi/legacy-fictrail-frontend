@@ -1,1 +1,1 @@
-exports.API_BASE_URL = "http://hr-api.crowdedtra.in";
+exports.API_BASE_URL = "http://legacy-api.rapidtra.in";

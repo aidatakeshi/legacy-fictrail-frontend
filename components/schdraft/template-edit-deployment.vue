@@ -7,10 +7,15 @@ const $ = require('~/common.js');
 import { BIcon, BIconPencilSquare, BIconXSquare, BIconPlusSquare, BIconGripVertical } from 'bootstrap-vue'
 import SelectStationInTemplate from './select-station-in-template.vue';
 
+import InputTime from '@/components/input-time';
+import InputMinSec from '@/components/input-min-sec';
+import NameStation from '@/components/name-station';
+
 export default {
     components:{
         BIcon, BIconPencilSquare, BIconXSquare, BIconPlusSquare, BIconGripVertical,
         SelectStationInTemplate, draggable,
+        InputTime, InputMinSec, NameStation,
     },
     props: {
         value: Object,

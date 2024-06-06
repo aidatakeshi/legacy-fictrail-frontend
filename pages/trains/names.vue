@@ -3,9 +3,18 @@
     import axios from '~/plugins/axios'
     const $ = require('~/common.js');
 
+    import ListItem from '@/components/list-item';
+    import EditItem from '@/components/edit-item';
+    import ButtonNew from '@/components/button-new';
+    import SelectItem from '@/components/select-item';
+
     export default {
 
         layout: "dashboard",
+        
+        components: {
+            ListItem, EditItem, ButtonNew, SelectItem,
+        },
 
         data() {
             return {

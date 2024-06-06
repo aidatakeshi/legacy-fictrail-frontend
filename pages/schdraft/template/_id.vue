@@ -6,11 +6,17 @@
     import { BIcon, BIconPen, BIconTrash } from 'bootstrap-vue'
     import EditSchdraftTemplate from '../../../components/schdraft/edit-schdraft-template.vue';
 
+    import ListItem from '@/components/list-item';
+    import EditItem from '@/components/edit-item';
+    import ButtonNew from '@/components/button-new';
+    import SelectItem from '@/components/select-item';
+
     export default {
 
         layout: "dashboard",
         components:{
             EditSchdraftTemplate,
+            ListItem, EditItem, ButtonNew, SelectItem,
         },
 
         data() {

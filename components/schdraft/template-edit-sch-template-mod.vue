@@ -9,11 +9,15 @@ import {
     BIconClockFill, BIconCodeSquare, BIconPlusSquare,
 } from 'bootstrap-vue'
 
+import InputTime from '@/components/input-time';
+import InputMinSec from '@/components/input-min-sec';
+
 export default {
     components:{
         BIcon, BIconPen, BIconPencil, BIconX, BIconPlus, BIconTrash, BIconClock,
         BIconClockFill, BIconCodeSquare, BIconPlusSquare,
         draggable,
+        InputTime, InputMinSec,
     },
     props: {
         value: Array,

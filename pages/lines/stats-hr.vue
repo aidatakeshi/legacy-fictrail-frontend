@@ -3,9 +3,15 @@
     import axios from '~/plugins/axios'
     const $ = require('~/common.js');
 
+    import ColorBox from '@/components/color-box';
+
     export default {
 
         layout: "dashboard",
+
+        components: {
+            ColorBox,
+        },
 
         data() {
             return {

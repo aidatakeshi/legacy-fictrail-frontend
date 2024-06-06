@@ -7,13 +7,20 @@
 import axios from '~/plugins/axios'
 const $ = require('~/common.js');
 const config = require('~/config.edit-item.js');
-const env = require('~/config.js');
+
+import InputTime from '@/components/input-time';
+import InputNumberSigned from '@/components/input-number-signed';
+import SelectItem from '@/components/select-item';
+import SelectImage from '@/components/select-image';
+import InputTrackNumber from '@/components/input-track-number';
+import InputTrackCrossPoints from '@/components/input-track-cross-points';
 
 import { BIcon, BIconPen, BIconX } from 'bootstrap-vue'
 
 export default {
     components:{
         BIcon, BIconPen, BIconX,
+        InputTime, InputNumberSigned, SelectItem, SelectImage,  InputTrackNumber, InputTrackCrossPoints,
     },
     props: {
         type: null,

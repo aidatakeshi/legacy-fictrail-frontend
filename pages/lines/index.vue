@@ -5,11 +5,19 @@
 
     import SchDiagramMain from '../../components/schdiagram/sch-diagram-main.vue';
 
+    import ListItem from '@/components/list-item';
+    import EditItem from '@/components/edit-item';
+    import ButtonNew from '@/components/button-new';
+    import SelectItem from '@/components/select-item';
+    import EditLineStations from '@/components/edit-line-stations';
+    import LineTimetable from '@/components/line-timetable';
+
     export default {
 
         layout: "dashboard",
         components:{
             SchDiagramMain,
+            ListItem, EditItem, ButtonNew, SelectItem, EditLineStations, LineTimetable,
         },
 
         data() {

@@ -4,10 +4,12 @@ import axios from '~/plugins/axios'
 const $ = require('~/common.js');
 
 import { BIcon, BIconPlus, BIconX } from 'bootstrap-vue'
+import SelectItem from '@/components/select-item';
 
 export default {
     components:{
         BIcon, BIconPlus, BIconX,
+        SelectItem,
     },
     props: {
         value: Array,

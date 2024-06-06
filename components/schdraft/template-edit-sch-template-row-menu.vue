@@ -7,9 +7,14 @@ import {
     BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown, BIconShuffle,
 } from 'bootstrap-vue'
 
+import InputTime from '@/components/input-time';
+import InputMinSec from '@/components/input-min-sec';
+import NameStation from '@/components/name-station';
+
 export default {
     components:{
         BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown, BIconShuffle,
+        InputTime, InputMinSec, NameStation,
     },
     props: {
         schTemplate: Array,

@@ -3,9 +3,17 @@
     import axios from '~/plugins/axios'
     const $ = require('~/common.js');
 
+    import SelectLineOfStation from '@/components/select-line-of-station';
+    import SelectStationOfLine from '@/components/select-station-of-line';
+    import SelectItem from '@/components/select-item';
+
     export default {
 
         layout: "dashboard",
+
+        components:{
+            SelectLineOfStation, SelectStationOfLine, SelectItem,
+        },
 
         data() {
             return {

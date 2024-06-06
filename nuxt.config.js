@@ -1,4 +1,4 @@
-  export default {
+export default {
     // Global page headers (https://go.nuxtjs.dev/config-head)
     head: {
         title: 'HR Doodle',
@@ -24,7 +24,10 @@
     ],
 
     // Auto import components (https://go.nuxtjs.dev/config-components)
-    components: true,
+    components: {
+        global: true,
+        dirs: ['~/components'],
+    },
 
     // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
     buildModules: [

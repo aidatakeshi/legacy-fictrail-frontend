@@ -5,11 +5,15 @@ import {
     BIconChevronUp, BIconChevronDown, BIconChevronLeft, BIconChevronRight, BIconArrowRepeat,
 } from 'bootstrap-vue'
 
+import ColorBox from '@/components/color-box';
+import SelectItem from '@/components/select-item';
+
 export default {
     
     components: {
         BIcon, BIconPlus, BIconPen, BIconEye, BIconEyeSlash, BIconLock, BIconUnlock,
         BIconChevronUp, BIconChevronDown, BIconChevronLeft, BIconChevronRight, BIconArrowRepeat,
+        ColorBox, SelectItem,
     },
     props: {
         dataLineTypes: Object,

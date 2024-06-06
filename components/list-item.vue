@@ -9,6 +9,8 @@ const $ = require('~/common.js');
 const config = require('~/config.list-item.js');
 const env = require('~/config.js');
 
+import ColorBox from '@/components/color-box';
+
 import {
     BIcon, BIconPen, BIconX, BIconCheck, BIconLayers, BIconGraphDown, BIconTrash, BIconTable,
 } from 'bootstrap-vue'
@@ -16,6 +18,7 @@ import {
 export default {
     components:{
         BIcon, BIconPen, BIconX, BIconCheck, BIconLayers, BIconGraphDown, BIconTrash, BIconTable,
+        ColorBox,
     },
     props: {
         type: null,

@@ -15,6 +15,13 @@ import TemplateEditSchTemplateRowActionModals from './template-edit-sch-template
 import TemplateEditSchTemplateShiftTime from './template-edit-sch-template-shift-time.vue';
 import SchDiagramMain from '../schdiagram/sch-diagram-main.vue';
 
+    import ListItem from '@/components/list-item';
+    import EditItem from '@/components/edit-item';
+    import ButtonNew from '@/components/button-new';
+    import EditLineStations from '@/components/edit-line-stations';
+    import LineTimetable from '@/components/line-timetable';
+    import NameLine from '@/components/name-line';
+
 export default {
     components:{
         BIcon, BIconPencilSquare, BIconX, BIconPlus, BIconTrash, BIconArrowUp, BIconArrowDown, BIconTable, BIconGraphDown,
@@ -25,6 +32,7 @@ export default {
         TemplateEditSchTemplateRowActionModals,
         TemplateEditSchTemplateShiftTime,
         SchDiagramMain,
+        ListItem, EditItem, ButtonNew, EditLineStations, LineTimetable, NameLine,
     },
     props: {
         value: Object,

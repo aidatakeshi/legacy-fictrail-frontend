@@ -3,9 +3,19 @@
     import axios from '~/plugins/axios'
     const $ = require('~/common.js');
 
+    import ListItem from '@/components/list-item';
+    import EditItem from '@/components/edit-item';
+    import ButtonNew from '@/components/button-new';
+    import EditVehiclePerformanceItem from '@/components/edit-vehicle-performance-item';
+    import ViewVehiclePerformanceItem from '@/components/view-vehicle-performance-item';
+
     export default {
 
         layout: "dashboard",
+
+        components: {
+            ListItem, EditItem, ButtonNew, EditVehiclePerformanceItem, ViewVehiclePerformanceItem,
+        },
 
         data() {
             return {

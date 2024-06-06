@@ -10,12 +10,16 @@ import {
     BIcon, BIconPencilSquare, BIconPlusSquare, BIconGripVertical, BIconXSquare,
 } from 'bootstrap-vue'
 import SelectStationInTemplate from './select-station-in-template.vue';
+import InputTime from '@/components/input-time';
+import InputMinSec from '@/components/input-min-sec';
+import SelectSchdraftTemplate from '@/components/select-schdraft-template';
 
 export default {
     components:{
         BIcon, BIconPencilSquare, BIconPlusSquare, BIconGripVertical, BIconXSquare,
         draggable, TemplateModRuleDisplay,
         SelectStationInTemplate,
+        InputTime, InputMinSec, SelectSchdraftTemplate,
     },
     props: {
         value: Object,

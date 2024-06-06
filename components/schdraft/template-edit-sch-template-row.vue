@@ -9,11 +9,14 @@ import {
 } from 'bootstrap-vue';
 import TemplateEditSchTemplateMod from './template-edit-sch-template-mod.vue';
 
+import NameStation from '@/components/name-station';
+import InputTime from '@/components/input-time';
+
 export default {
     components:{
         BIcon, BIconPen, BIconX, BIconPlus, BIconTrash, BIconCheck, BIconChevronDown,
     BIconPencilSquare, BIconInfoSquare,
-        TemplateEditSchTemplateMod,
+        TemplateEditSchTemplateMod, NameStation, InputTime,
     },
     props: {
         value: Object,

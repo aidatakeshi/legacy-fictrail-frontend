@@ -6,10 +6,12 @@ const $ = require('~/common.js');
 import { BIcon, BIconPencilSquare, BIconPlusSquare, BIconGripVertical, BIconXSquare } from 'bootstrap-vue'
 import SelectStationInTemplate from './select-station-in-template.vue';
 
+import NameStation from '@/components/name-station';
+
 export default {
     components:{
         BIcon, BIconPencilSquare, BIconPlusSquare, BIconGripVertical, BIconXSquare,
-        SelectStationInTemplate,
+        SelectStationInTemplate, NameStation,
     },
     props: {
         value: Array,
