@@ -25,5 +25,9 @@
             <Nuxt />
         </b-container>
 
+        <div style="color: red; text-align: center;">
+            This is a legacy version made in 2020-21 and is discontinued.
+        </div>
+
     </div>
 </template>
